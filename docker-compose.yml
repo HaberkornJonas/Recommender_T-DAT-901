@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  r:
+    build: .
+    volumes: 
+      - ./01_data:/01_data
+      - ./02_code:/02_code
+      - ./03_output:/03_output
