@@ -68,7 +68,7 @@ ggsave("03_output/01_ventes_total_par_mois.png", width = 10, height = 8, dpi = 1
 ################################################
 ##   TOTAL DE VENTES PAR FAMILLE ET PAR MOIS 
 ################################################
-print("Analyse du nombre total de ventes par mois par famille de produit...")
+print("Analyse du nombre total de ventes par mois par familles de produits...")
 
 # Manipulation des données
 ventes_total_par_mois_par_famille <- sourceData %>%
@@ -89,7 +89,8 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
     title = "Nombre total de ventes par mois par familles",
     subtitle = "Données du dataset KaDo",
     x = "Mois",
-    y = "Nombre de ventes"
+    y = "Nombre de ventes",
+    fill = "Familles de produits"
   )+
   scale_y_continuous(labels = scales::comma)
 ggsave("03_output/02_01_ventes_total_par_mois_par_famille.png", width = 10, height = 8, dpi = 100)
@@ -101,7 +102,8 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
     title = "Répartition des ventes par mois par familles",
     subtitle = "Données du dataset KaDo",
     x = "Mois",
-    y = "Nombre de ventes"
+    y = "Nombre de ventes",
+    fill = "Familles de produits"
   )+
   scale_y_continuous(labels = scales::percent)
 ggsave("03_output/02_02_repartition_ventes_par_mois_par_famille.png", width = 10, height = 8, dpi = 100)
@@ -112,7 +114,8 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
     title = "Ventes par familles par mois",
     subtitle = "Données du dataset KaDo",
     x = "Mois",
-    y = "Nombre de ventes"
+    y = "Nombre de ventes",
+    fill = "Familles de produits"
   )+
   scale_y_continuous(labels = scales::comma)+
   scale_x_continuous(
@@ -127,7 +130,8 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
     title = "Ventes par mois pour chaque famille",
     subtitle = "Données du dataset KaDo",
     x = "Mois",
-    y = "Nombre de ventes"
+    y = "Nombre de ventes",
+    fill = "Familles de produits"
   )+
   scale_y_continuous(labels = scales::comma)+
   scale_x_continuous(
