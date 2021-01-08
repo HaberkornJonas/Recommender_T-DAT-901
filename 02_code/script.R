@@ -140,7 +140,93 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
   facet_wrap(~famille_produit)
 ggsave("03_output/02_04_ventes_par_mois_pour_chaque_famille.png", width = 10, height = 8, dpi = 100)
 
+################################################
+##  PRIX MOYEN PAR MOIS
+################################################
+
+print("Analyse du prix moyen par mois...")
+
+prix_moyen_par_mois <- sourceData %>%
+  group_by(mois_vente_id) %>%
+  summarise(PRIX_NET=mean(prix_net)) %>%
+  rename(prix=PRIX_NET)
 
 
+write_csv(prix_moyen_par_mois, "03_output/03_prix_moyen_par_mois.csv")
 
+plot <- ggplot(data = prix_moyen_par_mois, aes(x = mois_vente_id, y = prix))+
+  geom_bar(stat="identity", fill="steelblue3", color="steelblue3")+
+  labs(
+    title = "Prix moyen par mois",
+    subtitle = "Données du dataset KaDo",
+    x = "Mois",
+    y = "Prix"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(
+    breaks = mois_ids,
+    label = mois_noms
+  )
+ggsave("03_output/03_prix_moyen_par_mois.png", width = 10, height = 8, dpi = 100)
+
+################################################
+##  PRIX MOYEN PAR MOIS PAR FAMILLE
+################################################
+
+
+print("Analyse du prix moyen par mois par famille...")
+
+prix_moyen_par_mois <- sourceData %>%
+  group_by(mois_vente_id, famille_produit) %>%
+  summarise(PRIX_NET=mean(prix_net)) %>%
+  rename(prix=PRIX_NET)
+
+write_csv(prix_moyen_par_mois, "03_output/03_01_prix_moyen_par_mois_par_famille.csv")
+
+plot <- ggplot(data = prix_moyen_par_mois, aes(x = mois_vente_id, y = prix, fill = famille_produit))+
+  geom_bar(stat="identity")+
+  labs(
+    title = "Prix moyen par mois par famille",
+    subtitle = "Données du dataset KaDo",
+    x = "Mois",
+    y = "Prix",
+    fill = "Famille de produits"
+  )+
+  scale_y_continuous(labels = scales::comma)
+
+ggsave("03_output/03_01_prix_moyen_par_mois_par_famille.png", width = 10, height = 8, dpi = 100)
+
+plot <- ggplot(data = prix_moyen_par_mois, aes(x = mois_vente_id, y = prix, fill=famille_produit))+
+  geom_bar(stat="identity", position="dodge")+
+  labs(
+    title = "Prix moyen par famille par mois",
+    subtitle = "Données du dataset KaDo",
+    x = "Mois",
+    y = "Prix",
+    fill = "Famille de produits"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(
+    breaks = mois_ids,
+    label = mois_noms
+  )
+
+ggsave("03_output/03_02_prix_moyen_par_famille_par_mois.png", width = 10, height = 8, dpi = 100)
+
+plot <- ggplot(data = prix_moyen_par_mois, aes(x = mois_vente_id, y = prix, fill=famille_produit))+
+  geom_bar(stat="identity", position="dodge")+
+  labs(
+    title = "Prix moyen par mois pour chaque famille",
+    subtitle = "Données du dataset KaDo",
+    x = "Mois",
+    y = "Prix",
+    fill = "Famille de produits"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(
+    breaks = mois_ids
+  )+
+  facet_wrap(~famille_produit)
+
+ggsave("03_output/03_03_prix_moyen_par_mois_pour_chaque_famille.png", width = 10, height = 8, dpi = 100)
 
