@@ -13,7 +13,7 @@ pacman::p_load(pacman, rio, sparklyr)
 options(scipen = 100)
 
 # Importing Dataset
-kado_csv <-import("~/Projects/School/TDAT901/KaDo.csv")
+kado_csv <-import("~/Projects/School/TDAT901/t-dat-901/01_data/KaDo.csv")
 head(kado_csv)
 
 # Getting stats from the dataset
@@ -116,26 +116,97 @@ colnames(bestSunItems)[2] <- "NbDeVentes"
 ##################################################
 # Getting the mean price for items by categories #
 ##################################################
+# Code example for row iterations :
+# for(row in 1:nrow(itemsWithPriceDF)){
+#   print(itemsWithPriceDF[row, "LIBELLE"])
+#   print(itemsWithPriceDF[row, "PRIX_NET"])
+# }
+
+# Gettings all the sells for the products and removing useless colums
 itemsWithPriceDF = subset(kado_csv, select = -c(TICKET_ID, MOIS_VENTE, CLI_ID))
-itemsWithPriceDF <- unique(itemsWithPriceDF)
 
+# Adding PRIX Column to our existings dataframes for the items
+bestCapillaryItems[, "PRIX"] <- NA
+bestHygieneItems[,"PRIX"] <- NA
+bestMakeupItems[, "PRIX"] <- NA
+bestVariousItems[, "PRIX"] <- NA
+bestParfumItems[, "PRIX"] <- NA
+bestNatHealthItems[, "PRIX"] <- NA
+bestBodyCareItems[, "PRIX"] <- NA
+bestFaceCareItems[, "PRIX"] <- NA
+bestSunItems[, "PRIX"] <- NA
 
-for (product in bestHygieneItems$Libellé)
+# Applying a correct price for every product in the capillary family
+for (product in bestCapillaryItems$Libellé)
 {
-  for(productWithPrice in itemsWithPriceDF){
-    print(productWithPrice[PRIX_NET])
-  }
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestCapillaryItems[bestCapillaryItems$Libellé==product,]$PRIX = productFrequentPrice
 }
 
-#sort(table(variable),decreasing=TRUE)[1]
+# Applying a correct price for every product in the hygiene family
+for (product in bestHygieneItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestHygieneItems[bestHygieneItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the makeup family
+for (product in bestMakeupItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestMakeupItems[bestMakeupItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the makeup family
+for (product in bestVariousItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestVariousItems[bestVariousItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the parfume family
+for (product in bestParfumItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestParfumItems[bestParfumItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the health care family
+for (product in bestNatHealthItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestNatHealthItems[bestNatHealthItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the body care family
+for (product in bestBodyCareItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestBodyCareItems[bestBodyCareItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
+# Applying a correct price for every product in the face care family
+for (product in bestFaceCareItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestFaceCareItems[bestFaceCareItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
-
+# Applying a correct price for every product in the sun care family
+for (product in bestSunItems$Libellé)
+{
+  productPrices <- itemsWithPriceDF %>% filter(itemsWithPriceDF$LIBELLE==product)
+  productFrequentPrice = as.double(names(sort(table(productPrices$PRIX_NET), decreasing = TRUE)[1]))
+  bestSunItems[bestSunItems$Libellé==product,]$PRIX = productFrequentPrice
+}
 
 
 
