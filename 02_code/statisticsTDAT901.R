@@ -208,7 +208,7 @@ for (product in bestSunItems$Libellé)
   bestSunItems[bestSunItems$Libellé==product,]$PRIX = productFrequentPrice
 }
 
-# Means of prices of items in each categorie
+# Means of prices of items in each categories
 mean(bestCapillaryItems[["PRIX"]])
 mean(bestHygieneItems[["PRIX"]])
 mean(bestMakeupItems[["PRIX"]])
@@ -218,6 +218,17 @@ mean(bestNatHealthItems[["PRIX"]])
 mean(bestBodyCareItems[["PRIX"]])
 mean(bestFaceCareItems[["PRIX"]])
 mean(bestSunItems[["PRIX"]])
+
+#######################################################
+# Getting the mean and STD number of items per client #
+#######################################################
+itemsBoughtByClients = as.data.frame(sort(table(kado_csv$CLI_ID), decreasing =TRUE ))
+colnames(itemsBoughtByClients)[1] <- "ClientID"
+colnames(itemsBoughtByClients)[2] <- "ItemsBought"
+mean(itemsBoughtByClients[["ItemsBought"]])
+
+
+
 
 
 
