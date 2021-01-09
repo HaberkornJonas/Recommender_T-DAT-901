@@ -208,8 +208,16 @@ for (product in bestSunItems$Libellé)
   bestSunItems[bestSunItems$Libellé==product,]$PRIX = productFrequentPrice
 }
 
-
-
+# Means of prices of items in each categorie
+mean(bestCapillaryItems[["PRIX"]])
+mean(bestHygieneItems[["PRIX"]])
+mean(bestMakeupItems[["PRIX"]])
+mean(bestVariousItems[["PRIX"]])
+mean(bestParfumItems[["PRIX"]])
+mean(bestNatHealthItems[["PRIX"]])
+mean(bestBodyCareItems[["PRIX"]])
+mean(bestFaceCareItems[["PRIX"]])
+mean(bestSunItems[["PRIX"]])
 
 
 
