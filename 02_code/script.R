@@ -4,6 +4,7 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 library(scales)
+library(Hmisc)
 
 ## INFO: 
 ##    - ggplot tuto: https://r4ds.had.co.nz/data-visualisation.html
@@ -51,17 +52,18 @@ write_csv(G.T.Y.T, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.Y.T.csv")
 # Creation du graphique
 df <- data.frame(x = 1, y = G.T.Y.T[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
-  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
     title = "Nombre total de tickets",
     subtitle = "Donnees du dataset KaDo",
-    x = "Année",
+    x = "Annee",
     y = "Nombre de tickets"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+print(plot)
 
 # Sauvegarde du graphique
 ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.Y.T.png", width = 5, height = 8, dpi = 100)
@@ -81,15 +83,36 @@ print("[G_T_M_T]...")
 # Manipulation des donnees
 G.T.M.T <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.T <- aggregate(G.T.M.T$TicketId, by=list(G.T.M$MoisVenteId), FUN=length) %>%     # Get count of tickets for each months
+G.T.M.T <- aggregate(G.T.M.T$TicketId, by=list(G.T.M.T$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 
 # Sauvegarde des donnees
 write_csv(G.T.M.T, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.T.csv")
 
+
+
+# Creation du graphique
+df <- data.frame(x = 1, y = G.T.M.T[1,1])
+plot <-  ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y=n))+
+  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
+  geom_errorbar(aes(ymin=n-sd(G.T.M.T$n), ymax=n+sd(G.T.M.T$n)), width=.2,
+                position=position_dodge(.9))+
+  labs(
+    title = "Nombre total de tickets",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Annee",
+    y = "Nombre de tickets"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+
 # Creation du graphique
 plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
-  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
+  geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
   labs(
     title = "Nombre total de tickets par mois",
     subtitle = "Donnees du dataset KaDo",
@@ -101,6 +124,7 @@ plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
     breaks = moisIds,
     label = moisNoms
   )
+print(plot)
 
 # Sauvegarde du graphique
 ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.T.png", width = 12, height = 8, dpi = 100)
@@ -122,7 +146,7 @@ print("[G_T_M_M]...")
 # Manipulation des donnees
 G.T.M.M <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.M <- aggregate(G.T.M.M$TicketId, by=list(G.T.M$MoisVenteId), FUN=length) %>%     # Get count of tickets for each months
+G.T.M.M <- aggregate(G.T.M.M$TicketId, by=list(G.T.M.M$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 G.T.M.M <- mean(G.T.M.M$n) %>%                                                         # Get mean value
            data.frame()                                                                # Make it a dataframe
@@ -138,13 +162,14 @@ plot <- ggplot(df, aes(x=x,y=y))+
   labs(
     title = "Nombre moyen de tickets par mois",
     subtitle = "Donnees du dataset KaDo",
-    x = "Année",
+    x = "Annee",
     y = "Nombre moyen de tickets par mois"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+print(plot)
 
 # Sauvegarde du graphique
 ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.M.png", width = 5, height = 8, dpi = 100)
@@ -166,7 +191,7 @@ print("[G_T_M_S]...")
 # Manipulation des donnees
 G.T.M.S <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.S <- aggregate(G.T.M.S$TicketId, by=list(G.T.M$MoisVenteId), FUN=length) %>%     # Get count of tickets for each months
+G.T.M.S <- aggregate(G.T.M.S$TicketId, by=list(G.T.M.S$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 G.T.M.S <- sd(G.T.M.S$n) %>%                                                           # Get standard deviation
            data.frame()                                                                # Make it a dataframe
@@ -182,13 +207,14 @@ plot <- ggplot(df, aes(x=x,y=y))+
   labs(
     title = "Deviation standard du nombre de tickets par mois",
     subtitle = "Donnees du dataset KaDo",
-    x = "Année",
+    x = "Annee",
     y = "Deviation standard du nombre de tickets par mois"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+print(plot)
 
 # Sauvegarde du graphique
 ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.S.png", width = 5, height = 8, dpi = 100)
@@ -204,45 +230,34 @@ sprintf("[G_T_M_S] Done!")
 
 
 
+
 ## [G_T_M] ############################### 
 print("[G_T_M]...")
 
 # Manipulation des donnees
-G.T.M <- sourceData %>%
-  select(TicketId, MoisVenteId)
-
-G.T.M <- aggregate(G.T.M$TicketId, by=list(G.T.M$MoisVenteId), FUN=length) %>%
-         rename(MoisVenteId=Group.1, n=x)
-
-typeof(G.T.M)
-
-hist(G.T.M)
-
-G.T.M[1] <- lapply(G.T.M[1], as.numeric)
-typeof(G.T.M$MoisVenteId)
+mean <- G.T.M.M$mean
+sd <- G.T.M.S$sd
+G.T.M <- data.frame(mean, sd)
 
 # Creation du graphique
-plot <- ggplot(data = G.T.M, aes(x = as.numeric(MoisVenteId), y = n))+
-  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
+df <- data.frame(x=1, y=G.T.M$mean)
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
+  geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
   labs(
-    title = "Nombre total de tickets par mois",
+    title = "Nombre moyen de tickets par mois (avec deviation standard)",
     subtitle = "Donnees du dataset KaDo",
-    x = "Mois",
     y = "Nombre de tickets"
   )+
-  stat_summary()+
   scale_y_continuous(labels = scales::comma)+
-  scale_x_continuous(
-    breaks = moisIds,
-    label = moisNoms
-  )
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.png", width = 12, height = 8, dpi = 100)
-print("[G_T_M] Done!")
-
-
-
+ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.png", width = 7, height = 8, dpi = 100)
+sprintf("[G_T_M] Done!")
 
 
 
