@@ -2,3 +2,4 @@
 03_output/*.csv
 
 .DS_Store
+03_output/*.png
