@@ -222,10 +222,24 @@ mean(bestSunItems[["PRIX"]])
 #######################################################
 # Getting the mean and STD number of items per client #
 #######################################################
-itemsBoughtByClients = as.data.frame(sort(table(kado_csv$CLI_ID), decreasing =TRUE ))
+itemsBoughtByClients = as.data.frame(sort(table(kado_csv$CLI_ID), decreasing=TRUE))
 colnames(itemsBoughtByClients)[1] <- "ClientID"
 colnames(itemsBoughtByClients)[2] <- "ItemsBought"
 mean(itemsBoughtByClients[["ItemsBought"]])
+sd(itemsBoughtByClients[["ItemsBought"]])
+
+####################
+# Mean price spend #
+####################
+
+
+
+
+
+
+
+
+
 
 
 
