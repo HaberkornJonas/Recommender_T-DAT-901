@@ -11,6 +11,7 @@ library(Hmisc)
 
 
 ## STATIC VALUES ###############################
+projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -19,7 +20,7 @@ moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
 ## READING DATASET ###############################
 print("Lecture des donees...")
 
-sourceData <- read_csv("C:/Users/jonas/Desktop/T-DAT/01_data/KaDo.csv") %>%
+sourceData <- read_csv(paste(projectPath, "01_data/KaDo.csv", sep="")) %>%
               rename(
                   TicketId = TICKET_ID,
                   MoisVenteId = MOIS_VENTE,
@@ -36,6 +37,10 @@ print("Done!")
 
 
 
+
+
+####  [G] General habits and facts ####
+####  [G_T] General tickets stats  ####
 ## [G_T_Y_T] ############################### 
 print("[G_T_Y_T]...")
 
@@ -47,7 +52,7 @@ G.T.Y.T <- sourceData$TicketId %>%                                          # Us
 colnames(G.T.Y.T) <- c("n")                                                 # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.Y.T, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.Y.T.csv")
+write_csv(G.T.Y.T, paste(projectPath, "03_output/G.T.Y.T.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G.T.Y.T[1,1])
@@ -66,7 +71,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.Y.T.png", width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G.T.Y.T.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_Y_T] There was a total of %s tickets for this year.", G.T.Y.T[1,1])
 
 
@@ -87,7 +92,7 @@ G.T.M.T <- aggregate(G.T.M.T$TicketId, by=list(G.T.M.T$MoisVenteId), FUN=length)
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 
 # Sauvegarde des donnees
-write_csv(G.T.M.T, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.T.csv")
+write_csv(G.T.M.T, paste(projectPath, "03_output/G.T.M.T.csv", sep=""))
 
 
 
@@ -127,7 +132,7 @@ plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.T.png", width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G.T.M.T.png", sep=""), width = 12, height = 8, dpi = 100)
 print("[G_T_M_T] Done!")
 
 
@@ -153,7 +158,7 @@ G.T.M.M <- mean(G.T.M.M$n) %>%                                                  
 colnames(G.T.M.M) <- c("mean")                                                         # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.M.M, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.M.csv")
+write_csv(G.T.M.M, paste(projectPath, "03_output/G.T.M.M.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G.T.M.M[1,1])
@@ -172,7 +177,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.M.png", width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G.T.M.M.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_M] Done!")
 
 
@@ -198,7 +203,7 @@ G.T.M.S <- sd(G.T.M.S$n) %>%                                                    
 colnames(G.T.M.S) <- c("sd")                                                           # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.M.S, "C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.S.csv")
+write_csv(G.T.M.S, paste(projectPath, "03_output/G.T.M.S.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G.T.M.S[1,1])
@@ -217,7 +222,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.S.png", width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G.T.M.S.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_S] Done!")
 
 
@@ -256,7 +261,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave("C:/Users/jonas/Desktop/T-DAT/03_output/G.T.M.png", width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G.T.M.png", sep=""), width = 7, height = 8, dpi = 100)
 sprintf("[G_T_M] Done!")
 
 
@@ -267,9 +272,440 @@ sprintf("[G_T_M] Done!")
 
 
 
-################################
+
+
+####  [G_S] General spendings stats ####
+## [G_S_Y_T] ############################### 
+# TODO
+
+
+## [G_S_M_T] ############################### 
+# TODO
+
+
+## [G_S_M_M] ############################### 
+# TODO
+
+
+## [G_S_M_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_P] General Products stats ####
+## [G_P_Y_T] ############################### 
+# TODO
+
+
+## [G_P_M_T] ############################### 
+# TODO
+
+
+## [G_P_M_M] ############################### 
+# TODO
+
+
+## [G_P_M_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_F] General Families stats ####
+## [G_F_T] ############################### 
+# TODO
+
+
+## [G_F_Y_T] ############################### 
+# TODO
+
+
+## [G_F_M_T] ############################### 
+# TODO
+
+
+## [G_F_M_M] ############################### 
+# TODO
+
+
+## [G_F_M_S] ############################### 
+# TODO
+
+
+## [G_F_P_M] ############################### 
+# TODO
+
+
+## [G_F_P_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_U] General Univers stats ####
+## [G_U_T] ############################### 
+# TODO
+
+
+## [G_U_Y_T] ############################### 
+# TODO
+
+
+## [G_U_M_T] ############################### 
+# TODO
+
+
+## [G_U_M_M] ############################### 
+# TODO
+
+
+## [G_U_M_S] ############################### 
+# TODO
+
+
+## [G_U_P_M] ############################### 
+# TODO
+
+
+## [G_U_P_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_M] General Maille stats ####
+## [G_M_T] ############################### 
+# TODO
+
+
+## [G_M_Y_T] ############################### 
+# TODO
+
+
+## [G_M_M_T] ############################### 
+# TODO
+
+
+## [G_M_M_M] ############################### 
+# TODO
+
+
+## [G_M_M_S] ############################### 
+# TODO
+
+
+## [G_M_P_M] ############################### 
+# TODO
+
+
+## [G_M_P_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_MF] General Most favorites Products ####
+## [G_MF_Y] ############################### 
+# TODO
+
+
+## [G_MF_M] ############################### 
+# TODO
+
+
+## [G_MF_F] ############################### 
+# TODO
+
+
+
+
+
+
+
+####  [G_C] General Customer stats ####
+####  [G_C_T] General Customer Ticket stats ####
+## [G_C_T_Y_M] ############################### 
+# TODO
+
+
+## [G_C_T_Y_S] ############################### 
+# TODO
+
+
+## [G_C_T_M_M] ############################### 
+# TODO
+
+
+## [G_C_T_M_S] ############################### 
+# TODO
+
+
+
+
+
+####  [G_C_S] General Customer Spendings stats ####
+## [G_C_S_Y_M] ############################### 
+# TODO
+
+
+## [G_C_S_Y_S] ############################### 
+# TODO
+
+
+## [G_C_S_M_M] ############################### 
+# TODO
+
+
+## [G_C_S_M_S] ############################### 
+# TODO
+
+
+
+
+####  [G_C_S_T] General Customer Spendings per ticket stats ####
+## [G_C_S_T_Y_M] ############################### 
+# TODO
+
+
+## [G_C_S_T_Y_S] ############################### 
+# TODO
+
+
+## [G_C_S_T_M_M] ############################### 
+# TODO
+
+
+## [G_C_S_T_M_S] ############################### 
+# TODO
+
+
+
+
+####  [G_C_S_F] General Customer Spendings per product family stats ####
+## [G_C_S_F_Y_M] ############################### 
+# TODO
+
+
+## [G_C_S_F_Y_S] ############################### 
+# TODO
+
+
+## [G_C_S_F_M_M] ############################### 
+# TODO
+
+
+## [G_C_S_F_M_S] ############################### 
+# TODO
+
+
+
+
+
+
+####  [G_C_F] General product family stats ####
+## [G_C_F_Y_M] ############################### 
+# TODO
+
+
+## [G_C_F_Y_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+
+####  [C] Customer habits and facts ####
+####  [C_T] Customer tickets stats  ####
+## [C_T_Y_T] ############################### 
+# TODO
+
+
+## [C_T_M_T] ############################### 
+# TODO
+
+
+## [C_T_M_M] ############################### 
+# TODO
+
+
+## [C_T_M_S] ############################### 
+# TODO
+
+
+
+
+
+
+####  [C_S] Customer spending stats  ####
+## [C_S_Y_T] ############################### 
+# TODO
+
+
+## [C_S_M_T] ############################### 
+# TODO
+
+
+## [C_S_M_M] ############################### 
+# TODO
+
+
+## [C_S_M_S] ############################### 
+# TODO
+
+
+## [C_S_T_M] ############################### 
+# TODO
+
+
+## [C_S_T_S] ############################### 
+# TODO
+
+
+## [C_S_P_M] ############################### 
+# TODO
+
+
+## [C_S_P_S] ############################### 
+# TODO
+
+
+
+
+
+
+
+
+####  [C_P] Customer Products bought stats  ####
+## [C_P_Y_T] ############################### 
+# TODO
+
+
+## [C_P_M_T] ############################### 
+# TODO
+
+
+## [C_P_M_M] ############################### 
+# TODO
+
+
+
+
+
+####  [C_C] Customer characteristics  ####
+## [C_C_G] ############################### 
+# TODO
+
+
+
+
+
+
+####  [C_F] Customer product families stats  ####
+## [C_F_Y_T] ############################### 
+# TODO
+
+
+## [C_F_M_T] ############################### 
+# TODO
+
+
+## [C_F_M_M] ############################### 
+# TODO
+
+
+## [C_F_M_S] ############################### 
+# TODO
+
+
+
+
+####  [C_F_S] Customer spendings per product families stats  ####
+## [C_F_S_Y_M] ############################### 
+# TODO
+
+
+## [C_F_S_Y_S] ############################### 
+# TODO
+
+
+
+
+
+
+####  [C_F_MF] Customer most favorite product per families stats  ####
+## [C_F_MF_Y] ############################### 
+# TODO
+
+
+
+
+
+####  [C_F_LF] Customer least favorite product per families stats  ####
+## [C_F_LF_Y] ############################### 
+# TODO
+
+
+
+
+
+####  [C_MF] Customer most favorite product stats  ####
+## [C_MF_Y] ############################### 
+# TODO
+
+
+## [C_MF_M] ############################### 
+# TODO
+
+
+
+
+
+####  [C_LF] Customer least favorite product stats  ####
+## [C_LF_Y] ############################### 
+# TODO
+
+
+## [C_LF_M] ############################### 
+# TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## OLD STATS - Will be deleted ####
+
 ##   TOTAL DE VENTES PAR MOIS 
-################################
 print("Analyse du nombre total de ventes par mois...")
 
 # Manipulation des donnees
@@ -303,9 +739,7 @@ ggsave("03_output/01_ventes_total_par_mois.png", width = 10, height = 8, dpi = 1
 
 
 
-################################################
 ##   TOTAL DE VENTES PAR FAMILLE ET PAR MOIS 
-################################################
 print("Analyse du nombre total de ventes par mois par familles de produits...")
 
 # Manipulation des données
@@ -377,11 +811,3 @@ plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, 
   )+
   facet_wrap(~famille_produit)
 ggsave("03_output/02_04_ventes_par_mois_pour_chaque_famille.png", width = 10, height = 8, dpi = 100)
-
-
-
-
-
-################################################
-##   VENTES DE PRODUITS PAR MOIS 
-################################################
