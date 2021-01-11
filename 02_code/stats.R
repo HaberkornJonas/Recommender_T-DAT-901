@@ -5,6 +5,7 @@ library(ggplot2)
 library(forcats)
 library(scales)
 library(Hmisc)
+library(tidyr)
 
 ## INFO: 
 ##    - ggplot tuto: https://r4ds.had.co.nz/data-visualisation.html
@@ -536,21 +537,80 @@ sprintf("[G_T_M] Done!")
 ####  [C] Customer habits and facts ####
 ####  [C_T] Customer tickets stats  ####
 ## [C_T_Y_T] ############################### 
-# TODO
+print("[C_T_Y_T]...")
+
+# Manipulation des donnees
+C.T.Y.T <- sourceData %>%                                          
+  select(TicketId, ClientId) %>%                                   # Keep TicketId and ClientId columns
+  group_by(ClientId) %>%                                           # Group by ClientId
+  distinct() %>%                                                   # Keep only distict values (clientID, TicketId couple)
+  tally()                                                          # Make a count of the number of different tickets per customer
+
+# Sauvegarde des donnees
+write_csv(C.T.Y.T, paste(projectPath, "03_output/C.T.Y.T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[G_T_Y_T] Done!")
+
+
 
 
 ## [C_T_M_T] ############################### 
-# TODO
+print("[C_T_M_T]...")
+
+# Manipulation des donnees
+C.T.M.T <- sourceData %>%                                          
+  select(TicketId, ClientId, MoisVenteId) %>%                      # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                              # Group by ClientId and MoisVenteId
+  distinct() %>%                                                   # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally()                                                          # Make a count of the number of different tickets per customer per month
+
+# Sauvegarde des donnees
+write_csv(C.T.M.T, paste(projectPath, "03_output/C.T.M.T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C.T.M.T] Done!")
+
+
 
 
 ## [C_T_M_M] ############################### 
-# TODO
+print("[C_T_M_M]...")
+
+# Manipulation des donnees
+C.T.M.M <- sourceData %>%                                          
+  select(TicketId, ClientId, MoisVenteId) %>%                         # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                                 # Group by ClientId and MoisVenteId
+  distinct() %>%                                                      # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally() %>%                                                         # Make a count of the number of different tickets per customer per month
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))   # Calculate mean number of tickets per month for each customer
+
+# Sauvegarde des donnees
+write_csv(C.T.M.M, paste(projectPath, "03_output/C.T.M.M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C.T.M.M] Done!")
+
+
 
 
 ## [C_T_M_S] ############################### 
-# TODO
+print("[C_T_M_S]...")
+
+# Manipulation des donnees
+C.T.M.S <- sourceData %>%                                          
+  select(TicketId, ClientId, MoisVenteId) %>%                      # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                              # Group by ClientId and MoisVenteId
+  distinct() %>%                                                   # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally() %>%                                                      # Make a count of the number of different tickets per customer per month
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))    # Calculate mean number of tickets per month for each customer
 
 
+# Sauvegarde des donnees
+write_csv(C.T.M.S, paste(projectPath, "03_output/C.T.M.S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C.T.M.S] Done!")
 
 
 
