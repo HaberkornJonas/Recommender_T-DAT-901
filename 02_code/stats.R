@@ -615,37 +615,159 @@ sprintf("[C.T.M.S] Done!")
 
 
 
+
+
+
+
 ####  [C_S] Customer spending stats  ####
 ## [C_S_Y_T] ############################### 
-# TODO
+print("[C_S_Y_T]...")
+
+# Manipulation des donnees
+C.S.Y.T <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                   # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                          # Group by ClientId
+  summarise(n=round(sum(PrixNet), digits=2))                      # Calculate spendings of the year
+  
+# Sauvegarde des donnees
+write_csv(C.S.Y.T, paste(projectPath, "03_output/C.S.Y.T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C.S.Y.T] Done!")
+
+
 
 
 ## [C_S_M_T] ############################### 
-# TODO
+print("[C_S_M_T]...")
+
+# Manipulation des donnees
+C_S_M_T <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                      # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                             # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2))                      # Calculate spendings of each month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_T, paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_T] Done!")
+
+
 
 
 ## [C_S_M_M] ############################### 
-# TODO
+print("[C_S_M_M]...")
+
+# Manipulation des donnees
+C_S_M_M <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each month per customer
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean spendings per month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_M, paste(projectPath, "03_output/C_S_M_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_M] Done!")
+
+
 
 
 ## [C_S_M_S] ############################### 
-# TODO
+print("[C_S_M_S]...")
+
+# Manipulation des donnees
+C_S_M_S <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each month per customer
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate standard deviation of spendings per month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_S, paste(projectPath, "03_output/C_S_M_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_S] Done!")
+
+
 
 
 ## [C_S_T_M] ############################### 
-# TODO
+print("[C_S_T_M]...")
+
+# Manipulation des donnees
+C_S_T_M <- sourceData %>%                                          
+  select(ClientId, TicketId, PrixNet) %>%                                      # Keep TicketId, PrixNet and ClientId columns
+  group_by(ClientId, TicketId) %>%                                             # Group by ClientId and TicketId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each tickets
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(mean=round(mean(n), digits=2))                                     # Calculate mean spendings per ticket per customer
+  
+# Sauvegarde des donnees
+write_csv(C_S_T_M, paste(projectPath, "03_output/C_S_T_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_T_M] Done!")
+
+
 
 
 ## [C_S_T_S] ############################### 
-# TODO
+print("[C_S_T_S]...")
+
+# Manipulation des donnees
+C_S_T_S <- sourceData %>%                                          
+  select(ClientId, TicketId, PrixNet) %>%                                      # Keep TicketId, PrixNet and ClientId columns
+  group_by(ClientId, TicketId) %>%                                             # Group by ClientId and TicketId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each tickets
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(sd=round(sd(n), digits=2))                                         # Calculate standard deviation of spendings per ticket per customer
+C_S_T_S[is.na(C_S_T_S)] <- 0                                                   # Replacing NA values with 0 for customers having only one ticket
+
+# Sauvegarde des donnees
+write_csv(C_S_T_S, paste(projectPath, "03_output/C_S_T_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_T_S] Done!")
+
+
 
 
 ## [C_S_P_M] ############################### 
-# TODO
+print("[C_S_P_M]...")
+
+# Manipulation des donnees
+C_S_P_M <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(mean=round(mean(PrixNet), digits=2))                               # Calculate mean spendings per product per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_P_M, paste(projectPath, "03_output/C_S_P_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_P_M] Done!")
+
+
 
 
 ## [C_S_P_S] ############################### 
-# TODO
+print("[C_S_P_S]...")
+
+# Manipulation des donnees
+C_S_P_S <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(sd=round(sd(PrixNet), digits=2))                                   # Calculate mean spendings per product per customer
+C_S_P_S[is.na(C_S_P_S)] <- 0                                                   # Replacing NA values with 0 for customers that bought only one product
+
+# Sauvegarde des donnees
+write_csv(C_S_P_S, paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_P_S] Done!")
 
 
 
