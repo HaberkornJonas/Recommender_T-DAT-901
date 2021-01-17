@@ -982,15 +982,34 @@ sprintf("[C_F_M_S] Done!")
 
 ####  [C_F_MF] Customer most favorite product per families stats  ####
 ## [C_F_MF_Y] ############################### 
-# TODO
+print("[C_F_MF_Y]...")
 
+# Manipulation des donnees
+C_F_MF_Y <- sourceData %>%                                          
+  select(ClientId, Famille, Libelle) %>%                                       # Keep ClientId, Famille and Libelle columns
+  group_by(ClientId, Famille, Libelle) %>%                                     # Group by ClientId, Famille and Libelle
+  tally() %>%                                                                  # Make a count of the number of time each product has been bought per customer
+  group_by(ClientId, Famille) %>%                                              # Grouping by Client and Famille
+  slice_max(n=3, order_by=n, with_ties=F) %>%                                  # Keeping only the top 3 most bought items
+  merge(Produits, by="Libelle", sort=F) %>%                                    # Matching Libelle to its ProductId
+  subset(select= -c(Libelle)) %>%                                              # Removing Libelle column to save memory and only use the assigned ProductId
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille)) %>%                                              # Removing Famille column to save memory and only use the assigned FamilleId
+  arrange(ClientId, Famille, n)                                                # Arranging dataframe by ClientId, FamilleId, number of time product has been bought
+
+# Sauvegarde des donnees
+write_csv(C_F_MF_Y, paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_MF_Y] Done!")
 
 
 
 
 ####  [C_F_LF] Customer least favorite product per families stats  ####
 ## [C_F_LF_Y] ############################### 
-# TODO
+# TODO (Not possible)
+
 
 
 
@@ -998,11 +1017,31 @@ sprintf("[C_F_M_S] Done!")
 
 ####  [C_MF] Customer most favorite product stats  ####
 ## [C_MF_Y] ############################### 
-# TODO
+print("[C_MF_Y]...")
+
+# Manipulation des donnees
+C_MF_Y <- sourceData %>%                                          
+  select(ClientId, Libelle) %>%                                                # Keep ClientId and Libelle columns
+  group_by(ClientId, Libelle) %>%                                              # Group by ClientId and Libelle
+  tally() %>%                                                                  # Make a count of the number of time each product has been bought per customer
+  group_by(ClientId) %>%                                                       # Grouping by Client
+  slice_max(n=3, order_by=n, with_ties=F) %>%                                  # Keeping only the top 3 most bought items
+  merge(Produits, by="Libelle", sort=F) %>%                                    # Matching Libelle to its ProductId
+  subset(select= -c(Libelle)) %>%                                              # Removing Libelle column to save memory and only use the assigned ProductId
+  arrange(ClientId, n)                                                         # Arranging dataframe by ClientId and number of time product has been bought
+
+# Sauvegarde des donnees
+write_csv(C_MF_Y, paste(projectPath, "03_output/C_MF_Y.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_MF_Y] Done!")
+
+
 
 
 ## [C_MF_M] ############################### 
-# TODO
+# TODO (Needed ?)
+
 
 
 
@@ -1010,11 +1049,9 @@ sprintf("[C_F_M_S] Done!")
 
 ####  [C_LF] Customer least favorite product stats  ####
 ## [C_LF_Y] ############################### 
-# TODO
-
-
+# TODO (Not possible)
 ## [C_LF_M] ############################### 
-# TODO
+# TODO (Not possible)
 
 
 
