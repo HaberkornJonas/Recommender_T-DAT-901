@@ -68,7 +68,7 @@ cl <- kmeans(S_S_T[,-1], 8, iter.max=8)                                         
 plot <- fviz_cluster(cl,
                      S_S_T[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur dépenses par ticket",
+                     main="Repartition des clients par leur depenses par ticket",
                      xlab="Moyenne des depenses par ticket",
                      ylab="Ecart-type des depenses par ticket")
 #print(plot)
@@ -95,11 +95,11 @@ C_S_P_S <- read_csv(paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
 S_S_I <- C_S_P_M %>%
   merge(C_S_P_S, by="ClientId", sort=F)  
 
-cl <- kmeans(S_S_I[,-1], 5, iter.max=8)                                                                           # Calculate kmeans based on mean and standard deviation of price per product per customer 
+cl <- kmeans(S_S_I[,-1], 8, iter.max=8)                                                                           # Calculate kmeans based on mean and standard deviation of price per product per customer 
 plot <- fviz_cluster(cl,
                      S_S_I[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur dépenses par produit",
+                     main="Repartition des clients par leur depenses par produit",
                      xlab="Moyenne des depenses par produit",
                      ylab="Ecart-type des depenses par produit")
 #print(plot)
