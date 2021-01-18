@@ -354,7 +354,7 @@ G_F_Y_T_Plot <- ggplot(G_F_Y_T,
                aes(x=Famille, y=Ventes)) +
         geom_bar(stat="identity") +
         labs(
-          title = "Vente sur l'année par Famille"
+          title = "Vente sur l'annee par Famille"
         )
 
 print(G_F_Y_T_Plot)
@@ -385,7 +385,7 @@ bestFaceCareItems[, "Prix"] <- NA
 bestSunItems[, "Prix"] <- NA
 
 # Applying a correct price for every product in the capillary family
-for (product in bestCapillaryItems$Libellé)
+for (product in bestCapillaryItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -394,7 +394,7 @@ for (product in bestCapillaryItems$Libellé)
 }
 
 # Applying a correct price for every product in the hygiene family
-for (product in bestHygieneItems$Libellé)
+for (product in bestHygieneItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -403,7 +403,7 @@ for (product in bestHygieneItems$Libellé)
 }
 
 # Applying a correct price for every product in the makeup family
-for (product in bestMakeupItems$Libellé)
+for (product in bestMakeupItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -412,7 +412,7 @@ for (product in bestMakeupItems$Libellé)
 }
 
 # Applying a correct price for every product in the parfume family
-for (product in bestParfumItems$Libellé)
+for (product in bestParfumItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -421,7 +421,7 @@ for (product in bestParfumItems$Libellé)
 }
 
 # Applying a correct price for every product in the body care family
-for (product in bestBodyCareItems$Libellé)
+for (product in bestBodyCareItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -430,7 +430,7 @@ for (product in bestBodyCareItems$Libellé)
 }
 
 # Applying a correct price for every product in the face care family
-for (product in bestFaceCareItems$Libellé)
+for (product in bestFaceCareItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -439,7 +439,7 @@ for (product in bestFaceCareItems$Libellé)
 }
 
 # Applying a correct price for every product in the sun care family
-for (product in bestSunItems$Libellé)
+for (product in bestSunItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
@@ -634,49 +634,49 @@ print(salesByProductYear_Plot)
 # Hygiene Family #
 hygieneFam = table(sourceData[sourceData$Famille=="HYGIENE", ]$Libelle)
 bestHygieneItems = as.data.frame(hygieneFam[order(hygieneFam, decreasing = TRUE)])
-colnames(bestHygieneItems)[1] <- "Libellé"
+colnames(bestHygieneItems)[1] <- "Libelle"
 colnames(bestHygieneItems)[2] <- "Ventes"
 write_csv(bestHygieneItems, paste(projectPath, "03_output/bestHygieneItems.csv", sep=""))
 
 # Capillary Family #
 capillaryFam = table(sourceData[sourceData$Famille=="CAPILLAIRES", ]$Libelle)
 bestCapillaryItems = as.data.frame(capillaryFam[order(capillaryFam, decreasing = TRUE)])
-colnames(bestCapillaryItems)[1] <- "Libellé"
+colnames(bestCapillaryItems)[1] <- "Libelle"
 colnames(bestCapillaryItems)[2] <- "Ventes"
 write_csv(bestCapillaryItems, paste(projectPath, "03_output/bestCapillaryItems.csv", sep=""))
 
 # Makeup Family #
 makeupFam = table(sourceData[sourceData$Famille=="MAQUILLAGE", ]$Libelle)
 bestMakeupItems = as.data.frame(makeupFam[order(makeupFam, decreasing = TRUE)])
-colnames(bestMakeupItems)[1] <- "Libellé"
+colnames(bestMakeupItems)[1] <- "Libelle"
 colnames(bestMakeupItems)[2] <- "Ventes"
 write_csv(bestMakeupItems, paste(projectPath, "03_output/bestMakeupItems.csv", sep=""))
 
 # Parfum Family #
 parfumFam = table(sourceData[sourceData$Famille=="PARFUMAGE", ]$Libelle)
 bestParfumItems = as.data.frame(parfumFam[order(parfumFam, decreasing = TRUE)])
-colnames(bestParfumItems)[1] <- "Libellé"
+colnames(bestParfumItems)[1] <- "Libelle"
 colnames(bestParfumItems)[2] <- "Ventes"
 write_csv(bestParfumItems, paste(projectPath, "03_output/bestParfumItems.csv", sep=""))
 
 # Body Care Family #
 bodyCareFam = table(sourceData[sourceData$Famille=="SOINS DU CORPS", ]$Libelle)
 bestBodyCareItems = as.data.frame(bodyCareFam[order(bodyCareFam, decreasing = TRUE)])
-colnames(bestBodyCareItems)[1] <- "Libellé"
+colnames(bestBodyCareItems)[1] <- "Libelle"
 colnames(bestBodyCareItems)[2] <- "Ventes"
 write_csv(bestBodyCareItems, paste(projectPath, "03_output/bestBodyCareItems.csv", sep=""))
 
 # Face Care Family #
 faceCareFam = table(sourceData[sourceData$Famille=="SOINS DU VISAGE", ]$Libelle)
 bestFaceCareItems = as.data.frame(faceCareFam[order(faceCareFam, decreasing = TRUE)])
-colnames(bestFaceCareItems)[1] <- "Libellé"
+colnames(bestFaceCareItems)[1] <- "Libelle"
 colnames(bestFaceCareItems)[2] <- "Ventes"
 write_csv(bestFaceCareItems, paste(projectPath, "03_output/bestFaceCareItems.csv", sep=""))
 
 # Sun Family #
 sunFam = table(sourceData[sourceData$Famille=="SOLAIRES", ]$Libelle)
 bestSunItems = as.data.frame(sunFam[order(sunFam, decreasing = TRUE)])
-colnames(bestSunItems)[1] <- "Libellé"
+colnames(bestSunItems)[1] <- "Libelle"
 colnames(bestSunItems)[2] <- "Ventes"
 write_csv(bestSunItems, paste(projectPath, "03_output/bestSunItems.csv", sep=""))
 
@@ -1186,7 +1186,7 @@ C_F_M_S <- sourceData %>%
   group_by(ClientId, Famille, MoisVenteId) %>%                                 # Group by ClientId, MoisVenteId and Famille
   tally() %>%                                                                  # Make a count of the number of products per family per month per customer
   group_by(ClientId, Famille) %>%                                              # Group by ClientId, MoisVenteId and Famille
-  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2)) %>%            # Calculate standard deviation of product bouught per famille and per month for each customer
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2)) %>%            # Calculate standard deviation of product bought per famille and per month for each customer
   merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
   subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
 
@@ -1196,6 +1196,28 @@ write_csv(C_F_M_S, paste(projectPath, "03_output/C_F_M_S.csv", sep=""))
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_M_S] Done!")
 
+
+
+
+
+## [C_F_Y_MF] ############################### 
+print("[C_F_Y_MF]...")
+
+# Manipulation des donnees
+C_F_Y_MF <- sourceData %>%                                          
+  select(ClientId, Famille) %>%                                                # Keep ClientId and Famille columns
+  group_by(ClientId, Famille) %>%                                              # Group by ClientId and Famille
+  tally() %>%                                                                  # Make a count of the number of products per family per customer
+  group_by(ClientId) %>%                                                       # Grouping by Client
+  slice_max(n=1, order_by=n, with_ties=F) %>%                                  # Keeping only the most bought product familly
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
+
+# Sauvegarde des donnees
+write_csv(C_F_Y_MF, paste(projectPath, "03_output/C_F_Y_MF.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_Y_MF] Done!")
 
 
 
@@ -1323,7 +1345,7 @@ if(FALSE){
     geom_bar(stat="identity", fill="steelblue3", color="steelblue3")+
     labs(
       title = "Nombre total de ventes par mois",
-      subtitle = "Données du dataset KaDo",
+      subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Nombre de ventes"
     )+
@@ -1372,7 +1394,7 @@ if(FALSE){
   plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, y = nombre_ventes, fill=famille_produit))+
     geom_bar(stat="identity", position="fill")+
     labs(
-      title = "Répartition des ventes par mois par familles",
+      title = "Repartition des ventes par mois par familles",
       subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Nombre de ventes",
