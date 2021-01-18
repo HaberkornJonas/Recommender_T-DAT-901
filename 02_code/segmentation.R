@@ -33,13 +33,15 @@ C_T_M_S <- read_csv(paste(projectPath, "03_output/C_T_M_S.csv", sep=""))
 S_R <- C_T_M_M %>%
   merge(C_T_M_S, by="ClientId", sort=F)  
 
-cl <- kmeans(S_R[,-1], 5, iter.max=20)                                         # Calculate kmeans based on mean number and standard deviation of tickets per month per customer 
+cl <- kmeans(S_R[,-1], 5, iter.max=20)                                                                            # Calculate kmeans based on mean number and standard deviation of tickets per month per customer 
 plot <- fviz_cluster(cl,
                      S_R[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur regularite")
-print(plot)
-S_R <- cbind(S_R, ClusterId=cl$cluster)                                        # Bind ClientId and data to ClusterId                        
+                     main="Repartition des clients par leur regularite",
+                     xlab="Moyenne de tickets par mois",
+                     ylab="Ecart-type de tickets par mois")
+#print(plot)
+S_R <- cbind(S_R, ClusterId=cl$cluster)                                                                           # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
 write_csv(S_R, paste(projectPath, "03_output/S_R.csv", sep=""))
@@ -62,13 +64,15 @@ C_S_T_S <- read_csv(paste(projectPath, "03_output/C_S_T_S.csv", sep=""))
 S_S_T <- C_S_T_M %>%
   merge(C_S_T_S, by="ClientId", sort=F)  
 
-cl <- kmeans(S_S_T[,-1], 8, iter.max=8)                                       # Calculate kmeans based on mean number and standard deviation of the price per tickets per month per customer 
+cl <- kmeans(S_S_T[,-1], 8, iter.max=8)                                                                           # Calculate kmeans based on mean number and standard deviation of the price per tickets per month per customer 
 plot <- fviz_cluster(cl,
                      S_S_T[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur dépenses par ticket")
-print(plot)
-S_S_T <- cbind(S_S_T, ClusterId=cl$cluster)                                    # Bind ClientId and data to ClusterId                        
+                     main="Repartition des clients par leur dépenses par ticket",
+                     xlab="Moyenne des depenses par ticket",
+                     ylab="Ecart-type des depenses par ticket")
+#print(plot)
+S_S_T <- cbind(S_S_T, ClusterId=cl$cluster)                                                                       # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
 write_csv(S_S_T, paste(projectPath, "03_output/S_S_T.csv", sep=""))
@@ -91,13 +95,15 @@ C_S_P_S <- read_csv(paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
 S_S_I <- C_S_P_M %>%
   merge(C_S_P_S, by="ClientId", sort=F)  
 
-cl <- kmeans(S_S_I[,-1], 5, iter.max=8)                                        # Calculate kmeans based on mean and standard deviation of price per product per customer 
+cl <- kmeans(S_S_I[,-1], 5, iter.max=8)                                                                           # Calculate kmeans based on mean and standard deviation of price per product per customer 
 plot <- fviz_cluster(cl,
                      S_S_I[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur dépenses par produit")
-print(plot)
-S_S_I <- cbind(S_S_I, ClusterId=cl$cluster)                                    # Bind ClientId and data to ClusterId                        
+                     main="Repartition des clients par leur dépenses par produit",
+                     xlab="Moyenne des depenses par produit",
+                     ylab="Ecart-type des depenses par produit")
+#print(plot)
+S_S_I <- cbind(S_S_I, ClusterId=cl$cluster)                                                                       # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
 write_csv(S_S_I, paste(projectPath, "03_output/S_S_I.csv", sep=""))
@@ -124,9 +130,11 @@ cl <- kmeans(S_F[,-c(1,2)], count(distinct(S_F, FamilleId))$n, iter.max=count(di
 plot <- fviz_cluster(cl,
                      S_F[,-1], 
                      geom="point",
-                     main="Repartition des clients par leur famille de produits favorite")
-print(plot)
-S_F <- cbind(S_F, ClusterId=cl$cluster)                                        # Bind ClientId and data to ClusterId   
+                     main="Repartition des clients par leur famille de produits favorite",
+                     xlab="Nombre de produit achetes",
+                     ylab="ID de la famille de produit")
+#print(plot)
+S_F <- cbind(S_F, ClusterId=cl$cluster)                                                                           # Bind ClientId and data to ClusterId   
 
 # Sauvegarde des donnees
 write_csv(S_F, paste(projectPath, "03_output/S_F.csv", sep=""))
