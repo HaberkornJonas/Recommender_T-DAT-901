@@ -95,27 +95,6 @@ G.T.M.T <- aggregate(G.T.M.T$TicketId, by=list(G.T.M.T$MoisVenteId), FUN=length)
 # Sauvegarde des donnees
 write_csv(G.T.M.T, paste(projectPath, "03_output/G.T.M.T.csv", sep=""))
 
-
-
-# Creation du graphique
-df <- data.frame(x = 1, y = G.T.M.T[1,1])
-plot <-  ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y=n))+
-  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
-  geom_errorbar(aes(ymin=n-sd(G.T.M.T$n), ymax=n+sd(G.T.M.T$n)), width=.2,
-                position=position_dodge(.9))+
-  labs(
-    title = "Nombre total de tickets",
-    subtitle = "Donnees du dataset KaDo",
-    x = "Annee",
-    y = "Nombre de tickets"
-  )+
-  scale_y_continuous(labels = scales::comma)+
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-print(plot)
-
-
 # Creation du graphique
 plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
   geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
