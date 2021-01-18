@@ -327,7 +327,8 @@ sprintf("[G_T_M] Done!")
 #### Products dataset creation ########
 
 productsData = subset(sourceData, select = -c(TicketId, MoisVenteId, ClientId, PrixNet))
-productsData <- as.data.frame(unique(G_F_T))
+productsData <- as.data.frame(unique(productsData))
+productsData[, "PrixNet"] <- NA
 
 ## [G_F_T] ############################### 
 productsByFamily = as.data.frame(table(productsData$Famille))
@@ -371,7 +372,7 @@ print(G_F_Y_T_Plot)
 
 
 ## [G_F_P_M] ###############################
-# Gettings all the sells for the products and removing useless colums
+# Gettings all the sells for the products and removing useless columns
 productsWithPriceDF = subset(sourceData, select = -c(TicketId, MoisVenteId, ClientId))
 
 # Adding Prix Column to our existings dataframes for the items
@@ -389,6 +390,7 @@ for (product in bestCapillaryItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestCapillaryItems[bestCapillaryItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the hygiene family
@@ -397,6 +399,7 @@ for (product in bestHygieneItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestHygieneItems[bestHygieneItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the makeup family
@@ -405,6 +408,7 @@ for (product in bestMakeupItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestMakeupItems[bestMakeupItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the parfume family
@@ -413,6 +417,7 @@ for (product in bestParfumItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestParfumItems[bestParfumItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the body care family
@@ -421,6 +426,7 @@ for (product in bestBodyCareItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestBodyCareItems[bestBodyCareItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the face care family
@@ -429,6 +435,7 @@ for (product in bestFaceCareItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestFaceCareItems[bestFaceCareItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
 # Applying a correct price for every product in the sun care family
@@ -437,9 +444,10 @@ for (product in bestSunItems$Libellé)
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
   bestSunItems[bestSunItems$Libellé==product,]$Prix = productFrequentPrice
+  productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
-# Means of prices of items in each categories
+# Means of prices of items in each Family
 mean(bestCapillaryItems[["PRIX"]])
 mean(bestHygieneItems[["PRIX"]])
 mean(bestMakeupItems[["PRIX"]])
@@ -449,12 +457,13 @@ mean(bestFaceCareItems[["PRIX"]])
 mean(bestSunItems[["PRIX"]])
 
 ## [G_F_P_S] ############################### 
-# TODO
-
-
-
-
-
+sd(bestCapillaryItems[["PRIX"]])
+sd(bestHygieneItems[["PRIX"]])
+sd(bestMakeupItems[["PRIX"]])
+sd(bestParfumItems[["PRIX"]])
+sd(bestBodyCareItems[["PRIX"]])
+sd(bestFaceCareItems[["PRIX"]])
+sd(bestSunItems[["PRIX"]])
 
 
 ####  [G_U] General Univers stats ####
@@ -475,8 +484,20 @@ productsByUnivers_Plot <- ggplot(productsByUnivers,
 print(productsByUnivers_Plot)
 
 ## [G_U_Y_T] ############################### 
-# TODO
+salesByUniversYear= as.data.frame(table(sourceData$Univers))
+colnames(salesByUniversYear)[1] = "Univers"
+colnames(salesByUniversYear)[2] = "Ventes"
 
+salesByUniversYear_Plot <- ggplot(salesByUniversYear,
+                                  aes(x=Univers, y=Ventes)) +
+  geom_bar(stat="identity") +
+  labs(
+    title = "Ventes par Univers durant l'année"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(salesByUniversYear_Plot)
 
 ## [G_U_M_T] ############################### 
 # TODO
@@ -491,16 +512,27 @@ print(productsByUnivers_Plot)
 
 
 ## [G_U_P_M] ############################### 
-# TODO
+universDf = as.data.frame(table(productsData$Univers))
+universDf = subset(universDf, select = -c(Freq))
+colnames(universDf)[1]="Univers"
+universDf[, "PrixMoyen"] <- NA
 
+for(univers in universDf$Univers){
+  universDf[universDf$Univers==univers, ]$PrixMoyen = mean(productsData[productsData$Univers==univers,]$PrixNet)
+}
 
+meanPriceByUnivers_Plot <- ggplot(universDf,
+                                  aes(x=Univers, y=PrixMoyen)) +
+  geom_bar(stat="identity") +
+  labs(
+    title = "Prix Moyen par Univers"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(meanPriceByUnivers_Plot)
 ## [G_U_P_S] ############################### 
-# TODO
-
-
-
-
-
+sd(universDf[["PrixMoyen"]])
 
 
 ####  [G_M] General Maille stats ####
@@ -522,8 +554,20 @@ print(productsByMaille_Plot)
 
 
 ## [G_M_Y_T] ############################### 
-# TODO
+salesByMaillesYear = as.data.frame(table(sourceData$Maille))
+colnames(salesByMaillesYear)[1] = "Maille"
+colnames(salesByMaillesYear)[2] = "Ventes"
 
+salesByMaillesYear_Plot <- ggplot(salesByMaillesYear,
+                                aes(x = Maille, y=Ventes)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Vente par Maille durant l'année"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(salesByMaillesYear_Plot)
 
 ## [G_M_M_T] ############################### 
 # TODO
@@ -538,23 +582,47 @@ print(productsByMaille_Plot)
 
 
 ## [G_M_P_M] ############################### 
-# TODO
+maillesDf = as.data.frame(table(productsData$Maille))
+maillesDf = subset(maillesDf, select = -c(Freq))
+colnames(maillesDf)[1]="Maille"
+maillesDf[, "PrixMoyen"] <- NA
 
+for(maille in maillesDf$Maille){
+  maillesDf[maillesDf$Maille==maille, ]$PrixMoyen = mean(productsData[productsData$Maille==maille,]$PrixNet)
+}
 
+meanPriceByMaille_Plot <- ggplot(maillesDf,
+                                  aes(x=Maille, y=PrixMoyen)) +
+  geom_bar(stat="identity") +
+  labs(
+    title = "Prix Moyen par Maille"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(meanPriceByMaille_Plot)
 ## [G_M_P_S] ############################### 
-# TODO
-
-
-
-
-
+sd(maillesDf[["PrixMoyen"]])
 
 
 ####  [G_MF] General Most favorites Products ####
 ## [G_MF_Y] ############################### 
-# TODO
+salesByProductYear = as.data.frame(sort(table(sourceData$Libelle), decreasing = TRUE))
+colnames(salesByProductYear)[1] = "Produit"
+colnames(salesByProductYear)[2] = "Ventes"
 
+salesByProductYear = head(salesByProductYear, 50)
 
+salesByProductYear_Plot <- ggplot(salesByProductYear,
+                                 aes(x=Produit, y=Ventes)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Vente par produit sur l'année"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(salesByProductYear_Plot)
 ## [G_MF_M] ############################### 
 # TODO
 
