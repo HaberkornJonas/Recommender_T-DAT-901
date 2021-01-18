@@ -12,7 +12,7 @@ library(tidyr)
 
 
 ## STATIC VALUES ###############################
-projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+projectPath <- "/home/sebastien/Epitech/t-dat-901/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -314,19 +314,166 @@ sprintf("[G_T_M] Done!")
 
 ####  [G_P] General Products stats ####
 ## [G_P_Y_T] ############################### 
-# TODO
+print("[G_P_Y_T]...")
+
+# Manipulation des donnees
+G.P.Y.T <- sourceData$Libelle %>%                                             
+  length() %>%
+  data.frame()
+colnames(G.P.Y.T) <- c("n")                                                   
+
+# Sauvegarde des donnees
+write_csv(G.P.Y.T, paste(projectPath, "03_output/G.P.Y.T.csv", sep=""))
+
+# Creation du graphique
+df <- data.frame(x=1, y=G.P.Y.T[1,1])
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
+  labs(
+    title= "Nombre total de produits vendus",
+    subtitle= "Données du dataset KaDo",
+    x= "Année",
+    y= "Somme des produits"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.P.Y.T.png", sep=""), width = 7, height = 8, dpi = 100)
+sprintf("[G_P_Y_T] Done!")
 
 
 ## [G_P_M_T] ############################### 
-# TODO
+print("[G.P.M.T]...")
+
+G.P.M.T <- sourceData %>%
+  select(Libelle, MoisVenteId)
+G.P.M.T <- aggregate(G.P.M.T$Libelle, by=list(G.P.M.T$MoisVenteId), FUN=length) %>%
+  rename(MoisVenteId=Group.1, n=x)
+
+write_csv(G.P.M.T, paste(projectPath, "03_output/G.P.M.T.csv", sep=""))
+
+df <- data.frame(x = 1, y=G.P.M.T[1,1])
+plot <- ggplot(data = G.P.M.T, aes(x= as.numeric(MoisVenteId), y=n))+
+  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
+  geom_errorbar(aes(ymin=n-sd(G.P.M.T$n), ymax=n+sd(G.P.M.T$n)), width=.2,
+                position=position_dodge(.9))+
+  labs(
+    title="Nombre total de produits vendus par mois",
+    subtitle="Données du dataset KaDo",
+    x= "Mois",
+    y= "Nombre de produits vendus"
+  )+
+  scale_y_continuous(labels= scales::comma)+
+  scale_x_continuous(
+    breaks= moisIds,
+    label = moisNoms
+  )
+print(plot)
+
+ggsave(paste(projectPath, "03_output/G.P.M.T.png", sep=""), width = 5, height = 8, dpi = 100)
+print("[G.P.M.T] Done!")
+
 
 
 ## [G_P_M_M] ############################### 
-# TODO
+print("[G.P.M.M]...")
+
+
+G.P.M.M <- sourceData %>%
+  select(Libelle, MoisVenteId)
+G.P.M.M <- aggregate(G.P.M.M$Libelle, by=list(G.P.M.M$MoisVenteId), FUN=length) %>%
+  rename(MoisVenteId=Group.1, n=x)
+G.P.M.M <- mean(G.P.M.M$n) %>%
+  data.frame()
+colnames(G.P.M.M) <- c("mean")
+
+write_csv(G.P.M.M, paste(projectPath, "03_output/G.P.M.M.csv", sep=""))
+
+df <- data.frame(x = 1, y = G.P.M.M[1,1])
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
+  labs(
+    title= "Nombre moyen de produits achetés par mois",
+    subtitle="Données du dataset KaDo",
+    x="Année",
+    y="Nombre moyen de produits"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+ggsave(paste(projectPath, "03_output/G.P.M.M.png", sep=""), width=5, height=8,dpi=100)
+print("[G.P.M.M] Done!")
 
 
 ## [G_P_M_S] ############################### 
-# TODO
+print("[G.P.M.S]...")
+
+G.P.M.S <- sourceData %>%
+  select(Libelle, MoisVenteId)
+G.P.M.S <- aggregate(G.P.M.S$Libelle, by=list(G.P.M.S$MoisVenteId), FUN=length) %>%
+  rename(MoisVenteId=Group.1, n=x)
+G.P.M.S <- sd(G.P.M.S$n) %>%
+  data.frame()
+colnames(G.P.M.S) <- c("sd")
+
+write_csv(G.P.M.S, paste(projectPath, "03_output/G.P.M.S.csv", sep=""))
+
+df <- data.frame(x = 1, y = G.P.M.S[1,1])
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
+  labs(
+    title= "Déviation standard du nombre de produits achetés par mois",
+    subtitle="Données du dataset KaDo",
+    x= "Année",
+    y= "Déviation standard"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+ggsave(paste(projectPath, "03_output/G.P.M.S.png", sep=""), width=5, height=8, dpi=100)
+print("[G.P.M.S] Done!")
+
+## [G_P_M] ############################### 
+
+print("[G.P.M]...")
+
+# Manipulation des donnees
+mean <- G.P.M.M$mean
+sd <- G.P.M.S$sd
+G.P.M <- data.frame(mean, sd)
+
+# Creation du graphique
+df <- data.frame(x=1, y=G.P.M$mean)
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
+  geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
+  labs(
+    title = "Nombre total de produits achetés par mois (avec deviation standard)",
+    subtitle = "Donnees du dataset KaDo",
+    y = "Nombre de produits achetés"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.P.M.png", sep=""), width = 7, height = 8, dpi = 100)
+print("[G_P_M] Done!")
+
+
+
 
 
 
