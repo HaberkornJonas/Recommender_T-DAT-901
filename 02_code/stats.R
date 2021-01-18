@@ -42,6 +42,10 @@ sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
 
 
 ## Generating label to ID matching for families and products
+Customers <- sourceData %>%
+  select(ClientId)                                                             # Keep Famille column
+write_csv(Customers, paste(projectPath, "03_output/Customers.csv", sep=""))    # Generating csv mapping
+
 Familles <- sourceData %>%                                          
   select(Famille) %>%                                                          # Keep Famille column
   distinct() %>%                                                               # Keep only distinc familles
@@ -66,17 +70,17 @@ write_csv(Produits, paste(projectPath, "03_output/Produits.csv", sep=""))      #
 print("[G_T_Y_T]...")
 
 # Manipulation des donnees
-G.T.Y.T <- sourceData$TicketId %>%                                             # Use Ticket column
+G_T_Y_T <- sourceData$TicketId %>%                                             # Use Ticket column
            unique() %>%                                                        # Get unique values (# different tickets)
            length() %>%                                                        # Get the number of unique values
            data.frame()                                                        # Make it a dataframe
-colnames(G.T.Y.T) <- c("n")                                                    # Give column name for CSV
+colnames(G_T_Y_T) <- c("n")                                                    # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.Y.T, paste(projectPath, "03_output/G.T.Y.T.csv", sep=""))
+write_csv(G_T_Y_T, paste(projectPath, "03_output/G_T_Y_T.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.T.Y.T[1,1])
+df <- data.frame(x = 1, y = G_T_Y_T[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
@@ -92,8 +96,8 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.T.Y.T.png", sep=""), width = 5, height = 8, dpi = 100)
-sprintf("[G_T_Y_T] There was a total of %s tickets for this year.", G.T.Y.T[1,1])
+ggsave(paste(projectPath, "03_output/G_T_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
+sprintf("[G_T_Y_T] There was a total of %s tickets for this year.", G_T_Y_T[1,1])
 
 
 
@@ -107,37 +111,16 @@ sprintf("[G_T_Y_T] There was a total of %s tickets for this year.", G.T.Y.T[1,1]
 print("[G_T_M_T]...")
 
 # Manipulation des donnees
-G.T.M.T <- sourceData %>%
+G_T_M_T <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.T <- aggregate(G.T.M.T$TicketId, by=list(G.T.M.T$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
+G_T_M_T <- aggregate(G_T_M_T$TicketId, by=list(G_T_M_T$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 
 # Sauvegarde des donnees
-write_csv(G.T.M.T, paste(projectPath, "03_output/G.T.M.T.csv", sep=""))
-
-
+write_csv(G_T_M_T, paste(projectPath, "03_output/G_T_M_T.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.T.M.T[1,1])
-plot <-  ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y=n))+
-  geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
-  geom_errorbar(aes(ymin=n-sd(G.T.M.T$n), ymax=n+sd(G.T.M.T$n)), width=.2,
-                position=position_dodge(.9))+
-  labs(
-    title = "Nombre total de tickets",
-    subtitle = "Donnees du dataset KaDo",
-    x = "Annee",
-    y = "Nombre de tickets"
-  )+
-  scale_y_continuous(labels = scales::comma)+
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-print(plot)
-
-
-# Creation du graphique
-plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
+plot <- ggplot(data = G_T_M_T, aes(x = as.numeric(MoisVenteId), y = n))+
   geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
   labs(
     title = "Nombre total de tickets par mois",
@@ -153,7 +136,7 @@ plot <- ggplot(data = G.T.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.T.M.T.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_T_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
 print("[G_T_M_T] Done!")
 
 
@@ -170,19 +153,19 @@ print("[G_T_M_T] Done!")
 print("[G_T_M_M]...")
 
 # Manipulation des donnees
-G.T.M.M <- sourceData %>%
+G_T_M_M <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.M <- aggregate(G.T.M.M$TicketId, by=list(G.T.M.M$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
+G_T_M_M <- aggregate(G_T_M_M$TicketId, by=list(G_T_M_M$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
-G.T.M.M <- mean(G.T.M.M$n) %>%                                                         # Get mean value
+G_T_M_M <- mean(G_T_M_M$n) %>%                                                         # Get mean value
            data.frame()                                                                # Make it a dataframe
-colnames(G.T.M.M) <- c("mean")                                                         # Give column name for CSV
+colnames(G_T_M_M) <- c("mean")                                                         # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.M.M, paste(projectPath, "03_output/G.T.M.M.csv", sep=""))
+write_csv(G_T_M_M, paste(projectPath, "03_output/G_T_M_M.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.T.M.M[1,1])
+df <- data.frame(x = 1, y = G_T_M_M[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -198,7 +181,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.T.M.M.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_T_M_M.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_M] Done!")
 
 
@@ -215,19 +198,19 @@ sprintf("[G_T_M_M] Done!")
 print("[G_T_M_S]...")
 
 # Manipulation des donnees
-G.T.M.S <- sourceData %>%
+G_T_M_S <- sourceData %>%
            select(TicketId, MoisVenteId)                                               # Select only ticketId and month
-G.T.M.S <- aggregate(G.T.M.S$TicketId, by=list(G.T.M.S$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
+G_T_M_S <- aggregate(G_T_M_S$TicketId, by=list(G_T_M_S$MoisVenteId), FUN=length) %>%   # Get count of tickets for each months
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
-G.T.M.S <- sd(G.T.M.S$n) %>%                                                           # Get standard deviation
+G_T_M_S <- sd(G_T_M_S$n) %>%                                                           # Get standard deviation
            data.frame()                                                                # Make it a dataframe
-colnames(G.T.M.S) <- c("sd")                                                           # Give column name for CSV
+colnames(G_T_M_S) <- c("sd")                                                           # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G.T.M.S, paste(projectPath, "03_output/G.T.M.S.csv", sep=""))
+write_csv(G_T_M_S, paste(projectPath, "03_output/G_T_M_S.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.T.M.S[1,1])
+df <- data.frame(x = 1, y = G_T_M_S[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -243,7 +226,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.T.M.S.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_T_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_S] Done!")
 
 
@@ -261,12 +244,12 @@ sprintf("[G_T_M_S] Done!")
 print("[G_T_M]...")
 
 # Manipulation des donnees
-mean <- G.T.M.M$mean
-sd <- G.T.M.S$sd
-G.T.M <- data.frame(mean, sd)
+mean <- G_T_M_M$mean
+sd <- G_T_M_S$sd
+G_T_M <- data.frame(mean, sd)
 
 # Creation du graphique
-df <- data.frame(x=1, y=G.T.M$mean)
+df <- data.frame(x=1, y=G_T_M$mean)
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
   geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
@@ -282,7 +265,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.T.M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_T_M.png", sep=""), width = 7, height = 8, dpi = 100)
 sprintf("[G_T_M] Done!")
 
 
@@ -738,14 +721,14 @@ sd(itemsBoughtByClients[["ItemsBought"]])
 print("[C_T_Y_T]...")
 
 # Manipulation des donnees
-C.T.Y.T <- sourceData %>%                                          
+C_T_Y_T <- sourceData %>%                                          
   select(TicketId, ClientId) %>%                                               # Keep TicketId and ClientId columns
   group_by(ClientId) %>%                                                       # Group by ClientId
   distinct() %>%                                                               # Keep only distict values (clientID, TicketId couple)
   tally()                                                                      # Make a count of the number of different tickets per customer
 
 # Sauvegarde des donnees
-write_csv(C.T.Y.T, paste(projectPath, "03_output/C.T.Y.T.csv", sep=""))
+write_csv(C_T_Y_T, paste(projectPath, "03_output/C_T_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[G_T_Y_T] Done!")
@@ -757,17 +740,17 @@ sprintf("[G_T_Y_T] Done!")
 print("[C_T_M_T]...")
 
 # Manipulation des donnees
-C.T.M.T <- sourceData %>%                                          
+C_T_M_T <- sourceData %>%                                          
   select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
   group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
   distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
   tally()                                                                      # Make a count of the number of different tickets per customer per month
 
 # Sauvegarde des donnees
-write_csv(C.T.M.T, paste(projectPath, "03_output/C.T.M.T.csv", sep=""))
+write_csv(C_T_M_T, paste(projectPath, "03_output/C_T_M_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
-sprintf("[C.T.M.T] Done!")
+sprintf("[C_T_M_T] Done!")
 
 
 
@@ -776,7 +759,7 @@ sprintf("[C.T.M.T] Done!")
 print("[C_T_M_M]...")
 
 # Manipulation des donnees
-C.T.M.M <- sourceData %>%                                          
+C_T_M_M <- sourceData %>%                                          
   select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
   group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
   distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
@@ -784,10 +767,10 @@ C.T.M.M <- sourceData %>%
   summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean number of tickets per month for each customer
 
 # Sauvegarde des donnees
-write_csv(C.T.M.M, paste(projectPath, "03_output/C.T.M.M.csv", sep=""))
+write_csv(C_T_M_M, paste(projectPath, "03_output/C_T_M_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
-sprintf("[C.T.M.M] Done!")
+sprintf("[C_T_M_M] Done!")
 
 
 
@@ -796,7 +779,7 @@ sprintf("[C.T.M.M] Done!")
 print("[C_T_M_S]...")
 
 # Manipulation des donnees
-C.T.M.S <- sourceData %>%                                          
+C_T_M_S <- sourceData %>%                                          
   select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
   group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
   distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
@@ -805,10 +788,10 @@ C.T.M.S <- sourceData %>%
 
 
 # Sauvegarde des donnees
-write_csv(C.T.M.S, paste(projectPath, "03_output/C.T.M.S.csv", sep=""))
+write_csv(C_T_M_S, paste(projectPath, "03_output/C_T_M_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
-sprintf("[C.T.M.S] Done!")
+sprintf("[C_T_M_S] Done!")
 
 
 
@@ -822,16 +805,16 @@ sprintf("[C.T.M.S] Done!")
 print("[C_S_Y_T]...")
 
 # Manipulation des donnees
-C.S.Y.T <- sourceData %>%                                          
+C_S_Y_T <- sourceData %>%                                          
   select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
   group_by(ClientId) %>%                                                       # Group by ClientId
   summarise(n=round(sum(PrixNet), digits=2))                                   # Calculate spendings of the year
   
 # Sauvegarde des donnees
-write_csv(C.S.Y.T, paste(projectPath, "03_output/C.S.Y.T.csv", sep=""))
+write_csv(C_S_Y_T, paste(projectPath, "03_output/C_S_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
-sprintf("[C.S.Y.T] Done!")
+sprintf("[C_S_Y_T] Done!")
 
 
 
@@ -1071,7 +1054,7 @@ C_F_Y_T <- sourceData %>%
   group_by(ClientId, Famille) %>%                                              # Group by ClientId and Famille
   tally() %>%                                                                  # Make a count of the number of products per family per customer
   merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
-  subset(select= -c(Famille)) #%>%                                             # Removing Famille column to save memory and only use the assigned FamilleId
+  subset(select= -c(Famille)) %>%                                              # Removing Famille column to save memory and only use the assigned FamilleId
   arrange(ClientId, FamilleId)
 
 
@@ -1178,7 +1161,7 @@ C_F_MF_Y <- sourceData %>%
   subset(select= -c(Libelle)) %>%                                              # Removing Libelle column to save memory and only use the assigned ProductId
   merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
   subset(select= -c(Famille)) %>%                                              # Removing Famille column to save memory and only use the assigned FamilleId
-  arrange(ClientId, Famille, n)                                                # Arranging dataframe by ClientId, FamilleId, number of time product has been bought
+  arrange(ClientId, FamilleId, n)                                              # Arranging dataframe by ClientId, FamilleId, number of time product has been bought
 
 # Sauvegarde des donnees
 write_csv(C_F_MF_Y, paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
@@ -1252,111 +1235,113 @@ sprintf("[C_MF_Y] Done!")
 
 
 
-## OLD STATS - Will be deleted ####
+## OLD STATS ####
 
-##   TOTAL DE VENTES PAR MOIS 
-print("Analyse du nombre total de ventes par mois...")
-
-# Manipulation des donnees
-ventes_total_par_mois <- sourceData %>%
-  group_by(mois_vente_id) %>%
-  count() %>%
-  rename(nombre_ventes = n)
-
-# Sauvegarde des données
-write_csv(ventes_total_par_mois, "03_output/01_ventes_total_par_mois.csv")
-
-# Creation du graphique
-plot <- ggplot(data = ventes_total_par_mois, aes(x = mois_vente_id, y = nombre_ventes))+
-  geom_bar(stat="identity", fill="steelblue3", color="steelblue3")+
-  labs(
-    title = "Nombre total de ventes par mois",
-    subtitle = "Données du dataset KaDo",
-    x = "Mois",
-    y = "Nombre de ventes"
-  )+
-  scale_y_continuous(labels = scales::comma)+
-  scale_x_continuous(
-    breaks = mois_ids,
-    label = mois_noms
-  )
-
-# Sauvegarde du graphique
-ggsave("03_output/01_ventes_total_par_mois.png", width = 10, height = 8, dpi = 100)
-
-
-
-
-
-##   TOTAL DE VENTES PAR Famille ET PAR MOIS 
-print("Analyse du nombre total de ventes par mois par Familles de produits...")
-
-# Manipulation des données
-ventes_total_par_mois_par_Famille <- sourceData %>%
-  group_by(mois_vente_id, Famille_produit) %>%
-  count() %>%
-  rename(nombre_ventes = n)
-
-# Sauvegarde des données
-write_csv(ventes_total_par_mois_par_Famille, "03_output/02_ventes_total_par_mois_par_Famille.csv")
-
-
-
-# Création des graphiques
-
-plot <- ggplot(data = ventes_total_par_mois_par_Famille, aes(x = mois_vente_id, y = nombre_ventes, fill=Famille_produit))+
-  geom_bar(stat="identity")+
-  labs(
-    title = "Nombre total de ventes par mois par Familles",
-    subtitle = "Données du dataset KaDo",
-    x = "Mois",
-    y = "Nombre de ventes",
-    fill = "Familles de produits"
-  )+
-  scale_y_continuous(labels = scales::comma)
-ggsave("03_output/02_01_ventes_total_par_mois_par_Famille.png", width = 10, height = 8, dpi = 100)
-
-
-plot <- ggplot(data = ventes_total_par_mois_par_Famille, aes(x = mois_vente_id, y = nombre_ventes, fill=Famille_produit))+
-  geom_bar(stat="identity", position="fill")+
-  labs(
-    title = "Répartition des ventes par mois par Familles",
-    subtitle = "Données du dataset KaDo",
-    x = "Mois",
-    y = "Nombre de ventes",
-    fill = "Familles de produits"
-  )+
-  scale_y_continuous(labels = scales::percent)
-ggsave("03_output/02_02_repartition_ventes_par_mois_par_Famille.png", width = 10, height = 8, dpi = 100)
-
-plot <- ggplot(data = ventes_total_par_mois_par_Famille, aes(x = mois_vente_id, y = nombre_ventes, fill=Famille_produit))+
-  geom_bar(stat="identity", position="dodge")+
-  labs(
-    title = "Ventes par Familles par mois",
-    subtitle = "Données du dataset KaDo",
-    x = "Mois",
-    y = "Nombre de ventes",
-    fill = "Familles de produits"
-  )+
-  scale_y_continuous(labels = scales::comma)+
-  scale_x_continuous(
-    breaks = mois_ids,
-    label = mois_noms
-  )
-ggsave("03_output/02_03_ventes_par_Familles_par_mois.png", width = 10, height = 8, dpi = 100)
-
-plot <- ggplot(data = ventes_total_par_mois_par_Famille, aes(x = mois_vente_id, y = nombre_ventes, fill = Famille_produit))+
-  geom_bar(stat="identity", position="dodge")+
-  labs(
-    title = "Ventes par mois pour chaque Famille",
-    subtitle = "Données du dataset KaDo",
-    x = "Mois",
-    y = "Nombre de ventes",
-    fill = "Familles de produits"
-  )+
-  scale_y_continuous(labels = scales::comma)+
-  scale_x_continuous(
-    breaks = mois_ids
-  )+
-  facet_wrap(~Famille_produit)
-ggsave("03_output/02_04_ventes_par_mois_pour_chaque_Famille.png", width = 10, height = 8, dpi = 100)
+if(FALSE){
+  ## TOTAL DE VENTES PAR MOIS 
+  print("Analyse du nombre total de ventes par mois...")
+  
+  # Manipulation des donnees
+  ventes_total_par_mois <- sourceData %>%
+    group_by(mois_vente_id) %>%
+    count() %>%
+    rename(nombre_ventes = n)
+  
+  # Sauvegarde des donnees
+  write_csv(ventes_total_par_mois, "03_output/01_ventes_total_par_mois.csv")
+  
+  # Creation du graphique
+  plot <- ggplot(data = ventes_total_par_mois, aes(x = mois_vente_id, y = nombre_ventes))+
+    geom_bar(stat="identity", fill="steelblue3", color="steelblue3")+
+    labs(
+      title = "Nombre total de ventes par mois",
+      subtitle = "Données du dataset KaDo",
+      x = "Mois",
+      y = "Nombre de ventes"
+    )+
+    scale_y_continuous(labels = scales::comma)+
+    scale_x_continuous(
+      breaks = mois_ids,
+      label = mois_noms
+    )
+  
+  # Sauvegarde du graphique
+  ggsave("03_output/01_ventes_total_par_mois.png", width = 10, height = 8, dpi = 100)
+  
+  
+  
+  
+  
+  ##   TOTAL DE VENTES PAR FAMILLE ET PAR MOIS 
+  print("Analyse du nombre total de ventes par mois par familles de produits...")
+  
+  # Manipulation des donnees
+  ventes_total_par_mois_par_famille <- sourceData %>%
+    group_by(mois_vente_id, famille_produit) %>%
+    count() %>%
+    rename(nombre_ventes = n)
+  
+  # Sauvegarde des donnees
+  write_csv(ventes_total_par_mois_par_famille, "03_output/02_ventes_total_par_mois_par_famille.csv")
+  
+  
+  
+  # Creation des graphiques
+  
+  plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, y = nombre_ventes, fill=famille_produit))+
+    geom_bar(stat="identity")+
+    labs(
+      title = "Nombre total de ventes par mois par familles",
+      subtitle = "Donnees du dataset KaDo",
+      x = "Mois",
+      y = "Nombre de ventes",
+      fill = "Familles de produits"
+    )+
+    scale_y_continuous(labels = scales::comma)
+  ggsave("03_output/02_01_ventes_total_par_mois_par_famille.png", width = 10, height = 8, dpi = 100)
+  
+  
+  plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, y = nombre_ventes, fill=famille_produit))+
+    geom_bar(stat="identity", position="fill")+
+    labs(
+      title = "Répartition des ventes par mois par familles",
+      subtitle = "Donnees du dataset KaDo",
+      x = "Mois",
+      y = "Nombre de ventes",
+      fill = "Familles de produits"
+    )+
+    scale_y_continuous(labels = scales::percent)
+  ggsave("03_output/02_02_repartition_ventes_par_mois_par_famille.png", width = 10, height = 8, dpi = 100)
+  
+  plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, y = nombre_ventes, fill=famille_produit))+
+    geom_bar(stat="identity", position="dodge")+
+    labs(
+      title = "Ventes par familles par mois",
+      subtitle = "Donnees du dataset KaDo",
+      x = "Mois",
+      y = "Nombre de ventes",
+      fill = "Familles de produits"
+    )+
+    scale_y_continuous(labels = scales::comma)+
+    scale_x_continuous(
+      breaks = mois_ids,
+      label = mois_noms
+    )
+  ggsave("03_output/02_03_ventes_par_familles_par_mois.png", width = 10, height = 8, dpi = 100)
+  
+  plot <- ggplot(data = ventes_total_par_mois_par_famille, aes(x = mois_vente_id, y = nombre_ventes, fill = famille_produit))+
+    geom_bar(stat="identity", position="dodge")+
+    labs(
+      title = "Ventes par mois pour chaque famille",
+      subtitle = "Donnees du dataset KaDo",
+      x = "Mois",
+      y = "Nombre de ventes",
+      fill = "Familles de produits"
+    )+
+    scale_y_continuous(labels = scales::comma)+
+    scale_x_continuous(
+      breaks = mois_ids
+    )+
+    facet_wrap(~famille_produit)
+  ggsave("03_output/02_04_ventes_par_mois_pour_chaque_famille.png", width = 10, height = 8, dpi = 100)
+}
