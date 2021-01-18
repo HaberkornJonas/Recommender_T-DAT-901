@@ -34,10 +34,31 @@ sourceData <- read_csv(paste(projectPath, "01_data/KaDo.csv", sep="")) %>%
               )
 print("Done!")
 
-### Clearing Data, Removing those 2 Families because they are not relevant ###
+## PRE-PROCESSING ###############################
+## Clearing Data, Removing those 2 Families because they are not relevant
 sourceData <- as.data.frame(sourceData)
 sourceData <- sourceData[!(sourceData$Famille=="MULTI FAMILLES"),]
 sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
+
+
+## Generating label to ID matching for families and products
+Familles <- sourceData %>%                                          
+  select(Famille) %>%                                                          # Keep Famille column
+  distinct() %>%                                                               # Keep only distinc familles
+  mutate(FamilleId=row_number())                                               # Assign ID to famille
+write_csv(Familles, paste(projectPath, "03_output/Familles.csv", sep=""))      # Generating csv mapping
+
+
+Produits <- sourceData %>%                                          
+  select(Libelle) %>%                                                          # Keep Libelle column
+  distinct() %>%                                                               # Keep only distinc produit
+  mutate(ProduitId=row_number())                                               # Assign ID to produit
+write_csv(Produits, paste(projectPath, "03_output/Produits.csv", sep=""))      # Generating csv mapping
+
+
+
+
+## STATS ###############################
 
 ####  [G] General habits and facts ####
 ####  [G_T] General tickets stats  ####
@@ -45,11 +66,11 @@ sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
 print("[G_T_Y_T]...")
 
 # Manipulation des donnees
-G.T.Y.T <- sourceData$TicketId %>%                                          # Use Ticket column
-           unique() %>%                                                     # Get unique values (# different tickets)
-           length() %>%                                                     # Get the number of unique values
-           data.frame()                                                     # Make it a dataframe
-colnames(G.T.Y.T) <- c("n")                                                 # Give column name for CSV
+G.T.Y.T <- sourceData$TicketId %>%                                             # Use Ticket column
+           unique() %>%                                                        # Get unique values (# different tickets)
+           length() %>%                                                        # Get the number of unique values
+           data.frame()                                                        # Make it a dataframe
+colnames(G.T.Y.T) <- c("n")                                                    # Give column name for CSV
 
 # Sauvegarde des donnees
 write_csv(G.T.Y.T, paste(projectPath, "03_output/G.T.Y.T.csv", sep=""))
@@ -718,10 +739,10 @@ print("[C_T_Y_T]...")
 
 # Manipulation des donnees
 C.T.Y.T <- sourceData %>%                                          
-  select(TicketId, ClientId) %>%                                   # Keep TicketId and ClientId columns
-  group_by(ClientId) %>%                                           # Group by ClientId
-  distinct() %>%                                                   # Keep only distict values (clientID, TicketId couple)
-  tally()                                                          # Make a count of the number of different tickets per customer
+  select(TicketId, ClientId) %>%                                               # Keep TicketId and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  distinct() %>%                                                               # Keep only distict values (clientID, TicketId couple)
+  tally()                                                                      # Make a count of the number of different tickets per customer
 
 # Sauvegarde des donnees
 write_csv(C.T.Y.T, paste(projectPath, "03_output/C.T.Y.T.csv", sep=""))
@@ -737,10 +758,10 @@ print("[C_T_M_T]...")
 
 # Manipulation des donnees
 C.T.M.T <- sourceData %>%                                          
-  select(TicketId, ClientId, MoisVenteId) %>%                      # Keep TicketId, ClientId and MoisVenteId columns
-  group_by(ClientId, MoisVenteId) %>%                              # Group by ClientId and MoisVenteId
-  distinct() %>%                                                   # Keep only distict values (clientID, MoisVenteId, TicketId couple)
-  tally()                                                          # Make a count of the number of different tickets per customer per month
+  select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally()                                                                      # Make a count of the number of different tickets per customer per month
 
 # Sauvegarde des donnees
 write_csv(C.T.M.T, paste(projectPath, "03_output/C.T.M.T.csv", sep=""))
@@ -756,11 +777,11 @@ print("[C_T_M_M]...")
 
 # Manipulation des donnees
 C.T.M.M <- sourceData %>%                                          
-  select(TicketId, ClientId, MoisVenteId) %>%                         # Keep TicketId, ClientId and MoisVenteId columns
-  group_by(ClientId, MoisVenteId) %>%                                 # Group by ClientId and MoisVenteId
-  distinct() %>%                                                      # Keep only distict values (clientID, MoisVenteId, TicketId couple)
-  tally() %>%                                                         # Make a count of the number of different tickets per customer per month
-  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))   # Calculate mean number of tickets per month for each customer
+  select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally() %>%                                                                  # Make a count of the number of different tickets per customer per month
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean number of tickets per month for each customer
 
 # Sauvegarde des donnees
 write_csv(C.T.M.M, paste(projectPath, "03_output/C.T.M.M.csv", sep=""))
@@ -776,11 +797,11 @@ print("[C_T_M_S]...")
 
 # Manipulation des donnees
 C.T.M.S <- sourceData %>%                                          
-  select(TicketId, ClientId, MoisVenteId) %>%                      # Keep TicketId, ClientId and MoisVenteId columns
-  group_by(ClientId, MoisVenteId) %>%                              # Group by ClientId and MoisVenteId
-  distinct() %>%                                                   # Keep only distict values (clientID, MoisVenteId, TicketId couple)
-  tally() %>%                                                      # Make a count of the number of different tickets per customer per month
-  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))    # Calculate mean number of tickets per month for each customer
+  select(TicketId, ClientId, MoisVenteId) %>%                                  # Keep TicketId, ClientId and MoisVenteId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  distinct() %>%                                                               # Keep only distict values (clientID, MoisVenteId, TicketId couple)
+  tally() %>%                                                                  # Make a count of the number of different tickets per customer per month
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate mean number of tickets per month for each customer
 
 
 # Sauvegarde des donnees
@@ -792,37 +813,159 @@ sprintf("[C.T.M.S] Done!")
 
 
 
+
+
+
+
 ####  [C_S] Customer spending stats  ####
 ## [C_S_Y_T] ############################### 
-# TODO
+print("[C_S_Y_T]...")
+
+# Manipulation des donnees
+C.S.Y.T <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(n=round(sum(PrixNet), digits=2))                                   # Calculate spendings of the year
+  
+# Sauvegarde des donnees
+write_csv(C.S.Y.T, paste(projectPath, "03_output/C.S.Y.T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C.S.Y.T] Done!")
+
+
 
 
 ## [C_S_M_T] ############################### 
-# TODO
+print("[C_S_M_T]...")
+
+# Manipulation des donnees
+C_S_M_T <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                  # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2))                                   # Calculate spendings of each month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_T, paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_T] Done!")
+
+
 
 
 ## [C_S_M_M] ############################### 
-# TODO
+print("[C_S_M_M]...")
+
+# Manipulation des donnees
+C_S_M_M <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each month per customer
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean spendings per month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_M, paste(projectPath, "03_output/C_S_M_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_M] Done!")
+
+
 
 
 ## [C_S_M_S] ############################### 
-# TODO
+print("[C_S_M_S]...")
+
+# Manipulation des donnees
+C_S_M_S <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each month per customer
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate standard deviation of spendings per month per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_M_S, paste(projectPath, "03_output/C_S_M_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_M_S] Done!")
+
+
 
 
 ## [C_S_T_M] ############################### 
-# TODO
+print("[C_S_T_M]...")
+
+# Manipulation des donnees
+C_S_T_M <- sourceData %>%                                          
+  select(ClientId, TicketId, PrixNet) %>%                                      # Keep TicketId, PrixNet and ClientId columns
+  group_by(ClientId, TicketId) %>%                                             # Group by ClientId and TicketId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each tickets
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(mean=round(mean(n), digits=2))                                     # Calculate mean spendings per ticket per customer
+  
+# Sauvegarde des donnees
+write_csv(C_S_T_M, paste(projectPath, "03_output/C_S_T_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_T_M] Done!")
+
+
 
 
 ## [C_S_T_S] ############################### 
-# TODO
+print("[C_S_T_S]...")
+
+# Manipulation des donnees
+C_S_T_S <- sourceData %>%                                          
+  select(ClientId, TicketId, PrixNet) %>%                                      # Keep TicketId, PrixNet and ClientId columns
+  group_by(ClientId, TicketId) %>%                                             # Group by ClientId and TicketId
+  summarise(n=round(sum(PrixNet), digits=2)) %>%                               # Calculate spendings of each tickets
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(sd=round(sd(n), digits=2))                                         # Calculate standard deviation of spendings per ticket per customer
+C_S_T_S[is.na(C_S_T_S)] <- 0                                                   # Replacing NA values with 0 for customers having only one ticket
+
+# Sauvegarde des donnees
+write_csv(C_S_T_S, paste(projectPath, "03_output/C_S_T_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_T_S] Done!")
+
+
 
 
 ## [C_S_P_M] ############################### 
-# TODO
+print("[C_S_P_M]...")
+
+# Manipulation des donnees
+C_S_P_M <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(mean=round(mean(PrixNet), digits=2))                               # Calculate mean spendings per product per customer
+
+# Sauvegarde des donnees
+write_csv(C_S_P_M, paste(projectPath, "03_output/C_S_P_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_P_M] Done!")
+
+
 
 
 ## [C_S_P_S] ############################### 
-# TODO
+print("[C_S_P_S]...")
+
+# Manipulation des donnees
+C_S_P_S <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  summarise(sd=round(sd(PrixNet), digits=2))                                   # Calculate mean spendings per product per customer
+C_S_P_S[is.na(C_S_P_S)] <- 0                                                   # Replacing NA values with 0 for customers that bought only one product
+
+# Sauvegarde des donnees
+write_csv(C_S_P_S, paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_S_P_S] Done!")
 
 
 
@@ -833,15 +976,77 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_P] Customer Products bought stats  ####
 ## [C_P_Y_T] ############################### 
-# TODO
+print("[C_P_Y_T]...")
+
+# Manipulation des donnees
+C_P_Y_T <- sourceData %>%                                          
+  select(ClientId, PrixNet) %>%                                                # Keep PrixNet and ClientId columns
+  group_by(ClientId) %>%                                                       # Group by ClientId
+  tally()                                                                      # Make a count of the number of products per customer
+
+# Sauvegarde des donnees
+write_csv(C_P_Y_T, paste(projectPath, "03_output/C_P_Y_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_P_Y_T] Done!")
+
+
+
 
 
 ## [C_P_M_T] ############################### 
-# TODO
+print("[C_P_M_T]...")
+
+# Manipulation des donnees
+C_P_M_T <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  tally()                                                                      # Make a count of the number of products per customer per month
+
+# Sauvegarde des donnees
+write_csv(C_P_M_T, paste(projectPath, "03_output/C_P_M_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_P_M_T] Done!")
+
+
 
 
 ## [C_P_M_M] ############################### 
-# TODO
+print("[C_P_M_M]...")
+
+# Manipulation des donnees
+C_P_M_M <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  tally() %>%                                                                  # Make a count of the number of products per customer per month
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean number of products per month for each customer
+
+# Sauvegarde des donnees
+write_csv(C_P_M_M, paste(projectPath, "03_output/C_P_M_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_P_M_M] Done!")
+
+
+
+
+## [C_P_M_S] ############################### 
+print("[C_P_M_S]...")
+
+# Manipulation des donnees
+C_P_M_S <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, PrixNet) %>%                                   # Keep PrixNet, MoisVenteId and ClientId columns
+  group_by(ClientId, MoisVenteId) %>%                                          # Group by ClientId and MoisVenteId
+  tally() %>%                                                                  # Make a count of the number of products per customer per month
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate standard deviation of products per month for each customer
+
+# Sauvegarde des donnees
+write_csv(C_P_M_S, paste(projectPath, "03_output/C_P_M_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_P_M_S] Done!")
+
 
 
 
@@ -849,7 +1054,7 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_C] Customer characteristics  ####
 ## [C_C_G] ############################### 
-# TODO
+# TODO (Bonus)
 
 
 
@@ -858,19 +1063,89 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_F] Customer product families stats  ####
 ## [C_F_Y_T] ############################### 
-# TODO
+print("[C_F_Y_T]...")
+
+# Manipulation des donnees
+C_F_Y_T <- sourceData %>%                                          
+  select(ClientId, Famille) %>%                                                # Keep ClientId and Famille columns
+  group_by(ClientId, Famille) %>%                                              # Group by ClientId and Famille
+  tally() %>%                                                                  # Make a count of the number of products per family per customer
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille)) #%>%                                             # Removing Famille column to save memory and only use the assigned FamilleId
+  arrange(ClientId, FamilleId)
+
+
+# Sauvegarde des donnees
+write_csv(C_F_Y_T, paste(projectPath, "03_output/C_F_Y_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_Y_T] Done!")
+
+
 
 
 ## [C_F_M_T] ############################### 
-# TODO
+print("[C_F_M_T]...")
+
+# Manipulation des donnees
+C_F_M_T <- sourceData %>%                                          
+  select(ClientId, MoisVenteId, Famille) %>%                                   # Keep ClientId, Famille and MoisVenteId columns
+  group_by(ClientId, MoisVenteId, Famille) %>%                                 # Group by ClientId, MoisVenteId and Famille
+  tally() %>%                                                                  # Make a count of the number of products per family per month per customer
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
+
+# Sauvegarde des donnees
+write_csv(C_F_M_T, paste(projectPath, "03_output/C_F_M_T.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_M_T] Done!")
+
+
 
 
 ## [C_F_M_M] ############################### 
-# TODO
+print("[C_F_M_M]...")
+
+# Manipulation des donnees
+C_F_M_M <- sourceData %>%                                          
+  select(ClientId, Famille, MoisVenteId) %>%                                   # Keep ClientId, Famille and MoisVenteId columns
+  group_by(ClientId, Famille, MoisVenteId) %>%                                 # Group by ClientId, MoisVenteId and Famille
+  tally() %>%                                                                  # Make a count of the number of products per family per month per customer
+  group_by(ClientId, Famille) %>%                                              # Group by ClientId, MoisVenteId and Famille
+  summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2)) %>%        # Calculate mean number of product bouught per famille and per month for each customer
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
+  
+# Sauvegarde des donnees
+write_csv(C_F_M_M, paste(projectPath, "03_output/C_F_M_M.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_M_M] Done!")
+
+
 
 
 ## [C_F_M_S] ############################### 
-# TODO
+print("[C_F_M_S]...")
+
+# Manipulation des donnees
+C_F_M_S <- sourceData %>%                                          
+  select(ClientId, Famille, MoisVenteId) %>%                                   # Keep ClientId, Famille and MoisVenteId columns
+  group_by(ClientId, Famille, MoisVenteId) %>%                                 # Group by ClientId, MoisVenteId and Famille
+  tally() %>%                                                                  # Make a count of the number of products per family per month per customer
+  group_by(ClientId, Famille) %>%                                              # Group by ClientId, MoisVenteId and Famille
+  summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2)) %>%            # Calculate standard deviation of product bouught per famille and per month for each customer
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
+
+# Sauvegarde des donnees
+write_csv(C_F_M_S, paste(projectPath, "03_output/C_F_M_S.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_M_S] Done!")
+
+
 
 
 
@@ -890,15 +1165,34 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_F_MF] Customer most favorite product per families stats  ####
 ## [C_F_MF_Y] ############################### 
-# TODO
+print("[C_F_MF_Y]...")
 
+# Manipulation des donnees
+C_F_MF_Y <- sourceData %>%                                          
+  select(ClientId, Famille, Libelle) %>%                                       # Keep ClientId, Famille and Libelle columns
+  group_by(ClientId, Famille, Libelle) %>%                                     # Group by ClientId, Famille and Libelle
+  tally() %>%                                                                  # Make a count of the number of time each product has been bought per customer
+  group_by(ClientId, Famille) %>%                                              # Grouping by Client and Famille
+  slice_max(n=3, order_by=n, with_ties=F) %>%                                  # Keeping only the top 3 most bought items
+  merge(Produits, by="Libelle", sort=F) %>%                                    # Matching Libelle to its ProductId
+  subset(select= -c(Libelle)) %>%                                              # Removing Libelle column to save memory and only use the assigned ProductId
+  merge(Familles, by="Famille", sort=F) %>%                                    # Matching Famille to its FamilleId
+  subset(select= -c(Famille)) %>%                                              # Removing Famille column to save memory and only use the assigned FamilleId
+  arrange(ClientId, Famille, n)                                                # Arranging dataframe by ClientId, FamilleId, number of time product has been bought
+
+# Sauvegarde des donnees
+write_csv(C_F_MF_Y, paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_F_MF_Y] Done!")
 
 
 
 
 ####  [C_F_LF] Customer least favorite product per families stats  ####
 ## [C_F_LF_Y] ############################### 
-# TODO
+# TODO (Not possible)
+
 
 
 
@@ -906,11 +1200,31 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_MF] Customer most favorite product stats  ####
 ## [C_MF_Y] ############################### 
-# TODO
+print("[C_MF_Y]...")
+
+# Manipulation des donnees
+C_MF_Y <- sourceData %>%                                          
+  select(ClientId, Libelle) %>%                                                # Keep ClientId and Libelle columns
+  group_by(ClientId, Libelle) %>%                                              # Group by ClientId and Libelle
+  tally() %>%                                                                  # Make a count of the number of time each product has been bought per customer
+  group_by(ClientId) %>%                                                       # Grouping by Client
+  slice_max(n=3, order_by=n, with_ties=F) %>%                                  # Keeping only the top 3 most bought items
+  merge(Produits, by="Libelle", sort=F) %>%                                    # Matching Libelle to its ProductId
+  subset(select= -c(Libelle)) %>%                                              # Removing Libelle column to save memory and only use the assigned ProductId
+  arrange(ClientId, n)                                                         # Arranging dataframe by ClientId and number of time product has been bought
+
+# Sauvegarde des donnees
+write_csv(C_MF_Y, paste(projectPath, "03_output/C_MF_Y.csv", sep=""))
+
+# Pas de graphique (trop d'entrees, resultat illisible et long a generer)
+sprintf("[C_MF_Y] Done!")
+
+
 
 
 ## [C_MF_M] ############################### 
-# TODO
+# TODO (Needed ?)
+
 
 
 
@@ -918,11 +1232,9 @@ sprintf("[C.T.M.S] Done!")
 
 ####  [C_LF] Customer least favorite product stats  ####
 ## [C_LF_Y] ############################### 
-# TODO
-
-
+# TODO (Not possible)
 ## [C_LF_M] ############################### 
-# TODO
+# TODO (Not possible)
 
 
 
