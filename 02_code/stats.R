@@ -280,19 +280,174 @@ sprintf("[G_T_M] Done!")
 
 ####  [G_S] General spendings stats ####
 ## [G_S_Y_T] ############################### 
-# TODO
+print("[G_S_Y_T]...")
+
+
+# Manipulation des donnees
+G.S.Y.T <- sourceData$PrixNet %>%                                 
+  sum() %>%                                                     
+  data.frame()                                                    
+colnames(G.S.Y.T) <- c("n")                                                
+
+# Sauvegarde des donnees
+write_csv(G.S.Y.T, paste(projectPath, "03_output/G.S.Y.T.csv", sep=""))
+
+# Creation du graphique
+df <- data.frame(x = 1, y = G.S.Y.T[1,1])
+plot <- ggplot(df, aes(x=x,y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
+  labs(
+    title = "Somme totale dépensée",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Annee",
+    y = "Somme dépensée"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.S.Y.T.png", sep=""), width = 5, height = 8, dpi = 100)
+print("[G_S_Y_T] Done!")
+
+
 
 
 ## [G_S_M_T] ############################### 
-# TODO
+print("[G_S_M_T]...")
+
+G.S.M.T <- sourceData %>%
+  select(PrixNet, MoisVenteId)
+G.S.M.T <- aggregate(G.S.M.T$PrixNet, by=list(G.S.M.T$MoisVenteId), FUN=sum) %>%
+  rename(MoisVenteId=Group.1, n=x)
+
+# Sauvegarde des donnees
+write_csv(G.S.M.T, paste(projectPath, "03_output/G.S.M.T.csv", sep=""))
+
+# Création du graphique
+
+plot <- ggplot(data = G.S.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
+  geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
+  labs(
+    title = "Somme totale dépensée par mois",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Mois",
+    y = "Somme dépensée"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(
+    breaks = moisIds,
+    label = moisNoms
+  )
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.S.M.T.png", sep=""), width = 12, height = 8, dpi = 100)
+print("[G_S_M_T] Done!")
+
 
 
 ## [G_S_M_M] ############################### 
-# TODO
 
+print("[G.S.M.M]...")
+
+# Manipulation des donnees
+G.S.M.M <- sourceData %>%
+  select(PrixNet, MoisVenteId)                                               
+G.S.M.M <- aggregate(G.S.M.M$PrixNet, by=list(G.S.M.M$MoisVenteId), FUN=sum) %>%   
+  rename(MoisVenteId=Group.1, n=x)
+G.S.M.M <- mean(G.S.M.M$n) %>%                                                         
+  data.frame()                                                                
+colnames(G.S.M.M) <- c("mean")                                                         
+
+# Sauvegarde des donnees
+write_csv(G.S.M.M, paste(projectPath, "03_output/G.S.M.M.csv", sep=""))
+
+# Creation du graphique
+df <- data.frame(x = 1, y = G.S.M.M[1,1])
+plot <- ggplot(df, aes(x=x,y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
+  labs(
+    title = "Somme moyenne dépensée par mois",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Annee",
+    y = "Somme moyenne par mois"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+print("[G.S.M.M] Done!")
 
 ## [G_S_M_S] ############################### 
-# TODO
+
+print("[G.S.M.S...]")
+
+# Manipulation des données
+
+G.S.M.S <- sourceData %>%
+  select(PrixNet, MoisVenteId)
+G.S.M.S <- aggregate(G.S.M.S$PrixNet, by=list(G.S.M.S$MoisVenteId), FUN=sum) %>%   
+  rename(MoisVenteId=Group.1, n=x)
+G.S.M.S <- sd(G.S.M.S$n) %>%
+  data.frame()
+colnames(G.S.M.S) <- c("sd")
+
+# Sauvegarde des donnees
+write_csv(G.S.M.S, paste(projectPath, "03_output/G.S.M.S.csv", sep=""))
+
+# Creation du graphique
+df <- data.frame(x = 1, y = G.S.M.S[1,1])
+plot <- ggplot(df, aes(x=x,y=y))+
+  geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
+  labs(
+    title = "Deviation standard de la somme dépensée par mois",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Annee",
+    y = "Deviation standard de la somme dépensée par mois"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.S.M.S.png", sep=""), width = 5, height = 8, dpi = 100)
+print("[G_S_M_S] Done!")
+
+
+
+## [G_S_M] ############################### 
+print("[G_S_M]...")
+
+# Manipulation des donnees
+mean <- G.S.M.M$mean
+sd <- G.S.M.S$sd
+G.S.M <- data.frame(mean, sd)
+
+# Creation du graphique
+df <- data.frame(x=1, y=G.S.M$mean)
+plot <- ggplot(df, aes(x=x, y=y))+
+  geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
+  geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
+  labs(
+    title = "Somme totale dépensée par mois (avec deviation standard)",
+    subtitle = "Donnees du dataset KaDo",
+    y = "Somme totale dépensée"
+  )+
+  scale_y_continuous(labels = scales::comma)+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/G.S.M.png", sep=""), width = 7, height = 8, dpi = 100)
+print("[G_S_M] Done!")
 
 
 
