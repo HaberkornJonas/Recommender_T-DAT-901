@@ -1,5 +1,6 @@
 01_data/*.csv
 03_output/*.csv
+03_output/Client_*/**
 
 .DS_Store
 03_output/*.png
