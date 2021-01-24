@@ -43,7 +43,8 @@ sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
 
 ## Generating label to ID matching for families and products
 Customers <- sourceData %>%
-  select(ClientId)                                                             # Keep Famille column
+  select(ClientId) %>%                                                         # Keep ClientId column
+  distinct()                                                                   # Keep only distinct ClientId
 write_csv(Customers, paste(projectPath, "03_output/Customers.csv", sep=""))    # Generating csv mapping
 
 Familles <- sourceData %>%                                          
