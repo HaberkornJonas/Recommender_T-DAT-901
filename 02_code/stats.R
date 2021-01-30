@@ -12,7 +12,7 @@ library(tidyr)
 
 
 ## STATIC VALUES ###############################
-projectPath <- "~/Projects/School/TDAT901/t-dat-901/"
+projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -298,10 +298,10 @@ df <- data.frame(x = 1, y = G.S.Y.T[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
-    title = "Somme totale dépensée",
+    title = "Somme totale depensee",
     subtitle = "Donnees du dataset KaDo",
     x = "Annee",
-    y = "Somme dépensée"
+    y = "Somme depensee"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
@@ -327,15 +327,15 @@ G.S.M.T <- aggregate(G.S.M.T$PrixNet, by=list(G.S.M.T$MoisVenteId), FUN=sum) %>%
 # Sauvegarde des donnees
 write_csv(G.S.M.T, paste(projectPath, "03_output/G.S.M.T.csv", sep=""))
 
-# Création du graphique
+# Creation du graphique
 
 plot <- ggplot(data = G.S.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
   geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
   labs(
-    title = "Somme totale dépensée par mois",
+    title = "Somme totale depensee par mois",
     subtitle = "Donnees du dataset KaDo",
     x = "Mois",
-    y = "Somme dépensée"
+    y = "Somme depensee"
   )+
   scale_y_continuous(labels = scales::comma)+
   scale_x_continuous(
@@ -371,7 +371,7 @@ df <- data.frame(x = 1, y = G.S.M.M[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
-    title = "Somme moyenne dépensée par mois",
+    title = "Somme moyenne depensee par mois",
     subtitle = "Donnees du dataset KaDo",
     x = "Annee",
     y = "Somme moyenne par mois"
@@ -387,7 +387,7 @@ print("[G.S.M.M] Done!")
 
 print("[G.S.M.S...]")
 
-# Manipulation des données
+# Manipulation des donnees
 
 G.S.M.S <- sourceData %>%
   select(PrixNet, MoisVenteId)
@@ -405,10 +405,10 @@ df <- data.frame(x = 1, y = G.S.M.S[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
-    title = "Deviation standard de la somme dépensée par mois",
+    title = "Deviation standard de la somme depensee par mois",
     subtitle = "Donnees du dataset KaDo",
     x = "Annee",
-    y = "Deviation standard de la somme dépensée par mois"
+    y = "Deviation standard de la somme depensee par mois"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
@@ -436,9 +436,9 @@ plot <- ggplot(df, aes(x=x, y=y))+
   geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
   geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
   labs(
-    title = "Somme totale dépensée par mois (avec deviation standard)",
+    title = "Somme totale depensee par mois (avec deviation standard)",
     subtitle = "Donnees du dataset KaDo",
-    y = "Somme totale dépensée"
+    y = "Somme totale depensee"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
@@ -475,8 +475,8 @@ plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
     title= "Nombre total de produits vendus",
-    subtitle= "Données du dataset KaDo",
-    x= "Année",
+    subtitle= "Donnees du dataset KaDo",
+    x= "Annee",
     y= "Somme des produits"
   )+
   scale_y_continuous(labels = scales::comma)+
@@ -507,7 +507,7 @@ plot <- ggplot(data = G.P.M.T, aes(x= as.numeric(MoisVenteId), y=n))+
                 position=position_dodge(.9))+
   labs(
     title="Nombre total de produits vendus par mois",
-    subtitle="Données du dataset KaDo",
+    subtitle="Donnees du dataset KaDo",
     x= "Mois",
     y= "Nombre de produits vendus"
   )+
@@ -541,9 +541,9 @@ df <- data.frame(x = 1, y = G.P.M.M[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
-    title= "Nombre moyen de produits achetés par mois",
-    subtitle="Données du dataset KaDo",
-    x="Année",
+    title= "Nombre moyen de produits achetes par mois",
+    subtitle="Donnees du dataset KaDo",
+    x="Annee",
     y="Nombre moyen de produits"
   )+
   scale_y_continuous(labels = scales::comma)+
@@ -573,10 +573,10 @@ df <- data.frame(x = 1, y = G.P.M.S[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
-    title= "Déviation standard du nombre de produits achetés par mois",
-    subtitle="Données du dataset KaDo",
-    x= "Année",
-    y= "Déviation standard"
+    title= "Deviation standard du nombre de produits achetes par mois",
+    subtitle="Donnees du dataset KaDo",
+    x= "Annee",
+    y= "Deviation standard"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
@@ -602,9 +602,9 @@ plot <- ggplot(df, aes(x=x, y=y))+
   geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
   geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
   labs(
-    title = "Nombre total de produits achetés par mois (avec deviation standard)",
+    title = "Nombre total de produits achetes par mois (avec deviation standard)",
     subtitle = "Donnees du dataset KaDo",
-    y = "Nombre de produits achetés"
+    y = "Nombre de produits achetes"
   )+
   scale_y_continuous(labels = scales::comma)+
   theme(axis.title.x=element_blank(),
@@ -692,7 +692,7 @@ for (product in bestCapillaryItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestCapillaryItems[bestCapillaryItems$Libellé==product,]$Prix = productFrequentPrice
+  bestCapillaryItems[bestCapillaryItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -701,7 +701,7 @@ for (product in bestHygieneItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestHygieneItems[bestHygieneItems$Libellé==product,]$Prix = productFrequentPrice
+  bestHygieneItems[bestHygieneItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -710,7 +710,7 @@ for (product in bestMakeupItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestMakeupItems[bestMakeupItems$Libellé==product,]$Prix = productFrequentPrice
+  bestMakeupItems[bestMakeupItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -719,7 +719,7 @@ for (product in bestParfumItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestParfumItems[bestParfumItems$Libellé==product,]$Prix = productFrequentPrice
+  bestParfumItems[bestParfumItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -728,7 +728,7 @@ for (product in bestBodyCareItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestBodyCareItems[bestBodyCareItems$Libellé==product,]$Prix = productFrequentPrice
+  bestBodyCareItems[bestBodyCareItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -737,7 +737,7 @@ for (product in bestFaceCareItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestFaceCareItems[bestFaceCareItems$Libellé==product,]$Prix = productFrequentPrice
+  bestFaceCareItems[bestFaceCareItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -746,7 +746,7 @@ for (product in bestSunItems$Libelle)
 {
   productPrices <- productsWithPriceDF %>% filter(productsWithPriceDF$Libelle==product)
   productFrequentPrice = as.double(names(sort(table(productPrices$PrixNet), decreasing = TRUE)[1]))
-  bestSunItems[bestSunItems$Libellé==product,]$Prix = productFrequentPrice
+  bestSunItems[bestSunItems$Libelle==product,]$Prix = productFrequentPrice
   productsData[productsData$Libelle==product, ]$PrixNet = productFrequentPrice
 }
 
@@ -795,7 +795,7 @@ salesByUniversYear_Plot <- ggplot(salesByUniversYear,
                                   aes(x=Univers, y=Ventes)) +
   geom_bar(stat="identity") +
   labs(
-    title = "Ventes par Univers durant l'année"
+    title = "Ventes par Univers durant l'annee"
   ) + 
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -865,7 +865,7 @@ salesByMaillesYear_Plot <- ggplot(salesByMaillesYear,
                                 aes(x = Maille, y=Ventes)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Vente par Maille durant l'année"
+    title = "Vente par Maille durant l'annee"
   ) + 
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -920,7 +920,7 @@ salesByProductYear_Plot <- ggplot(salesByProductYear,
                                  aes(x=Produit, y=Ventes)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Vente par produit sur l'année"
+    title = "Vente par produit sur l'annee"
   ) + 
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -1759,7 +1759,7 @@ if(FALSE){
     geom_bar(stat="identity", fill="steelblue3", color="steelblue3")+
     labs(
       title = "Prix moyen par mois",
-      subtitle = "Données du dataset KaDo",
+      subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Prix"
     )+
@@ -1788,7 +1788,7 @@ if(FALSE){
     geom_bar(stat="identity")+
     labs(
       title = "Prix moyen par mois par famille",
-      subtitle = "Données du dataset KaDo",
+      subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Prix",
       fill = "Famille de produits"
@@ -1801,7 +1801,7 @@ if(FALSE){
     geom_bar(stat="identity", position="dodge")+
     labs(
       title = "Prix moyen par famille par mois",
-      subtitle = "Données du dataset KaDo",
+      subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Prix",
       fill = "Famille de produits"
@@ -1818,7 +1818,7 @@ if(FALSE){
     geom_bar(stat="identity", position="dodge")+
     labs(
       title = "Prix moyen par mois pour chaque famille",
-      subtitle = "Données du dataset KaDo",
+      subtitle = "Donnees du dataset KaDo",
       x = "Mois",
       y = "Prix",
       fill = "Famille de produits"

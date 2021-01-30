@@ -46,13 +46,16 @@ descriptionFile<-paste(projectPath, "03_output/Client_", clientId, "/description
 ## CLIENT STATISTICAL DESCRIPTION ###############################
 print("## Client statistical dedscripton")
 write("----- STATISTICAL DESCRIPTION -----", file=descriptionFile, append=T)
+write(paste("", sep=""), file=descriptionFile, append=T)
+
+# Client ID
 write(paste("ClientId:",clientId), file=descriptionFile, append=T)
 
 # Add lots of statistics (# tickets, 3 most frequented months, money spend, # products bought, etc.)
 # TODO
 
 
-
+write(paste("", sep=""), file=descriptionFile, append=T)
 
 
 
@@ -64,7 +67,6 @@ clientProfile <- data.frame(ClientId=clientId)
 
 
 ## [S_R] Regularity
-write(paste("", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 S_R <- Customers <- read_csv(paste(projectPath, "03_output/S_R.csv", sep=""))  # Getting segmentation result
 
@@ -86,21 +88,39 @@ orderedGoups <- S_R %>%
   summarise(meanDist = mean(sqrt(mean*mean+sd*sd))) %>%                        # Calculating mean distance with origin for each cluster
   arrange(desc(meanDist))                                                      # Ordering clusters by their distance
 
-# Getting group position and data
+# Getting group position
 groupPos <- match(clientProfile$S_R, orderedGoups$ClusterId)                   # Getting user's cluster position
 group <- S_R %>%
   filter(S_R$ClusterId==clientProfile$S_R)                                     # Keeping only data from the same cluster as the user's cluster
+
+# Getting client position in group and distance
+orderedGroup <- S_R %>%
+  filter(S_R$ClusterId==clientProfile$S_R) %>%
+  transform(dist=round(sqrt(mean*mean+sd*sd), digits=2)) %>%
+  arrange(desc(dist))
+dist <- orderedGroup %>%
+  filter(orderedGroup$ClientId==clientProfile$ClientId) %>%
+  select(dist)
+pos <- match(dist, orderedGroup$dist)
+
+# Getting group data
 maxMean <- max(group$mean)
 minMean <- min(group$mean)
 maxSD <- max(group$sd)
 minSD <- min(group$sd)
+maxDist <- max(orderedGroup$dist)
+minDist <- min(orderedGroup$dist)
+
 
 # Writing segmentation analysis
 write("- Regularite (vient souvent ou non)", file=descriptionFile, append=T)
 write(paste("    Le client fait parti du groupe en position ", groupPos, " sur ", count(orderedGoups)$n, " avec une regularite moyenne de ", mean, " tickets par mois et une deviation standard de ", sd, ".", sep=""), file=descriptionFile, append=T)
 write(paste("    Le groupe possede une moyenne maximum de ", maxMean, " et minimum de ", minMean, " tickets par mois pour une deviation standard maximum de ", maxSD, " et minimum de ", minSD, ".", sep=""), file=descriptionFile, append=T)
-write(paste("    Moyenne:            [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
-write(paste("    Deviation standard: [", minSD, ", ", sd, ", ", maxSD, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Le client se place donc en position ", pos, " sur ", count(orderedGroup)$n, " de son groupe avec une distance a l'origine de ", dist, ".", sep=""), file=descriptionFile, append=T)
+write(paste("    Groupe ID:            [", clientProfile$S_R, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Moyenne:              [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Deviation standard:   [", minSD,   ", ", sd,   ", ", maxSD,   "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "]", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
@@ -128,21 +148,39 @@ orderedGoups <- S_S_T %>%
   summarise(meanDist = mean(sqrt(mean*mean+sd*sd))) %>%                        # Calculating mean distance with origin for each cluster
   arrange(desc(meanDist))                                                      # Ordering clusters by their distance
 
-# Getting group position and data
+# Getting group position
 groupPos <- match(clientProfile$S_S_T, orderedGoups$ClusterId)                 # Getting user's cluster position
 group <- S_S_T %>%
   filter(S_S_T$ClusterId==clientProfile$S_S_T)                                 # Keeping only data from the same cluster as the user's cluster
+
+# Getting client position in group and distance
+orderedGroup <- S_S_T %>%
+  filter(S_S_T$ClusterId==clientProfile$S_S_T) %>%
+  transform(dist=round(sqrt(mean*mean+sd*sd), digits=2)) %>%
+  arrange(desc(dist))
+dist <- orderedGroup %>%
+  filter(orderedGroup$ClientId==clientProfile$ClientId) %>%
+  select(dist)
+pos <- match(dist, orderedGroup$dist)
+
+# Getting group data
 maxMean <- max(group$mean)
 minMean <- min(group$mean)
 maxSD <- max(group$sd)
 minSD <- min(group$sd)
+maxDist <- max(orderedGroup$dist)
+minDist <- min(orderedGroup$dist)
+
 
 # Writing segmentation analysis
-write("- Depenses par produit (depenses beaucoup ou non)", file=descriptionFile, append=T)
+write("- Depenses par ticket (depenses beaucoup ou non)", file=descriptionFile, append=T)
 write(paste("    Le client fait parti du groupe en position ", groupPos, " sur ", count(orderedGoups)$n, " avec une depense par ticket moyenne de ", mean, " et une deviation standard de ", sd, ". (en euros)", sep=""), file=descriptionFile, append=T)
 write(paste("    Le groupe possede une moyenne de depenses par ticket maximum de ", maxMean, " et minimum de ", minMean, " pour une deviation standard maximum de ", maxSD, " et minimum de ", minSD, ". (en euros)", sep=""), file=descriptionFile, append=T)
-write(paste("    Moyenne:            [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
-write(paste("    Deviation standard: [", minSD, ", ", sd, ", ", maxSD, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Le client se place donc en position ", pos, " sur ", count(orderedGroup)$n, " de son groupe avec une distance a l'origine de ", dist, ".", sep=""), file=descriptionFile, append=T)
+write(paste("    Groupe ID:            [", clientProfile$S_S_T, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Moyenne:              [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Deviation standard:   [", minSD,   ", ", sd,   ", ", maxSD,   "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "]", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
@@ -170,21 +208,40 @@ orderedGoups <- S_S_I %>%
   summarise(meanDist = mean(sqrt(mean*mean+sd*sd))) %>%                        # Calculating mean distance with origin for each cluster
   arrange(desc(meanDist))                                                      # Ordering clusters by their distance
 
-# Getting group position and data
+orderedGoups
+
+# Getting group position
 groupPos <- match(clientProfile$S_S_I, orderedGoups$ClusterId)                 # Getting user's cluster position
 group <- S_S_I %>%
   filter(S_S_I$ClusterId==clientProfile$S_S_I)                                 # Keeping only data from the same cluster as the user's cluster
+
+# Getting client position in group and distance
+orderedGroup <- S_S_I %>%
+  filter(S_S_I$ClusterId==clientProfile$S_S_I) %>%
+  transform(dist=round(sqrt(mean*mean+sd*sd), digits=2)) %>%
+  arrange(desc(dist))
+dist <- orderedGroup %>%
+  filter(orderedGroup$ClientId==clientProfile$ClientId) %>%
+  select(dist)
+pos <- match(dist, orderedGroup$dist)
+
+# Getting group data
 maxMean <- max(group$mean)
 minMean <- min(group$mean)
 maxSD <- max(group$sd)
 minSD <- min(group$sd)
+maxDist <- max(orderedGroup$dist)
+minDist <- min(orderedGroup$dist)
 
 # Writing segmentation analysis
 write("- Depenses par produit (achete des produits chere ou non)", file=descriptionFile, append=T)
 write(paste("    Le client fait parti du groupe en position ", groupPos, " sur ", count(orderedGoups)$n, " avec une depense par produit moyenne de ", mean, " et une deviation standard de ", sd, ". (en euros)", sep=""), file=descriptionFile, append=T)
 write(paste("    Le groupe possede une moyenne de depenses par produit maximum de ", maxMean, " et minimum de ", minMean, " pour une deviation standard maximum de ", maxSD, " et minimum de ", minSD, ". (en euros)", sep=""), file=descriptionFile, append=T)
-write(paste("    Moyenne:            [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
-write(paste("    Deviation standard: [", minSD, ", ", sd, ", ", maxSD, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Le client se place donc en position ", pos, " sur ", count(orderedGroup)$n, " de son groupe avec une distance a l'origine de ", dist, ".", sep=""), file=descriptionFile, append=T)
+write(paste("    Groupe ID:            [", clientProfile$S_S_I, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Moyenne:              [", minMean, ", ", mean, ", ", maxMean, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Deviation standard:   [", minSD,   ", ", sd,   ", ", maxSD,   "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "]", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
@@ -196,7 +253,6 @@ S_F <- Customers <- read_csv(paste(projectPath, "03_output/S_F.csv", sep=""))  #
 
 # Extracting clusterId and data
 S_F.client <- subset(S_F, ClientId == clientId)                                # Extracting client entry
-clusterId <- S_F.client$ClusterId 
 famillyId <- S_F.client$FamilleId                                              # Getting client prefered product family
 n <- S_F.client$n                                                              # Getting number of bought product in the family
 
@@ -216,9 +272,10 @@ famillyName <- subset(Families, FamilleId == famillyId)$Famille
 
 # Writing segmentation analysis
 write("- Famille de produits preferee", file=descriptionFile, append=T)
-write(paste("    Le client fait parti du groupe ", clusterId, " qui prefere la famille de produit ", famillyName, ", dont il a achete ", n, " produits.", sep=""), file=descriptionFile, append=T)
+write(paste("    Le client fait parti du groupe qui prefere la famille de produit ", famillyName, ", dont il a achete ", n, " produits.", sep=""), file=descriptionFile, append=T)
 write(paste("    Le groupe a achete au maximum  ", maxN, " et au minimum ", minN, " produits de la famille ", famillyName, ".", sep=""), file=descriptionFile, append=T)
-write(paste("    Produits achetes:   [", minN, ", ", n, ", ", maxN, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Groupe ID:            [", clientProfile$S_F, "]", sep=""), file=descriptionFile, append=T)
+write(paste("    Produits achetes:     [", minN, ", ", n, ", ", maxN, "]", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
