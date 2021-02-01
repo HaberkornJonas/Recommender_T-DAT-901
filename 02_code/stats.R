@@ -285,16 +285,16 @@ print("[G_S_Y_T]...")
 
 
 # Manipulation des donnees
-G.S.Y.T <- sourceData$PrixNet %>%                                 
+G_S_Y_T <- sourceData$PrixNet %>%                                 
   sum() %>%                                                     
   data.frame()                                                    
-colnames(G.S.Y.T) <- c("n")                                                
+colnames(G_S_Y_T) <- c("n")                                                
 
 # Sauvegarde des donnees
-write_csv(G.S.Y.T, paste(projectPath, "03_output/G.S.Y.T.csv", sep=""))
+write_csv(G_S_Y_T, paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.S.Y.T[1,1])
+df <- data.frame(x = 1, y = G_S_Y_T[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
@@ -310,7 +310,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.S.Y.T.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_S_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
 print("[G_S_Y_T] Done!")
 
 
@@ -319,17 +319,17 @@ print("[G_S_Y_T] Done!")
 ## [G_S_M_T] ############################### 
 print("[G_S_M_T]...")
 
-G.S.M.T <- sourceData %>%
+G_S_M_T <- sourceData %>%
   select(PrixNet, MoisVenteId)
-G.S.M.T <- aggregate(G.S.M.T$PrixNet, by=list(G.S.M.T$MoisVenteId), FUN=sum) %>%
+G_S_M_T <- aggregate(G_S_M_T$PrixNet, by=list(G_S_M_T$MoisVenteId), FUN=sum) %>%
   rename(MoisVenteId=Group.1, n=x)
 
 # Sauvegarde des donnees
-write_csv(G.S.M.T, paste(projectPath, "03_output/G.S.M.T.csv", sep=""))
+write_csv(G_S_M_T, paste(projectPath, "03_output/G_S_M_T.csv", sep=""))
 
 # Creation du graphique
 
-plot <- ggplot(data = G.S.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
+plot <- ggplot(data = G_S_M_T, aes(x = as.numeric(MoisVenteId), y = n))+
   geom_histogram(stat="identity", fill="steelblue3", color="gray40")+
   labs(
     title = "Somme totale depensee par mois",
@@ -345,29 +345,29 @@ plot <- ggplot(data = G.S.M.T, aes(x = as.numeric(MoisVenteId), y = n))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.S.M.T.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_S_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
 print("[G_S_M_T] Done!")
 
 
 
 ## [G_S_M_M] ############################### 
 
-print("[G.S.M.M]...")
+print("[G_S_M_M]...")
 
 # Manipulation des donnees
-G.S.M.M <- sourceData %>%
+G_S_M_M <- sourceData %>%
   select(PrixNet, MoisVenteId)                                               
-G.S.M.M <- aggregate(G.S.M.M$PrixNet, by=list(G.S.M.M$MoisVenteId), FUN=sum) %>%   
+G_S_M_M <- aggregate(G_S_M_M$PrixNet, by=list(G_S_M_M$MoisVenteId), FUN=sum) %>%   
   rename(MoisVenteId=Group.1, n=x)
-G.S.M.M <- mean(G.S.M.M$n) %>%                                                         
+G_S_M_M <- mean(G_S_M_M$n) %>%                                                         
   data.frame()                                                                
-colnames(G.S.M.M) <- c("mean")                                                         
+colnames(G_S_M_M) <- c("mean")                                                         
 
 # Sauvegarde des donnees
-write_csv(G.S.M.M, paste(projectPath, "03_output/G.S.M.M.csv", sep=""))
+write_csv(G_S_M_M, paste(projectPath, "03_output/G_S_M_M.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.S.M.M[1,1])
+df <- data.frame(x = 1, y = G_S_M_M[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -381,27 +381,27 @@ plot <- ggplot(df, aes(x=x,y=y))+
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
 print(plot)
-print("[G.S.M.M] Done!")
+print("[G_S_M_M] Done!")
 
 ## [G_S_M_S] ############################### 
 
-print("[G.S.M.S...]")
+print("[G_S_M_S...]")
 
 # Manipulation des donnees
 
-G.S.M.S <- sourceData %>%
+G_S_M_S <- sourceData %>%
   select(PrixNet, MoisVenteId)
-G.S.M.S <- aggregate(G.S.M.S$PrixNet, by=list(G.S.M.S$MoisVenteId), FUN=sum) %>%   
+G_S_M_S <- aggregate(G_S_M_S$PrixNet, by=list(G_S_M_S$MoisVenteId), FUN=sum) %>%   
   rename(MoisVenteId=Group.1, n=x)
-G.S.M.S <- sd(G.S.M.S$n) %>%
+G_S_M_S <- sd(G_S_M_S$n) %>%
   data.frame()
-colnames(G.S.M.S) <- c("sd")
+colnames(G_S_M_S) <- c("sd")
 
 # Sauvegarde des donnees
-write_csv(G.S.M.S, paste(projectPath, "03_output/G.S.M.S.csv", sep=""))
+write_csv(G_S_M_S, paste(projectPath, "03_output/G_S_M_S.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x = 1, y = G.S.M.S[1,1])
+df <- data.frame(x = 1, y = G_S_M_S[1,1])
 plot <- ggplot(df, aes(x=x,y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -417,7 +417,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.S.M.S.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_S_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
 print("[G_S_M_S] Done!")
 
 
@@ -426,12 +426,12 @@ print("[G_S_M_S] Done!")
 print("[G_S_M]...")
 
 # Manipulation des donnees
-mean <- G.S.M.M$mean
-sd <- G.S.M.S$sd
-G.S.M <- data.frame(mean, sd)
+mean <- G_S_M_M$mean
+sd <- G_S_M_S$sd
+G_S_M <- data.frame(mean, sd)
 
 # Creation du graphique
-df <- data.frame(x=1, y=G.S.M$mean)
+df <- data.frame(x=1, y=G_S_M$mean)
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
   geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
@@ -447,7 +447,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.S.M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_S_M.png", sep=""), width = 7, height = 8, dpi = 100)
 print("[G_S_M] Done!")
 
 
@@ -461,16 +461,16 @@ print("[G_S_M] Done!")
 print("[G_P_Y_T]...")
 
 # Manipulation des donnees
-G.P.Y.T <- sourceData$Libelle %>%                                             
+G_P_Y_T <- sourceData$Libelle %>%                                             
   length() %>%
   data.frame()
-colnames(G.P.Y.T) <- c("n")                                                   
+colnames(G_P_Y_T) <- c("n")                                                   
 
 # Sauvegarde des donnees
-write_csv(G.P.Y.T, paste(projectPath, "03_output/G.P.Y.T.csv", sep=""))
+write_csv(G_P_Y_T, paste(projectPath, "03_output/G_P_Y_T.csv", sep=""))
 
 # Creation du graphique
-df <- data.frame(x=1, y=G.P.Y.T[1,1])
+df <- data.frame(x=1, y=G_P_Y_T[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9)+
   labs(
@@ -486,24 +486,24 @@ plot <- ggplot(df, aes(x=x, y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.P.Y.T.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_P_Y_T.png", sep=""), width = 7, height = 8, dpi = 100)
 sprintf("[G_P_Y_T] Done!")
 
 
 ## [G_P_M_T] ############################### 
-print("[G.P.M.T]...")
+print("[G_P_M_T]...")
 
-G.P.M.T <- sourceData %>%
+G_P_M_T <- sourceData %>%
   select(Libelle, MoisVenteId)
-G.P.M.T <- aggregate(G.P.M.T$Libelle, by=list(G.P.M.T$MoisVenteId), FUN=length) %>%
+G_P_M_T <- aggregate(G_P_M_T$Libelle, by=list(G_P_M_T$MoisVenteId), FUN=length) %>%
   rename(MoisVenteId=Group.1, n=x)
 
-write_csv(G.P.M.T, paste(projectPath, "03_output/G.P.M.T.csv", sep=""))
+write_csv(G_P_M_T, paste(projectPath, "03_output/G_P_M_T.csv", sep=""))
 
-df <- data.frame(x = 1, y=G.P.M.T[1,1])
-plot <- ggplot(data = G.P.M.T, aes(x= as.numeric(MoisVenteId), y=n))+
+df <- data.frame(x = 1, y=G_P_M_T[1,1])
+plot <- ggplot(data = G_P_M_T, aes(x= as.numeric(MoisVenteId), y=n))+
   geom_histogram(stat="identity", fill="steelblue3", color="steelblue3")+
-  geom_errorbar(aes(ymin=n-sd(G.P.M.T$n), ymax=n+sd(G.P.M.T$n)), width=.2,
+  geom_errorbar(aes(ymin=n-sd(G_P_M_T$n), ymax=n+sd(G_P_M_T$n)), width=.2,
                 position=position_dodge(.9))+
   labs(
     title="Nombre total de produits vendus par mois",
@@ -518,26 +518,26 @@ plot <- ggplot(data = G.P.M.T, aes(x= as.numeric(MoisVenteId), y=n))+
   )
 print(plot)
 
-ggsave(paste(projectPath, "03_output/G.P.M.T.png", sep=""), width = 5, height = 8, dpi = 100)
-print("[G.P.M.T] Done!")
+ggsave(paste(projectPath, "03_output/G_P_M_T.png", sep=""), width = 5, height = 8, dpi = 100)
+print("[G_P_M_T] Done!")
 
 
 
 ## [G_P_M_M] ############################### 
-print("[G.P.M.M]...")
+print("[G_P_M_M]...")
 
 
-G.P.M.M <- sourceData %>%
+G_P_M_M <- sourceData %>%
   select(Libelle, MoisVenteId)
-G.P.M.M <- aggregate(G.P.M.M$Libelle, by=list(G.P.M.M$MoisVenteId), FUN=length) %>%
+G_P_M_M <- aggregate(G_P_M_M$Libelle, by=list(G_P_M_M$MoisVenteId), FUN=length) %>%
   rename(MoisVenteId=Group.1, n=x)
-G.P.M.M <- mean(G.P.M.M$n) %>%
+G_P_M_M <- mean(G_P_M_M$n) %>%
   data.frame()
-colnames(G.P.M.M) <- c("mean")
+colnames(G_P_M_M) <- c("mean")
 
-write_csv(G.P.M.M, paste(projectPath, "03_output/G.P.M.M.csv", sep=""))
+write_csv(G_P_M_M, paste(projectPath, "03_output/G_P_M_M.csv", sep=""))
 
-df <- data.frame(x = 1, y = G.P.M.M[1,1])
+df <- data.frame(x = 1, y = G_P_M_M[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -552,24 +552,24 @@ plot <- ggplot(df, aes(x=x, y=y))+
         axis.ticks.x=element_blank())
 print(plot)
 
-ggsave(paste(projectPath, "03_output/G.P.M.M.png", sep=""), width=5, height=8,dpi=100)
-print("[G.P.M.M] Done!")
+ggsave(paste(projectPath, "03_output/G_P_M_M.png", sep=""), width=5, height=8,dpi=100)
+print("[G_P_M_M] Done!")
 
 
 ## [G_P_M_S] ############################### 
-print("[G.P.M.S]...")
+print("[G_P_M_S]...")
 
-G.P.M.S <- sourceData %>%
+G_P_M_S <- sourceData %>%
   select(Libelle, MoisVenteId)
-G.P.M.S <- aggregate(G.P.M.S$Libelle, by=list(G.P.M.S$MoisVenteId), FUN=length) %>%
+G_P_M_S <- aggregate(G_P_M_S$Libelle, by=list(G_P_M_S$MoisVenteId), FUN=length) %>%
   rename(MoisVenteId=Group.1, n=x)
-G.P.M.S <- sd(G.P.M.S$n) %>%
+G_P_M_S <- sd(G_P_M_S$n) %>%
   data.frame()
-colnames(G.P.M.S) <- c("sd")
+colnames(G_P_M_S) <- c("sd")
 
-write_csv(G.P.M.S, paste(projectPath, "03_output/G.P.M.S.csv", sep=""))
+write_csv(G_P_M_S, paste(projectPath, "03_output/G_P_M_S.csv", sep=""))
 
-df <- data.frame(x = 1, y = G.P.M.S[1,1])
+df <- data.frame(x = 1, y = G_P_M_S[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_segment( aes(x=x, xend=x, y=0, yend=y), size=1.3, alpha=0.9) +
   labs(
@@ -584,20 +584,20 @@ plot <- ggplot(df, aes(x=x, y=y))+
         axis.ticks.x=element_blank())
 print(plot)
 
-ggsave(paste(projectPath, "03_output/G.P.M.S.png", sep=""), width=5, height=8, dpi=100)
-print("[G.P.M.S] Done!")
+ggsave(paste(projectPath, "03_output/G_P_M_S.png", sep=""), width=5, height=8, dpi=100)
+print("[G_P_M_S] Done!")
 
 ## [G_P_M] ############################### 
 
-print("[G.P.M]...")
+print("[G_P_M]...")
 
 # Manipulation des donnees
-mean <- G.P.M.M$mean
-sd <- G.P.M.S$sd
-G.P.M <- data.frame(mean, sd)
+mean <- G_P_M_M$mean
+sd <- G_P_M_S$sd
+G_P_M <- data.frame(mean, sd)
 
 # Creation du graphique
-df <- data.frame(x=1, y=G.P.M$mean)
+df <- data.frame(x=1, y=G_P_M$mean)
 plot <- ggplot(df, aes(x=x, y=y))+
   geom_bar(stat="identity", width=0.5, fill="steelblue3", color="gray40")+
   geom_errorbar(aes(ymin=y-sd, ymax=y+sd), width=.3, position=position_dodge(.9))+
@@ -613,7 +613,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G.P.M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_output/G_P_M.png", sep=""), width = 7, height = 8, dpi = 100)
 print("[G_P_M] Done!")
 
 
