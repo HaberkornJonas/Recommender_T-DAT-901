@@ -35,7 +35,7 @@ sourceData <- read_csv(paste(projectPath, "01_data/KaDo.csv", sep="")) %>%
 print("Done!")
 
 ## PRE-PROCESSING ###############################
-## Clearing Data, Removing those 2 Families because they are not relevant
+## Clearing Data, Removing those 2 Families because they are not relevant enough (too few products)
 sourceData <- as.data.frame(sourceData)
 sourceData <- sourceData[!(sourceData$Famille=="MULTI FAMILLES"),]
 sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
@@ -55,8 +55,8 @@ write_csv(Familles, paste(projectPath, "03_output/Familles.csv", sep=""))      #
 
 
 Produits <- sourceData %>%                                          
-  select(Libelle) %>%                                                          # Keep Libelle column
-  distinct() %>%                                                               # Keep only distinc produit
+  select(Libelle, Famille) %>%                                                 # Keep Libelle column and family product name
+  distinct(Libelle, Famille) %>%                                               # Keep only distinc produit
   mutate(ProduitId=row_number())                                               # Assign ID to produit
 write_csv(Produits, paste(projectPath, "03_output/Produits.csv", sep=""))      # Generating csv mapping
 
