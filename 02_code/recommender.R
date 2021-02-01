@@ -296,7 +296,6 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 # Getting general data
 C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))                                    # Getting client's preferred products
-C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))                                    # Getting client's preferred products
 clientPreferedProducts <- C_MF_Y %>%
   filter(ClientId==clientId) %>%
   select(ProduitId)
@@ -330,7 +329,7 @@ related_S_S_I <-  S_S_I %>%
 client_S_F <- subset(S_F, ClientId == clientId)                                                           # Keeping only client's data
 related_S_F <-  S_F %>%
   filter(S_F$ClusterId==clientProfile$S_F & S_F$ClientId!=clientProfile$ClientId) %>%                     # Keeping only data from the same cluster as the client's cluster and removing client itself
-  transform(dist=round(abs(n-client_S_F$n/12), digits=2)) %>%                                             # Calculating distance with the selected client (divinding by 12 to keep indicator normalized with the others segmentations)
+  transform(dist=round(abs((n-client_S_F$n)/12), digits=2)) %>%                                             # Calculating distance with the selected client (divinding by 12 to keep indicator normalized with the others segmentations)
   arrange(dist)                                                                                           # Ordering by distance ascending
 
 
@@ -359,7 +358,7 @@ R_1_related <- related_S_R %>%
   transform(dist_S_R  =ifelse(is.na(dist_S_R),   max(related_S_R$dist),    dist_S_R    )) %>%
   transform(dist_S_S_T=ifelse(is.na(dist_S_S_T), max(related_S_S_T$dist),  dist_S_S_T  )) %>%
   transform(dist_S_S_I=ifelse(is.na(dist_S_S_I), max(related_S_S_I$dist),  dist_S_S_I  )) %>%
-  transform(dist_S_F  =ifelse(is.na(dist_S_F),   max(related_S_F$dist)/12, dist_S_F/12 )) %>%
+  transform(dist_S_F  =ifelse(is.na(dist_S_F),   max(related_S_F$dist),    dist_S_F    )) %>%
   transform(dist=round(dist_S_R+dist_S_S_T+dist_S_S_I+dist_S_F, digits=2)) %>%
   arrange(dist)
   
@@ -394,7 +393,40 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 
 ### [R_2] "Because you are interested in..." ###############################
-#TODO
+# Calculating how close each profile that appears at least once in the same cluster are from the selected client
+R_2_related <- related_S_F %>%
+  select(ClientId, dist) %>%
+  arrange(dist)
+
+# Getting closest scores
+R_2_top_scores <- R_2_related %>%
+  select(dist) %>%
+  distinct() %>%
+  head(3)
+
+
+# Getting closest profiles
+R_2_top_related <- R_2_related %>%
+  filter(dist %in% R_2_top_scores$dist)
+
+# Getting closest profile's preferred products
+R_2_top_related_products <- C_MF_Y %>%
+  filter(ClientId %in% R_2_top_related$ClientId) %>%
+  filter(!(ProduitId %in% clientPreferedProducts$ProduitId)) %>%
+  select(ProduitId, n) %>%
+  group_by(ProduitId) %>%
+  summarise(n=sum(n)) %>%
+  merge(Products, by='ProduitId', sort=F) %>%
+  arrange(match(Famille, clientPreferedProductFamily$Famille), desc(n))
+
+
+# Making recommendation
+write("- Parce que vous etes interesse par...", file=descriptionFile, append=T)
+write(paste("    * ", R_2_top_related_products[1, "Libelle"], " (#", R_2_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+write(paste("    * ", R_2_top_related_products[2, "Libelle"], " (#", R_2_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+write(paste("    * ", R_2_top_related_products[3, "Libelle"], " (#", R_2_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+write(paste("    (Ces recommendations se basent sur le type de produits que vous preferez et sur le succes de produits de ce type pour vous proposer de nouveaux produits dans votre centre d'interet)", sep=""), file=descriptionFile, append=T)
+write(paste("", sep=""), file=descriptionFile, append=T)
 
 
 
