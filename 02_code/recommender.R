@@ -52,16 +52,39 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 # Client ID
 write(paste("ClientId:",clientId), file=descriptionFile, append=T)
 
+
+
+
+
+
+
+
+
 # Add lots of statistics (# tickets, 3 most frequented months, money spend, # products bought, etc.)
 # TODO
 
 
-write(paste("", sep=""), file=descriptionFile, append=T)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 ## CLIENT SEGMENTATION ANALYSIS ###############################
 print("## Client segmentation analysis")
+write(paste("", sep=""), file=descriptionFile, append=T)
 write("----- SEGMENTATION ANALYSIS -----", file=descriptionFile, append=T)
 clientProfile <- data.frame(ClientId=clientId)
 
