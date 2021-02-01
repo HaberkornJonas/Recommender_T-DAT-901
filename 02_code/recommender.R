@@ -356,10 +356,10 @@ R_1_related <- related_S_R %>%
           select(ClientId, dist_S_F),
         by="ClientId", sort=F, all = TRUE
   ) %>%
-  transform(dist_S_R  =ifelse(is.na(dist_S_R),   max(related_S_R$dist),   dist_S_R  )) %>%
-  transform(dist_S_S_T=ifelse(is.na(dist_S_S_T), max(related_S_S_T$dist), dist_S_S_T)) %>%
-  transform(dist_S_S_I=ifelse(is.na(dist_S_S_I), max(related_S_S_I$dist), dist_S_S_I)) %>%
-  transform(dist_S_F  =ifelse(is.na(dist_S_F),   max(related_S_F$dist),   dist_S_F  )) %>%
+  transform(dist_S_R  =ifelse(is.na(dist_S_R),   max(related_S_R$dist),    dist_S_R    )) %>%
+  transform(dist_S_S_T=ifelse(is.na(dist_S_S_T), max(related_S_S_T$dist),  dist_S_S_T  )) %>%
+  transform(dist_S_S_I=ifelse(is.na(dist_S_S_I), max(related_S_S_I$dist),  dist_S_S_I  )) %>%
+  transform(dist_S_F  =ifelse(is.na(dist_S_F),   max(related_S_F$dist)/12, dist_S_F/12 )) %>%
   transform(dist=round(dist_S_R+dist_S_S_T+dist_S_S_I+dist_S_F, digits=2)) %>%
   arrange(dist)
   
