@@ -46,7 +46,7 @@ descriptionFile<-paste(projectPath, "03_output/Client_", clientId, "/description
 
 ## CLIENT STATISTICAL DESCRIPTION ###############################
 print("## Client statistical dedscripton")
-write("----- STATISTICAL DESCRIPTION -----", file=descriptionFile, append=T)
+write("----- DESCRIPTION STATISTIQUE DU CLIENT -----", file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 # Client ID
@@ -85,7 +85,7 @@ write(paste("ClientId:",clientId), file=descriptionFile, append=T)
 ## CLIENT SEGMENTATION ANALYSIS ###############################
 print("## Client segmentation analysis")
 write(paste("", sep=""), file=descriptionFile, append=T)
-write("----- SEGMENTATION ANALYSIS -----", file=descriptionFile, append=T)
+write("----- ANALYSE DE LA SEGMENTATION -----", file=descriptionFile, append=T)
 clientProfile <- data.frame(ClientId=clientId)
 
 
@@ -314,7 +314,7 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 ## CLIENT RECOMMENDATIONS ###############################
 print("## Client recommendations")
-write("----- CLIENT RECOMMENDATIONS -----", file=descriptionFile, append=T)
+write("----- RECOMMENDATIONS -----", file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 # Getting general data
