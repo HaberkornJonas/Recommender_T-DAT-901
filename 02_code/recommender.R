@@ -6,6 +6,7 @@ library(forcats)
 library(scales)
 library(Hmisc)
 library(tidyr)
+library(gridExtra)
 
 
 ## STATIC VALUES ###############################
@@ -154,6 +155,54 @@ write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
+# Generating plot
+# Scatter plot of clients in the group
+scatterPlot <- ggplot(group,aes(mean, sd)) + 
+  geom_point() + 
+  geom_point(data=group%>%filter(ClientId==clientProfile$ClientId), aes(mean, sd), color="red", size=3) +
+  scale_color_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+# Marginal density curve for mean values
+xdensity <- ggplot(group, aes(mean, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Marginal density curve for sd values
+ydensity <- ggplot(group, aes(sd, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  coord_flip() +
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Create blank plot to hold previous plots
+blankPlot <- ggplot()+geom_blank(aes(1,1))+
+  theme(plot.background = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+  ) +
+  labs(
+    title = paste("Position du client dans le groupe #", S_R.client$S_R, "\nDe la segementation S_R", sep=""),
+    subtitle = "Donnees generees a partir du dataset KaDo"
+  )
+
+# Create and save grid plot
+png(file=paste(clientDir, "/S_R.png", sep=""),
+    width=1200, height=700)
+gridPlot <- grid.arrange(xdensity, blankPlot, scatterPlot, ydensity, 
+             ncol=2, nrow=2, widths=c(4, 1.4), heights=c(1.4, 4))
+dev.off()
+
+
+
 
 
 
@@ -220,6 +269,52 @@ write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
+# Generating plot
+# Scatter plot of clients in the group
+scatterPlot <- ggplot(group,aes(mean, sd)) + 
+  geom_point() + 
+  geom_point(data=group%>%filter(ClientId==clientProfile$ClientId), aes(mean, sd), color="red", size=3) +
+  scale_color_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+# Marginal density curve for mean values
+xdensity <- ggplot(group, aes(mean, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Marginal density curve for sd values
+ydensity <- ggplot(group, aes(sd, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  coord_flip() +
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Create blank plot to hold previous plots
+blankPlot <- ggplot()+geom_blank(aes(1,1))+
+  theme(plot.background = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+  ) +
+  labs(
+    title = paste("Position du client dans le groupe #", S_S_T.client$S_S_T, "\nDe la segementation S_S_T", sep=""),
+    subtitle = "Donnees generees a partir du dataset KaDo"
+  )
+
+# Create and save grid plot
+png(file=paste(clientDir, "/S_S_T.png", sep=""),
+    width=1200, height=700)
+gridPlot <- grid.arrange(xdensity, blankPlot, scatterPlot, ydensity, 
+                         ncol=2, nrow=2, widths=c(4, 1.4), heights=c(1.4, 4))
+dev.off()
+
 
 
 
@@ -285,6 +380,52 @@ write(paste("    Distance a l'origine: [", minDist, ", ", dist, ", ", maxDist, "
 write(paste("", sep=""), file=descriptionFile, append=T)
 
 
+# Generating plot
+# Scatter plot of clients in the group
+scatterPlot <- ggplot(group,aes(mean, sd)) + 
+  geom_point() + 
+  geom_point(data=group%>%filter(ClientId==clientProfile$ClientId), aes(mean, sd), color="red", size=3) +
+  scale_color_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+# Marginal density curve for mean values
+xdensity <- ggplot(group, aes(mean, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Marginal density curve for sd values
+ydensity <- ggplot(group, aes(sd, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  coord_flip() +
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Create blank plot to hold previous plots
+blankPlot <- ggplot()+geom_blank(aes(1,1))+
+  theme(plot.background = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+  ) +
+  labs(
+    title = paste("Position du client dans le groupe #", S_S_I.client$S_S_I, "\nDe la segementation S_S_I", sep=""),
+    subtitle = "Donnees generees a partir du dataset KaDo"
+  )
+
+# Create and save grid plot
+png(file=paste(clientDir, "/S_S_I.png", sep=""),
+    width=1200, height=700)
+gridPlot <- grid.arrange(xdensity, blankPlot, scatterPlot, ydensity, 
+                         ncol=2, nrow=2, widths=c(4, 1.4), heights=c(1.4, 4))
+dev.off()
+
 
 
 
@@ -327,8 +468,59 @@ write(paste("    Groupe ID:            [", clientProfile$S_F, "]", sep=""), file
 write(paste("    Produits achetes:     [", minN, ", ", n, ", ", maxN, "] (mean: ", meanN, ", sd: ", sdN, ")", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
+group
+# Generating plot
+# Scatter plot of clients in the group
+scatterPlot <- ggplot(group,aes(n, FamilleId)) + 
+  geom_point() + 
+  geom_point(data=group%>%filter(ClientId==clientProfile$ClientId), aes(n, FamilleId), color="red", size=3) +
+  scale_color_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position=c(0,1), legend.justification=c(0,1))
+
+# Marginal density curve for n values
+xdensity <- ggplot(group, aes(n, fill=c('#999999'))) + 
+  geom_density(alpha=.5, adjust=2) + 
+  scale_fill_manual(values = c('#999999','#E69F00')) + 
+  theme(legend.position = "none")
+
+# Create blank plot to hold previous plots
+blankPlot <- ggplot()+geom_blank(aes(1,1))+
+  theme(plot.background = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+  )
+
+blankPlot_title <- ggplot()+geom_blank(aes(1,1))+
+  theme(plot.background = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+  ) +
+  labs(
+    title = paste("Position du client dans le groupe #", S_F.client$S_F, "\nDe la segementation S_F", sep=""),
+    subtitle = "Donnees generees a partir du dataset KaDo"
+  )
 
 
+# Create and save grid plot
+png(file=paste(clientDir, "/S_F.png", sep=""),
+    width=1200, height=700)
+gridPlot <- grid.arrange(xdensity, blankPlot_title, scatterPlot, blankPlot, 
+                         ncol=2, nrow=2, widths=c(4, 1.4), heights=c(1.4, 4))
+dev.off()
 
 
 
