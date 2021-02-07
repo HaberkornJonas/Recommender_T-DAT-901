@@ -317,13 +317,57 @@ print("## Client recommendations")
 write("----- RECOMMENDATIONS -----", file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
+# Display function for recommendations
+display_Recommendations <- function(descriptionFile, R_top_related_products, R_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, recommendation_intro, recommendation_description){
+  
+  # Making recommendation
+  write(paste("- ", recommendation_intro, sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[1, "Libelle"], " (#", R_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[2, "Libelle"], " (#", R_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[3, "Libelle"], " (#", R_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+  
+  # Explaining recommendation
+  write(paste("    ", sep=""), file=descriptionFile, append=T)
+  write(paste("    ", recommendation_description, sep=""), file=descriptionFile, append=T)
+  
+  # Details about the products
+  write(paste("", sep=""), file=descriptionFile, append=T)
+  write(paste("    Details sur les produits recommendes : ", sep=""), file=descriptionFile, append=T)
+  for(i in 1:3){
+    write(paste("        * ", R_top_related_products[i, "Libelle"], " (#", R_top_related_products[i, "ProduitId"], ") a ete achete ", R_top_related_products[i, "n"], " fois par des profils semblables au votres selon les criteres mentionnes ci-dessus.", sep=""), file=descriptionFile, append=T)
+    write(paste("            Ce produit produit a ete selectionne parmis les produits potentiels car il fait parti des produits les plus populaires des profils proches du votres", ifelse(R_top_related_products[i, "Famille"]==clientPreferedProductFamily$Famille, " et qu'il fait parti de votre famille de produit preferee.", "."), sep=""), file=descriptionFile, append=T)  
+    write(paste("", sep=""), file=descriptionFile, append=T)
+  }
+  
+  # Details about the closest profils 
+  write(paste("    Details sur les profils proches du votre (top 3) : ", sep=""), file=descriptionFile, append=T)
+  for(i in 1:3){
+    write(paste("        * Client #", R_top_related[i, "ClientId"], " est a une distance totale de votre profil de ", R_top_related[i, "dist"], ", ses produits preferes sont : ", sep=""), file=descriptionFile, append=T)
+    produits <- C_MF_Y %>%
+      filter(ClientId == R_top_related[i, "ClientId"]) %>%
+      filter(!(ProduitId %in% clientPreferedProducts$ProduitId)) %>%
+      select(ProduitId, n) %>%
+      group_by(ProduitId) %>%
+      summarise(n=sum(n)) %>%
+      merge(Products, by='ProduitId', sort=F)
+    for(j in 1:3){
+      if(!is.na(produits[j,"n"])){
+        write(paste("            * ", produits[j, "Libelle"], " (#", produits[j, "ProduitId"], ") achete ", produits[j, "n"], " fois et de la famille ", produits[j, "Famille"], sep=""), file=descriptionFile, append=T)  
+      }
+    }
+    write(paste("", sep=""), file=descriptionFile, append=T)
+  }
+  write(paste("", sep=""), file=descriptionFile, append=T)
+}
+
+
 # Getting general data
 C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))                                    # Getting client's preferred products
 clientPreferedProducts <- C_MF_Y %>%
   filter(ClientId==clientId) %>%
   select(ProduitId)
 clientPreferedProductFamily <- subset(S_F, ClientId==clientId) %>%
-  merge(Familles, by="FamilleId") %>%
+  merge(Families, by="FamilleId") %>%
   select(ClientId, FamilleId, Famille)
 
 
@@ -405,14 +449,8 @@ R_1_top_related_products <- C_MF_Y %>%
   merge(Products, by='ProduitId', sort=F) %>%
   arrange(match(Famille, clientPreferedProductFamily$Famille), desc(n))
 
-# Making recommendation
-write("- D'autres profils comme le votre aiment aussi...", file=descriptionFile, append=T)
-write(paste("    * ", R_1_top_related_products[1, "Libelle"], " (#", R_1_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_1_top_related_products[2, "Libelle"], " (#", R_1_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_1_top_related_products[3, "Libelle"], " (#", R_1_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    (Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant la regularite, les depenses par achats et par produits ainsi que la famille de produit preferee pour vous proposer des produits dans votre budget et centre d'interet)", sep=""), file=descriptionFile, append=T)
-write(paste("", sep=""), file=descriptionFile, append=T)
-
+# Displaying recommendation
+display_Recommendations(descriptionFile, R_2_top_related_products, R_2_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "D'autres profils comme le votre aiment aussi...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant la regularite, les depenses par achats et par produits ainsi que la famille de produit preferee pour vous proposer des produits dans votre budget et centre d'interet")
 
 
 ### [R_2] "Because you are interested in..." ###############################
@@ -442,15 +480,8 @@ R_2_top_related_products <- C_MF_Y %>%
   merge(Products, by='ProduitId', sort=F) %>%
   arrange(match(Famille, clientPreferedProductFamily$Famille), desc(n))
 
-
-# Making recommendation
-write("- Parce que vous etes interesse par...", file=descriptionFile, append=T)
-write(paste("    * ", R_2_top_related_products[1, "Libelle"], " (#", R_2_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_2_top_related_products[2, "Libelle"], " (#", R_2_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_2_top_related_products[3, "Libelle"], " (#", R_2_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    (Ces recommendations se basent sur le type de produits que vous preferez et sur le succes de produits de ce type pour vous proposer de nouveaux produits dans votre centre d'interet)", sep=""), file=descriptionFile, append=T)
-write(paste("", sep=""), file=descriptionFile, append=T)
-
+# Displaying recommendation
+display_Recommendations(descriptionFile, R_2_top_related_products, R_2_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "Parce que vous etes interesse par...", "Ces recommendations se basent sur le type de produits que vous preferez et sur le succes de produits de ce type pour vous proposer de nouveaux produits dans votre centre d'interet")
 
 
 ### [R_3] "Based on your budget..." ###############################
@@ -488,12 +519,5 @@ R_3_top_related_products <- C_MF_Y %>%
   merge(Products, by='ProduitId', sort=F) %>%
   arrange(match(Famille, clientPreferedProductFamily$Famille), desc(n))
 
-
-# Making recommendation
-write("- Base sur votre budget, nous vous recommandons...", file=descriptionFile, append=T)
-write(paste("    * ", R_3_top_related_products[1, "Libelle"], " (#", R_3_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_3_top_related_products[2, "Libelle"], " (#", R_3_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    * ", R_3_top_related_products[3, "Libelle"], " (#", R_3_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-write(paste("    (Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant les depenses par achats et par produits pour vous proposer des produits dans votre budget et centre d'interet)", sep=""), file=descriptionFile, append=T)
-write(paste("", sep=""), file=descriptionFile, append=T)
-
+# Displaying recommendation
+display_Recommendations(descriptionFile, R_3_top_related_products, R_3_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "Base sur votre budget, nous vous recommandons...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant les depenses par achats et par produits pour vous proposer des produits dans votre budget et centre d'interet")
