@@ -662,7 +662,7 @@ R_1_top_related_products <- C_MF_Y %>%
   arrange(match(Famille, clientPreferedProductFamily$Famille), desc(n))
 
 # Displaying recommendation
-display_Recommendations(descriptionFile, R_2_top_related_products, R_2_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "D'autres profils comme le votre aiment aussi...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant la regularite, les depenses par achats et par produits ainsi que la famille de produit preferee pour vous proposer des produits dans votre budget et centre d'interet")
+display_Recommendations(descriptionFile, R_1_top_related_products, R_1_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "D'autres profils comme le votre aiment aussi...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant la regularite, les depenses par achats et par produits ainsi que la famille de produit preferee pour vous proposer des produits dans votre budget et centre d'interet")
 
 
 ### [R_2] "Because you are interested in..." ###############################
