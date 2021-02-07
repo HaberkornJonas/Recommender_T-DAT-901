@@ -32,14 +32,68 @@ sourceData <- read_csv(paste(projectPath, "01_data/KaDo.csv", sep="")) %>%
                   Libelle = LIBELLE,
                   ClientId = CLI_ID
               )
+sourceData <- as.data.frame(sourceData)
 print("Done!")
 
+
+
 ## PRE-PROCESSING ###############################
+
+## Products sells per family
+sells_per_family <- sourceData %>% 
+  group_by(Famille) %>%
+  tally()
+
+# Creation du graphique
+plot <- ggplot(data = sells_per_family, aes(x = Famille, y = n))+
+  geom_col(fill="steelblue3", color="gray40")+
+  labs(
+    title = "Nombre total de produits vendus par familles de produits",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Famille de produits",
+    y = "Nombre de produits vendus"
+  )+
+  scale_y_continuous(labels = scales::comma)
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/pre_processing_1.png", sep=""), width = 12, height = 8, dpi = 100)
+
+
+## Products per families
+produits_per_family <- sourceData %>% 
+  group_by(Famille, Libelle) %>%
+  tally() %>%
+  group_by(Famille) %>%
+  tally()
+produits_par_famille
+
+# Creation du graphique
+plot <- ggplot(data = produits_per_family, aes(x = Famille, y = n))+
+  geom_col(fill="steelblue3", color="gray40")+
+  labs(
+    title = "Nombre de produits distincts par familles de produits",
+    subtitle = "Donnees du dataset KaDo",
+    x = "Famille de produits",
+    y = "Nombre de produits distincts"
+  )+
+  scale_y_continuous(labels = scales::comma)
+print(plot)
+
+# Sauvegarde du graphique
+ggsave(paste(projectPath, "03_output/pre_processing_2.png", sep=""), width = 12, height = 8, dpi = 100)
+
+
+
 ## Clearing Data, Removing those 2 Families because they are not relevant enough (too few products)
-sourceData <- as.data.frame(sourceData)
 sourceData <- sourceData[!(sourceData$Famille=="MULTI FAMILLES"),]
 sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
 
+
+
+
+
+## DICTIONARIES ############################
 
 ## Generating label to ID matching for families and products
 Customers <- sourceData %>%
@@ -59,6 +113,8 @@ Produits <- sourceData %>%
   distinct(Libelle, Famille) %>%                                               # Keep only distinc produit
   mutate(ProduitId=row_number())                                               # Assign ID to produit
 write_csv(Produits, paste(projectPath, "03_output/Produits.csv", sep=""))      # Generating csv mapping
+
+
 
 
 
