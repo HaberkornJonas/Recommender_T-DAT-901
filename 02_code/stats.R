@@ -12,7 +12,7 @@ library(tidyr)
 
 
 ## STATIC VALUES ###############################
-projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+projectPath <- "/Users/ogunkocaoz/Projects/School/TDAT901/t-dat-901/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -673,14 +673,6 @@ ggsave(paste(projectPath, "03_output/G_P_M.png", sep=""), width = 7, height = 8,
 print("[G_P_M] Done!")
 
 
-
-
-
-
-
-
-
-
 ####  [G_F] General Families stats ####
 
 #### Products dataset creation ########
@@ -703,6 +695,7 @@ productsByFamily_Plot <- ggplot(productsByFamily,
   )
 
 print(productsByFamily_Plot)
+ggsave(paste(projectPath, "03_output/G_F_T.png", sep=""), width=8, height=8, dpi=500)
 
 ## [G_F_Y_T] ############################### 
 G_F_Y_T <- as.data.frame(table(sourceData$Famille))
@@ -717,6 +710,7 @@ G_F_Y_T_Plot <- ggplot(G_F_Y_T,
         )
 
 print(G_F_Y_T_Plot)
+ggsave(paste(projectPath, "03_output/G_F_T_Y.png", sep=""), width=10, height=10, dpi=500)
 
 ## [G_F_M_T] ############################### 
 # TODO
@@ -728,6 +722,59 @@ print(G_F_Y_T_Plot)
 
 ## [G_F_M_S] ############################### 
 # TODO
+
+## [G_MF_F] ############################### 
+################################################
+#     Getting best selling items by Family     #
+################################################
+# Hygiene Family #
+hygieneFam = table(sourceData[sourceData$Famille=="HYGIENE", ]$Libelle)
+bestHygieneItems = as.data.frame(hygieneFam[order(hygieneFam, decreasing = TRUE)])
+colnames(bestHygieneItems)[1] <- "Libelle"
+colnames(bestHygieneItems)[2] <- "Ventes"
+write_csv(bestHygieneItems, paste(projectPath, "03_output/bestHygieneItems.csv", sep=""))
+
+# Capillary Family #
+capillaryFam = table(sourceData[sourceData$Famille=="CAPILLAIRES", ]$Libelle)
+bestCapillaryItems = as.data.frame(capillaryFam[order(capillaryFam, decreasing = TRUE)])
+colnames(bestCapillaryItems)[1] <- "Libelle"
+colnames(bestCapillaryItems)[2] <- "Ventes"
+write_csv(bestCapillaryItems, paste(projectPath, "03_output/bestCapillaryItems.csv", sep=""))
+
+# Makeup Family #
+makeupFam = table(sourceData[sourceData$Famille=="MAQUILLAGE", ]$Libelle)
+bestMakeupItems = as.data.frame(makeupFam[order(makeupFam, decreasing = TRUE)])
+colnames(bestMakeupItems)[1] <- "Libelle"
+colnames(bestMakeupItems)[2] <- "Ventes"
+write_csv(bestMakeupItems, paste(projectPath, "03_output/bestMakeupItems.csv", sep=""))
+
+# Parfum Family #
+parfumFam = table(sourceData[sourceData$Famille=="PARFUMAGE", ]$Libelle)
+bestParfumItems = as.data.frame(parfumFam[order(parfumFam, decreasing = TRUE)])
+colnames(bestParfumItems)[1] <- "Libelle"
+colnames(bestParfumItems)[2] <- "Ventes"
+write_csv(bestParfumItems, paste(projectPath, "03_output/bestParfumItems.csv", sep=""))
+
+# Body Care Family #
+bodyCareFam = table(sourceData[sourceData$Famille=="SOINS DU CORPS", ]$Libelle)
+bestBodyCareItems = as.data.frame(bodyCareFam[order(bodyCareFam, decreasing = TRUE)])
+colnames(bestBodyCareItems)[1] <- "Libelle"
+colnames(bestBodyCareItems)[2] <- "Ventes"
+write_csv(bestBodyCareItems, paste(projectPath, "03_output/bestBodyCareItems.csv", sep=""))
+
+# Face Care Family #
+faceCareFam = table(sourceData[sourceData$Famille=="SOINS DU VISAGE", ]$Libelle)
+bestFaceCareItems = as.data.frame(faceCareFam[order(faceCareFam, decreasing = TRUE)])
+colnames(bestFaceCareItems)[1] <- "Libelle"
+colnames(bestFaceCareItems)[2] <- "Ventes"
+write_csv(bestFaceCareItems, paste(projectPath, "03_output/bestFaceCareItems.csv", sep=""))
+
+# Sun Family #
+sunFam = table(sourceData[sourceData$Famille=="SOLAIRES", ]$Libelle)
+bestSunItems = as.data.frame(sunFam[order(sunFam, decreasing = TRUE)])
+colnames(bestSunItems)[1] <- "Libelle"
+colnames(bestSunItems)[2] <- "Ventes"
+write_csv(bestSunItems, paste(projectPath, "03_output/bestSunItems.csv", sep=""))
 
 
 ## [G_F_P_M] ###############################
@@ -807,23 +854,51 @@ for (product in bestSunItems$Libelle)
 }
 
 # Means of prices of items in each Family
-mean(bestCapillaryItems[["PRIX"]])
-mean(bestHygieneItems[["PRIX"]])
-mean(bestMakeupItems[["PRIX"]])
-mean(bestParfumItems[["PRIX"]])
-mean(bestBodyCareItems[["PRIX"]])
-mean(bestFaceCareItems[["PRIX"]])
-mean(bestSunItems[["PRIX"]])
+family <- c("Capillary", "Hygiene", "Makeup", "Parfum", "BodyCare", "FaceCare", "Sun")
+meanPrices <- c(
+  mean(bestCapillaryItems[["Prix"]]),
+  mean(bestHygieneItems[["Prix"]]),
+  mean(bestMakeupItems[["Prix"]]),
+  mean(bestParfumItems[["Prix"]]),
+  mean(bestBodyCareItems[["Prix"]]),
+  mean(bestFaceCareItems[["Prix"]]),
+  mean(bestSunItems[["Prix"]])
+)
+
+meanPricesByFamilies_DF <- data.frame(family, meanPrices)
+meanPricesByFamilies_Plot <- ggplot(meanPricesByFamilies_DF,
+                                 aes(x = family, y=meanPrices)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Prix moyen des produits par famille"
+  ) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(meanPricesByFamilies_Plot)
+ggsave(paste(projectPath, "03_output/G_F_P_M.png", sep=""), width=7, height=8, dpi=500)
 
 ## [G_F_P_S] ############################### 
-sd(bestCapillaryItems[["PRIX"]])
-sd(bestHygieneItems[["PRIX"]])
-sd(bestMakeupItems[["PRIX"]])
-sd(bestParfumItems[["PRIX"]])
-sd(bestBodyCareItems[["PRIX"]])
-sd(bestFaceCareItems[["PRIX"]])
-sd(bestSunItems[["PRIX"]])
+standardDeviations <- c(
+  sd(bestCapillaryItems[["Prix"]]),
+  sd(bestHygieneItems[["Prix"]]),
+  sd(bestMakeupItems[["Prix"]]),
+  sd(bestParfumItems[["Prix"]]),
+  sd(bestBodyCareItems[["Prix"]]),
+  sd(bestFaceCareItems[["Prix"]]),
+  sd(bestSunItems[["Prix"]])
+)
 
+standardDeviations_DF <- data.frame(family, standardDeviations)
+standardDeviations_Plot <- ggplot(standardDeviations_DF,
+                                    aes(x = family, y=standardDeviations)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Ecart type des prix des produits par famille"
+  ) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(standardDeviations_Plot)
+ggsave(paste(projectPath, "03_output/G_F_P_S.png",sep=""), width=7, height=8, dpi=500)
 
 ####  [G_U] General Univers stats ####
 ## [G_U_T] ############################### 
@@ -841,7 +916,8 @@ productsByUnivers_Plot <- ggplot(productsByUnivers,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(productsByUnivers_Plot)
-
+ggsave(paste(projectPath, "03_output/G_U_T.png",sep=""), width=20, height=10, dpi=500)
+write_csv(productsByUnivers, paste(projectPath, "03_output/G_U_T.csv", sep=""))
 ## [G_U_Y_T] ############################### 
 salesByUniversYear= as.data.frame(table(sourceData$Univers))
 colnames(salesByUniversYear)[1] = "Univers"
@@ -857,7 +933,8 @@ salesByUniversYear_Plot <- ggplot(salesByUniversYear,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(salesByUniversYear_Plot)
-
+ggsave(paste(projectPath, "03_output/G_U_Y_T.png",sep=""), width=25, height=10, dpi=500)
+write_csv(salesByUniversYear, paste(projectPath, "03_output/G_U_Y_T.csv", sep=""))
 ## [G_U_M_T] ############################### 
 # TODO
 
@@ -890,10 +967,27 @@ meanPriceByUnivers_Plot <- ggplot(universDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(meanPriceByUnivers_Plot)
-## [G_U_P_S] ############################### 
-sd(universDf[["PrixMoyen"]])
+ggsave(paste(projectPath, "03_output/G_U_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(universDf, paste(projectPath, "03_output/G_U_P_M.csv", sep=""))
+## [G_U_P_S] ###############################
+universDf[, "EcartType"] <- NA
 
+for(univers in universDf$Univers){
+  universDf[universDf$Univers==univers, ]$EcartType = sd(productsData[productsData$Univers==univers,]$PrixNet)
+}
 
+standardDeviationseByUnivers_Plot <- ggplot(universDf,
+                                  aes(x=Univers, y=EcartType)) +
+  geom_bar(stat="identity") +
+  labs(
+    title = "Ecart Type des prix par produits par Univers"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(standardDeviationseByUnivers_Plot)
+ggsave(paste(projectPath, "03_output/G_U_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(universDf, paste(projectPath, "03_output/G_U_P_S.csv", sep=""))
 ####  [G_M] General Maille stats ####
 ## [G_M_T] ############################### 
 productsByMaille = as.data.frame(table(productsData$Maille))
@@ -910,8 +1004,8 @@ productsByMaille_Plot <- ggplot(productsByMaille,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(productsByMaille_Plot)
-
-
+ggsave(paste(projectPath, "03_output/G_M_T.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(productsByMaille, paste(projectPath, "03_output/G_M_T.csv", sep=""))
 ## [G_M_Y_T] ############################### 
 salesByMaillesYear = as.data.frame(table(sourceData$Maille))
 colnames(salesByMaillesYear)[1] = "Maille"
@@ -927,7 +1021,8 @@ salesByMaillesYear_Plot <- ggplot(salesByMaillesYear,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(salesByMaillesYear_Plot)
-
+ggsave(paste(projectPath, "03_output/G_M_Y_T.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(salesByMaillesYear, paste(projectPath, "03_output/G_M_Y_T.csv", sep=""))
 ## [G_M_M_T] ############################### 
 # TODO
 
@@ -960,10 +1055,27 @@ meanPriceByMaille_Plot <- ggplot(maillesDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(meanPriceByMaille_Plot)
+ggsave(paste(projectPath, "03_output/G_M_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(maillesDf, paste(projectPath, "03_output/G_M_P_M.csv", sep=""))
 ## [G_M_P_S] ############################### 
-sd(maillesDf[["PrixMoyen"]])
+maillesDf[, "EcartType"] <- NA
 
+for(maille in maillesDf$Maille){
+  maillesDf[maillesDf$Maille==maille, ]$EcartType = sd(productsData[productsData$Maille==maille,]$PrixNet)
+}
 
+standardDeviationsByMaille_Plot <- ggplot(maillesDf,
+                                 aes(x=Maille, y=EcartType)) +
+  geom_bar(stat="identity") +
+  labs(
+    title = "Ecart type des prix des produits par Maille"
+  ) + 
+  scale_y_continuous(labels = scales::comma) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(standardDeviationsByMaille_Plot)
+ggsave(paste(projectPath, "03_output/G_M_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(maillesDf, paste(projectPath, "03_output/G_M_P_S.csv", sep=""))
 ####  [G_MF] General Most favorites Products ####
 ## [G_MF_Y] ############################### 
 salesByProductYear = as.data.frame(sort(table(sourceData$Libelle), decreasing = TRUE))
@@ -981,63 +1093,11 @@ salesByProductYear_Plot <- ggplot(salesByProductYear,
   scale_y_continuous(labels = scales::comma) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-print(salesByProductYear_Plot)
+print(salesByProductYear_Plot) # The plot is unreadable, so no png generated, the csv will do
+write_csv(salesByProductYear, paste(projectPath, "03_output/G_MF_Y.csv", sep=""))
 ## [G_MF_M] ############################### 
 # TODO
 
-
-## [G_MF_F] ############################### 
-################################################
-#     Getting best selling items by Family     #
-################################################
-# Hygiene Family #
-hygieneFam = table(sourceData[sourceData$Famille=="HYGIENE", ]$Libelle)
-bestHygieneItems = as.data.frame(hygieneFam[order(hygieneFam, decreasing = TRUE)])
-colnames(bestHygieneItems)[1] <- "Libelle"
-colnames(bestHygieneItems)[2] <- "Ventes"
-write_csv(bestHygieneItems, paste(projectPath, "03_output/bestHygieneItems.csv", sep=""))
-
-# Capillary Family #
-capillaryFam = table(sourceData[sourceData$Famille=="CAPILLAIRES", ]$Libelle)
-bestCapillaryItems = as.data.frame(capillaryFam[order(capillaryFam, decreasing = TRUE)])
-colnames(bestCapillaryItems)[1] <- "Libelle"
-colnames(bestCapillaryItems)[2] <- "Ventes"
-write_csv(bestCapillaryItems, paste(projectPath, "03_output/bestCapillaryItems.csv", sep=""))
-
-# Makeup Family #
-makeupFam = table(sourceData[sourceData$Famille=="MAQUILLAGE", ]$Libelle)
-bestMakeupItems = as.data.frame(makeupFam[order(makeupFam, decreasing = TRUE)])
-colnames(bestMakeupItems)[1] <- "Libelle"
-colnames(bestMakeupItems)[2] <- "Ventes"
-write_csv(bestMakeupItems, paste(projectPath, "03_output/bestMakeupItems.csv", sep=""))
-
-# Parfum Family #
-parfumFam = table(sourceData[sourceData$Famille=="PARFUMAGE", ]$Libelle)
-bestParfumItems = as.data.frame(parfumFam[order(parfumFam, decreasing = TRUE)])
-colnames(bestParfumItems)[1] <- "Libelle"
-colnames(bestParfumItems)[2] <- "Ventes"
-write_csv(bestParfumItems, paste(projectPath, "03_output/bestParfumItems.csv", sep=""))
-
-# Body Care Family #
-bodyCareFam = table(sourceData[sourceData$Famille=="SOINS DU CORPS", ]$Libelle)
-bestBodyCareItems = as.data.frame(bodyCareFam[order(bodyCareFam, decreasing = TRUE)])
-colnames(bestBodyCareItems)[1] <- "Libelle"
-colnames(bestBodyCareItems)[2] <- "Ventes"
-write_csv(bestBodyCareItems, paste(projectPath, "03_output/bestBodyCareItems.csv", sep=""))
-
-# Face Care Family #
-faceCareFam = table(sourceData[sourceData$Famille=="SOINS DU VISAGE", ]$Libelle)
-bestFaceCareItems = as.data.frame(faceCareFam[order(faceCareFam, decreasing = TRUE)])
-colnames(bestFaceCareItems)[1] <- "Libelle"
-colnames(bestFaceCareItems)[2] <- "Ventes"
-write_csv(bestFaceCareItems, paste(projectPath, "03_output/bestFaceCareItems.csv", sep=""))
-
-# Sun Family #
-sunFam = table(sourceData[sourceData$Famille=="SOLAIRES", ]$Libelle)
-bestSunItems = as.data.frame(sunFam[order(sunFam, decreasing = TRUE)])
-colnames(bestSunItems)[1] <- "Libelle"
-colnames(bestSunItems)[2] <- "Ventes"
-write_csv(bestSunItems, paste(projectPath, "03_output/bestSunItems.csv", sep=""))
 
 ####  [G_C] General Customer stats ####
 ####  [G_C_T] General Customer Ticket stats ####
