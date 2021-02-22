@@ -12,8 +12,9 @@ library(tidyr)
 
 
 ## STATIC VALUES ###############################
-projectPath <- "/Users/ogunkocaoz/Projects/School/TDAT901/t-dat-901/"
-#projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+## projectPath <- "/Users/ogunkocaoz/Projects/School/TDAT901/t-dat-901/"
+projectPath <- "E:/Projet/Epitech/t-dat-901/"
+## projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -1103,7 +1104,6 @@ write_csv(salesByProductYear, paste(projectPath, "03_output/G_MF_Y.csv", sep="")
 ####  [G_C] General Customer stats ####
 ####  [G_C_T] General Customer Ticket stats ####
 ## [G_C_T_Y_M] ############################### 
-# TODO
 
 
 ## [G_C_T_Y_S] ############################### 
@@ -1117,10 +1117,17 @@ write_csv(salesByProductYear, paste(projectPath, "03_output/G_MF_Y.csv", sep="")
 itemsBoughtByClients = as.data.frame(sort(table(sourceData$ClientId), decreasing=TRUE))
 colnames(itemsBoughtByClients)[1] <- "ClientID"
 colnames(itemsBoughtByClients)[2] <- "ItemsBought"
-mean(itemsBoughtByClients[["ItemsBought"]])
+
+G_C_P_Y_M <- mean(itemsBoughtByClients[["ItemsBought"]]) %>% data.frame()
+colnames(G_C_P_Y_M) <- c("mean")
+
+write_csv(G_C_P_Y_M, paste(projectPath, "03_output/G_C_P_Y_M.csv", sep=""))
 
 ## [G_C_P_Y_S] ############################### 
-sd(itemsBoughtByClients[["ItemsBought"]])
+G_C_P_Y_S <- sd(itemsBoughtByClients[["ItemsBought"]]) %>% data.frame()
+colnames(G_C_P_Y_S) <- c("sd")
+
+write_csv(sd(itemsBoughtByClients[["ItemsBought"]]), paste(projectPath, "03_output/G_C_P_Y_S.csv", sep=""))
 
 ## [G_C_T_M_S] ############################### 
 # TODO

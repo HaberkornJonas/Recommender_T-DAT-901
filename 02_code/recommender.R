@@ -10,7 +10,8 @@ library(gridExtra)
 
 
 ## STATIC VALUES ###############################
-projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+## projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+projectPath <- "E:/Projet/Epitech/t-dat-901/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -19,6 +20,8 @@ moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
 Customers <- read_csv(paste(projectPath, "03_output/Customers.csv", sep=""))
 Families <- read_csv(paste(projectPath, "03_output/Familles.csv", sep=""))
 Products <- read_csv(paste(projectPath, "03_output/Produits.csv", sep=""))
+
+options("scipen"=100)
 
 
 ## GETTING CLIENT ID ###############################
@@ -53,34 +56,72 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 # Client ID
 write(paste("ClientId:",clientId), file=descriptionFile, append=T)
 
-
-
-
-
-
-
-
-
 # Add lots of statistics (# tickets, 3 most frequented months, money spend, # products bought, etc.)
-# TODO
+## Loading data ##
+C_T_Y_T <- read_csv(paste(projectPath, "03_output/C_T_Y_T.csv", sep=""))
+G_T_Y_T <- read_csv(paste(projectPath, "03_output/G_T_Y_T.csv", sep=""))
+C_P_Y_T <- read_csv(paste(projectPath, "03_output/C_P_Y_T.csv", sep=""))
+G_C_P_Y_M <- read_csv(paste(projectPath, "03_output/G_C_P_Y_M.csv", sep=""))
+C_S_Y_T <- read_csv(paste(projectPath, "03_output/C_S_Y_T.csv", sep=""))
+C_P_M_M <- read_csv(paste(projectPath, "03_output/C_P_M_M.csv", sep=""))
+C_P_M_T <- read_csv(paste(projectPath, "03_output/C_P_M_T.csv", sep=""))
+C_T_M_T <- read_csv(paste(projectPath, "03_output/C_T_M_T.csv", sep=""))
+C_S_M_T <- read_csv(paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
+G_S_Y_T <- read_csv(paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
 
+## Writting data in the file ## 
+write(paste("Nombre total de ticket du client : ", C_T_Y_T[C_T_Y_T$ClientId==clientId, ]$n), file=descriptionFile, append=T)
 
+percentageOfTicketsOfclient <- (C_T_Y_T[C_T_Y_T$ClientId==clientId, ]$n *100)/G_T_Y_T$n
+write(paste("Ce client représente ", 
+            percentageOfTicketsOfclient, "% des tickets du magasin"), file=descriptionFile, append=T)
 
+write(paste("Nombre total de produit acheté par ce client : ", 
+            C_P_Y_T[C_P_Y_T$ClientId==clientId, ]$n,
+            " la moyenne de produit acheté par les clients étant de ", G_C_P_Y_M$mean), 
+      file=descriptionFile, append=T)
 
+write(paste("Moyenne du nombre de produit acheté par mois du client : ", 
+            C_P_M_M[C_P_M_M$ClientId==clientId, ]$mean),
+      file=descriptionFile, append=T)
 
+write(paste("La dépense total de ce client sur l'année est de : ", 
+            C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n,"???",
+            "représentant ", (C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n * 100 / G_S_Y_T),
+            "% des revenus du magasins"), 
+      file=descriptionFile, append=T)
 
-
-
-
-
-
-
-
-
-
-
-
-
+write(paste("", sep=""), file=descriptionFile, append=T)
+write("Statistique du client par mois : ", file=descriptionFile, append=T)
+mostPurchaseMonth <- 0
+for(month in moisIds){
+  customerPurchases <- C_P_M_T[C_P_M_T$ClientId==clientId, ]
+  productBoughtDuringCurrentMonth <- customerPurchases[customerPurchases$MoisVenteId==month, ]$n
+  
+  customerSpendings <- C_S_M_T[C_S_M_T$ClientId==clientId, ]
+  currentMonthCustomerSpending <- customerSpendings[customerSpendings$MoisVenteId==month, ]$n
+  
+  visitByMonth <- C_T_M_T[C_T_M_T$ClientId==clientId, ]
+  currentMonthVisit <- visitByMonth[visitByMonth$MoisVenteId==month, ]$n
+  
+  if(length(productBoughtDuringCurrentMonth) == 0){
+    productBoughtDuringCurrentMonth <- 0
+  }
+  
+  if(length(currentMonthCustomerSpending) == 0){
+    currentMonthCustomerSpending <- 0
+  }
+  
+  if(length(currentMonthVisit) == 0){
+    currentMonthVisit <- 0
+  }
+  
+  write(paste(moisNoms[month],": ", 
+              productBoughtDuringCurrentMonth, "achat, ", 
+              currentMonthVisit, "visite, ",
+              currentMonthCustomerSpending, "??? dépensé"),
+        file=descriptionFile, append=T)
+}
 
 
 ## CLIENT SEGMENTATION ANALYSIS ###############################
@@ -733,3 +774,4 @@ R_3_top_related_products <- C_MF_Y %>%
 
 # Displaying recommendation
 display_Recommendations(descriptionFile, R_3_top_related_products, R_3_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "Base sur votre budget, nous vous recommandons...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant les depenses par achats et par produits pour vous proposer des produits dans votre budget et centre d'interet")
+
