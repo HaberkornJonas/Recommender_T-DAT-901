@@ -47,6 +47,7 @@ clientDir <- paste(projectPath, "03_output/Client_", clientId, sep="")
 unlink(clientDir, recursive = TRUE)
 dir.create(file.path(clientDir), showWarnings = FALSE)
 descriptionFile<-paste(projectPath, "03_output/Client_", clientId, "/description.txt", sep="")
+clientProfile <- data.frame(ClientId=clientId)
 
 
 ## CLIENT STATISTICAL DESCRIPTION ###############################
@@ -58,7 +59,7 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 write(paste("ClientId:",clientId), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
-# Add lots of statistics (# tickets, 3 most frequented months, money spend, # products bought, etc.)
+# General statistics
 ## Loading data ##
 C_T_Y_T <- read_csv(paste(projectPath, "03_output/C_T_Y_T.csv", sep=""))
 G_T_Y_T <- read_csv(paste(projectPath, "03_output/G_T_Y_T.csv", sep=""))
@@ -70,29 +71,27 @@ C_P_M_T <- read_csv(paste(projectPath, "03_output/C_P_M_T.csv", sep=""))
 C_T_M_T <- read_csv(paste(projectPath, "03_output/C_T_M_T.csv", sep=""))
 C_S_M_T <- read_csv(paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
 G_S_Y_T <- read_csv(paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
+C_F_Y_MF <- read_csv(paste(projectPath, "03_output/C_F_Y_MF.csv", sep=""))
+C_F_Y_T <- read_csv(paste(projectPath, "03_output/C_F_Y_T.csv", sep=""))
+C_F_MF_Y <- read_csv(paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
+C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))
 
-## Writting data in the file ## 
-percentageOfTicketsOfclient <- (C_T_Y_T[C_T_Y_T$ClientId==clientId, ]$n *100)/G_T_Y_T$n
-write(paste("Nombre total de tickets: ", C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n, " (", signif(percentageOfTicketsOfclient, 3), "% des tickets du magasin)", sep=""), file=descriptionFile, append=T)
+## Writing data in the file ## 
+### Number of tickets
+write(paste("Nombre total de tickets: ", C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n, " (", signif((C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n*100)/G_T_Y_T$n, 3), "% des tickets du magasin)", sep=""), file=descriptionFile, append=T)
 
-write(paste("Nombre total de produit achete: ", 
-            C_P_Y_T[C_P_Y_T$ClientId==clientId, ]$n,
-            " (la moyenne generale de produits achete par client etant de ", round(G_C_P_Y_M$mean, digits=2), ")", sep=""), file=descriptionFile, append=T)
+### Number of products bought over the year
+write(paste("Nombre total de produits achetes: ", C_P_Y_T[C_P_Y_T$ClientId==clientId,]$n, " (la moyenne generale de produits achete par client etant de ", round(G_C_P_Y_M$mean, digits=2), ")", sep=""), file=descriptionFile, append=T)
 
-write(paste("Nombre moyen de produit achete par mois: ", 
-            C_P_M_M[C_P_M_M$ClientId==clientId, ]$mean,
-            sep=""),
-      file=descriptionFile, append=T)
+### Mean number of products bought per month 
+write(paste("Nombre moyen de produits achetes par mois: ", C_P_M_M[C_P_M_M$ClientId==clientId,]$mean, sep=""), file=descriptionFile, append=T)
 
-write(paste("Depense total sur l'annee: ", 
-            C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n,"euros",
-            " (", signif((C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n * 100 / G_S_Y_T), 3),
-            "% des revenus du magasin)",
-            sep=""), 
-      file=descriptionFile, append=T)
-
+### Total spendings over the year
+write(paste("Depenses totales sur l'annee: ", C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n," euros (", signif((C_S_Y_T[C_S_Y_T$ClientId==clientId,]$n*100/G_S_Y_T),3), "% des revenus du magasin)", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
-write("Statistique du client par mois : ", file=descriptionFile, append=T)
+
+### Number of vistis, products bought and spendings per month
+write("Statistiques par mois: ", file=descriptionFile, append=T)
 mostPurchaseMonth <- 0
 for(month in moisIds){
   customerPurchases <- C_P_M_T[C_P_M_T$ClientId==clientId, ]
@@ -116,27 +115,74 @@ for(month in moisIds){
     currentMonthVisit <- 0
   }
   
-  write(paste("   ",
-              str_pad(moisNoms[month],9,'right',' '),": ", 
-              productBoughtDuringCurrentMonth, " achats, ", 
-              currentMonthVisit, " visites, ",
-              currentMonthCustomerSpending, " euros",
-              sep=""),
-        file=descriptionFile, append=T)
+  write(paste("   ", str_pad(moisNoms[month],9,'right',' '),": ", productBoughtDuringCurrentMonth, " achats, ", currentMonthVisit, " visites, ", currentMonthCustomerSpending, " euros", sep=""), file=descriptionFile, append=T)
 }
+write(paste("", sep=""), file=descriptionFile, append=T)
+
+### Favorite product families
+yearlyMostPreferedFamilies <- C_F_Y_MF %>% 
+  filter(C_F_Y_MF$ClientId==clientProfile$ClientId) %>%
+  merge(Families, by='FamilleId', sort=F)
+if(count(yearlyMostPreferedFamilies)$n > 0){
+  write(paste("Famille de produits prefere: ", yearlyMostPreferedFamilies$Famille," (avec ", yearlyMostPreferedFamilies$n," produits achetes)", sep=""), file=descriptionFile, append=T)
+}
+write(paste("", sep=""), file=descriptionFile, append=T)
+
+
+### Number of products bought and favorite products per product families
+write("Statistiques par famille de produits: ", file=descriptionFile, append=T)
+client_C_F_Y_T <- C_F_Y_T %>% 
+  filter(C_F_Y_T$ClientId==clientProfile$ClientId)
+client_C_F_MF_Y <- C_F_MF_Y %>% 
+  filter(C_F_MF_Y$ClientId==clientProfile$ClientId) %>%
+  merge(Products, by='ProduitId', sort=F)
+if(count(Families)$n > 0){
+  for(family_index in 1:count(Families)$n){
+    family_data <- client_C_F_Y_T %>% filter(client_C_F_Y_T$FamilleId==Families[family_index,]$FamilleId)
+    if(count(family_data)$n > 0){
+      write(paste("   - ", Families[family_index,]$Famille," (", family_data$n ," produits achetes)", sep=""), file=descriptionFile, append=T)
+    } else {
+      write(paste("   - ", Families[family_index,]$Famille," (",       0       ," produits achetes)", sep=""), file=descriptionFile, append=T)
+    }
+    
+    preferedProduct <- client_C_F_MF_Y %>% 
+      filter(client_C_F_MF_Y$FamilleId==Families[family_index,]$FamilleId) %>%
+      arrange(desc(n))
+    if(count(preferedProduct)$n > 0){
+      write(paste("       Produits preferes: ",sep=""),file=descriptionFile, append=T)
+      for(product_index in 1:count(preferedProduct)$n){
+        write(paste("           - ", preferedProduct[product_index,]$Libelle," (achete ", preferedProduct[product_index,]$n," fois)", sep=""), file=descriptionFile, append=T)
+      }
+    }
+  }
+}
+write(paste("", sep=""), file=descriptionFile, append=T)
+
+
+### Most favorite products over the year
+write("Produits preferes: ", file=descriptionFile, append=T)
+yearlyMostPreferedProducts <- C_MF_Y %>% 
+  filter(C_MF_Y$ClientId==clientProfile$ClientId) %>%
+  merge(Products %>% select(ProduitId, Libelle), by='ProduitId', sort=F) %>%
+  arrange(desc(n))
+if(count(yearlyMostPreferedProducts)$n > 0){
+  for(product_index in 1:count(yearlyMostPreferedProducts)$n){
+    write(paste("   - ", yearlyMostPreferedProducts[product_index,]$Libelle," [", yearlyMostPreferedProducts[product_index,]$Famille,"] (achete ", yearlyMostPreferedProducts[product_index,]$n, " fois)", sep=""), file=descriptionFile, append=T)
+  }
+}
+write(paste("", sep=""), file=descriptionFile, append=T)
 
 
 ## CLIENT SEGMENTATION ANALYSIS ###############################
 print("## Client segmentation analysis")
 write(paste("", sep=""), file=descriptionFile, append=T)
 write("----- ANALYSE DE LA SEGMENTATION -----", file=descriptionFile, append=T)
-clientProfile <- data.frame(ClientId=clientId)
 
 
 
 ## [S_R] Regularity
 write(paste("", sep=""), file=descriptionFile, append=T)
-S_R <- Customers <- read_csv(paste(projectPath, "03_output/S_R.csv", sep=""))  # Getting segmentation result
+S_R <- read_csv(paste(projectPath, "03_output/S_R.csv", sep=""))  # Getting segmentation result
 
 # Extracting clusterId and data
 S_R.client <- subset(S_R, ClientId == clientId)                                # Extracting client entry
@@ -250,7 +296,7 @@ dev.off()
 
 
 # [S_S_T] Spendings per tickets
-S_S_T <- Customers <- read_csv(paste(projectPath, "03_output/S_S_T.csv", sep=""))  # Getting segmentation result
+S_S_T <- read_csv(paste(projectPath, "03_output/S_S_T.csv", sep=""))  # Getting segmentation result
 
 # Extracting clusterId and data
 S_S_T.client <- subset(S_S_T, ClientId == clientId)                            # Extracting client entry
@@ -362,7 +408,7 @@ dev.off()
 
 
 # [S_S_I] Spendings per items
-S_S_I <- Customers <- read_csv(paste(projectPath, "03_output/S_S_I.csv", sep=""))  # Getting segmentation result
+S_S_I <- read_csv(paste(projectPath, "03_output/S_S_I.csv", sep=""))  # Getting segmentation result
 
 # Extracting clusterId and data
 S_S_I.client <- subset(S_S_I, ClientId == clientId)                            # Extracting client entry
@@ -473,7 +519,7 @@ dev.off()
 
 
 # [S_F] Prefered product family
-S_F <- Customers <- read_csv(paste(projectPath, "03_output/S_F.csv", sep=""))  # Getting segmentation result
+S_F <- read_csv(paste(projectPath, "03_output/S_F.csv", sep=""))  # Getting segmentation result
 
 # Extracting clusterId and data
 S_F.client <- subset(S_F, ClientId == clientId)                                # Extracting client entry
@@ -576,10 +622,11 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 display_Recommendations <- function(descriptionFile, R_top_related_products, R_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, recommendation_intro, recommendation_description){
   
   # Making recommendation
+  print(R_top_related_products)
   write(paste("- ", recommendation_intro, sep=""), file=descriptionFile, append=T)
-  write(paste("    * ", R_top_related_products[1, "Libelle"], " (#", R_top_related_products[1, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-  write(paste("    * ", R_top_related_products[2, "Libelle"], " (#", R_top_related_products[2, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
-  write(paste("    * ", R_top_related_products[3, "Libelle"], " (#", R_top_related_products[3, "ProduitId"], ")", sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[1, "Libelle"], " (#", R_top_related_products[1, "ProduitId"], ") [", R_top_related_products[1, "Famille"], "]", sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[2, "Libelle"], " (#", R_top_related_products[2, "ProduitId"], ") [", R_top_related_products[2, "Famille"], "]", sep=""), file=descriptionFile, append=T)
+  write(paste("    * ", R_top_related_products[3, "Libelle"], " (#", R_top_related_products[3, "ProduitId"], ") [", R_top_related_products[3, "Famille"], "]", sep=""), file=descriptionFile, append=T)
   
   # Explaining recommendation
   write(paste("    ", sep=""), file=descriptionFile, append=T)
