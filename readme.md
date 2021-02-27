@@ -10,8 +10,8 @@ It's recommanded to run the scripts using RStudio in the following order:
 3. `segmentation.R`
 4. `recommender.R`
 
-You can also use the provided Dockerfile but this will use more RAM ans memory on your computer than using RStudio.  
-If you still want to use Docker, run `docker-compose build` for the first time and then `docker-compose up` for each new recommendation.
+You can also use the provided Dockerfile but this will use more RAM ans memory on your computer than using RStudio (it also needs way more time to build and install the libraries than RStudio).  
+If you still want to use Docker, run `docker-compose build` for the first time (while installing libraries, the logs are displayed red as errors, don't worry) and then `docker-compose up` for each new recommendation.
 
 ## How to add a new library
 

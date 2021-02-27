@@ -11,7 +11,8 @@ library(stringr)
 
 
 ## STATIC VALUES ###############################
- projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+projectPath <- ""
+## projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
 ## projectPath <- "E:/Projet/Epitech/t-dat-901/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")

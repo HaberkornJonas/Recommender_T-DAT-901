@@ -12,9 +12,11 @@ library(tidyr)
 
 
 ## STATIC VALUES ###############################
-## projectPath <- "/Users/ogunkocaoz/Projects/School/TDAT901/t-dat-901/"
+projectPath <- ""
+## projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
 ## projectPath <- "E:/Projet/Epitech/t-dat-901/"
-projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+## projectPath <- "/Users/ogunkocaoz/Projects/School/TDAT901/t-dat-901/"
+
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
