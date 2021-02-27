@@ -7,11 +7,12 @@ library(scales)
 library(Hmisc)
 library(tidyr)
 library(gridExtra)
+library(stringr)
 
 
 ## STATIC VALUES ###############################
-## projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
-projectPath <- "E:/Projet/Epitech/t-dat-901/"
+ projectPath <- "C:/Users/jonas/Desktop/T-DAT/"
+## projectPath <- "E:/Projet/Epitech/t-dat-901/"
 moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
@@ -55,6 +56,7 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 # Client ID
 write(paste("ClientId:",clientId), file=descriptionFile, append=T)
+write(paste("", sep=""), file=descriptionFile, append=T)
 
 # Add lots of statistics (# tickets, 3 most frequented months, money spend, # products bought, etc.)
 ## Loading data ##
@@ -70,25 +72,23 @@ C_S_M_T <- read_csv(paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
 G_S_Y_T <- read_csv(paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
 
 ## Writting data in the file ## 
-write(paste("Nombre total de ticket du client : ", C_T_Y_T[C_T_Y_T$ClientId==clientId, ]$n), file=descriptionFile, append=T)
-
 percentageOfTicketsOfclient <- (C_T_Y_T[C_T_Y_T$ClientId==clientId, ]$n *100)/G_T_Y_T$n
-write(paste("Ce client représente ", 
-            percentageOfTicketsOfclient, "% des tickets du magasin"), file=descriptionFile, append=T)
+write(paste("Nombre total de tickets: ", C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n, " (", signif(percentageOfTicketsOfclient, 3), "% des tickets du magasin)", sep=""), file=descriptionFile, append=T)
 
-write(paste("Nombre total de produit acheté par ce client : ", 
+write(paste("Nombre total de produit achete: ", 
             C_P_Y_T[C_P_Y_T$ClientId==clientId, ]$n,
-            " la moyenne de produit acheté par les clients étant de ", G_C_P_Y_M$mean), 
+            " (la moyenne generale de produits achete par client etant de ", round(G_C_P_Y_M$mean, digits=2), ")", sep=""), file=descriptionFile, append=T)
+
+write(paste("Nombre moyen de produit achete par mois: ", 
+            C_P_M_M[C_P_M_M$ClientId==clientId, ]$mean,
+            sep=""),
       file=descriptionFile, append=T)
 
-write(paste("Moyenne du nombre de produit acheté par mois du client : ", 
-            C_P_M_M[C_P_M_M$ClientId==clientId, ]$mean),
-      file=descriptionFile, append=T)
-
-write(paste("La dépense total de ce client sur l'année est de : ", 
-            C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n,"???",
-            "représentant ", (C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n * 100 / G_S_Y_T),
-            "% des revenus du magasins"), 
+write(paste("Depense total sur l'annee: ", 
+            C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n,"euros",
+            " (", signif((C_S_Y_T[C_S_Y_T$ClientId==clientId, ]$n * 100 / G_S_Y_T), 3),
+            "% des revenus du magasin)",
+            sep=""), 
       file=descriptionFile, append=T)
 
 write(paste("", sep=""), file=descriptionFile, append=T)
@@ -116,10 +116,12 @@ for(month in moisIds){
     currentMonthVisit <- 0
   }
   
-  write(paste(moisNoms[month],": ", 
-              productBoughtDuringCurrentMonth, "achat, ", 
-              currentMonthVisit, "visite, ",
-              currentMonthCustomerSpending, "??? dépensé"),
+  write(paste("   ",
+              str_pad(moisNoms[month],9,'right',' '),": ", 
+              productBoughtDuringCurrentMonth, " achats, ", 
+              currentMonthVisit, " visites, ",
+              currentMonthCustomerSpending, " euros",
+              sep=""),
         file=descriptionFile, append=T)
 }
 
