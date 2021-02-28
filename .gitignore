@@ -1,9 +1,9 @@
 01_data/*.csv
 03_generated/*.csv
 03_generated/Client_*/**
-04_recommender/*.csv
-04_recommender/Client_*/**
+04_user_recommendation/*.csv
+04_user_recommendation/Client_*/**
 
 .DS_Store
 03_generated/*.png
-04_recommender/*.png
+04_user_recommendation/*.png

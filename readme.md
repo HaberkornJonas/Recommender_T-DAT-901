@@ -8,7 +8,7 @@ It's recommanded to run the scripts using RStudio in the following order:
 1. `install_packages.R`
 2. `stats.R`
 3. `segmentation.R`
-4. `recommender.R`
+4. `user_recommendation.R`
 
 An other solution would be to use the provided Dockerfile.  
 > **/!\\** This would use **more RAM and memory on your computer** than using RStudio (it also needs way **more time to install the libraries and build the stats than RStudio**, going for a total of arround **30 minutes**).   
@@ -17,7 +17,7 @@ An other solution would be to use the provided Dockerfile.
 
 If you still want to use Docker, run `docker-compose build` for the first time (while installing libraries, the logs are displayed red as errors, don't worry). Then start it with `docker-compose up`.  
   
-If you cannot enter the client ID in the console (this is an issue with interactive process and docker-compose on Windows, has not be tested on Linux) then, while still having *docker-compose up* running, open a second terminal and run `docker exec -it <container name> /bin/bash` then start the recommender with `Rscript /02_code/recommender.R`
+If you cannot enter the client ID in the console (this is an issue with interactive process and docker-compose on Windows, has not be tested on Linux) then, while still having *docker-compose up* running, open a second terminal and run `docker exec -it <container name> /bin/bash` then start the recommender with `Rscript /02_code/user_recommendation.R`
 
 ## How to add a new library
 

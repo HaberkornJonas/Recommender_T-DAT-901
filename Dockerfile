@@ -5,12 +5,12 @@ FROM rocker/r-base:latest
 RUN mkdir -p /01_data
 RUN mkdir -p /02_code
 RUN mkdir -p /03_generated
-RUN mkdir -p /04_recommender
+RUN mkdir -p /04_user_recommendation
 
 COPY /01_data /01_data
 COPY /02_code /02_code
 COPY /03_generated /03_generated
-COPY /04_recommender /04_recommender
+COPY /04_user_recommendation /04_user_recommendation
 
 # Install prerequisites
 RUN apt-get update

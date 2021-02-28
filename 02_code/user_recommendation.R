@@ -52,10 +52,10 @@ repeat{
 
 
 ## SETUP CUSTOMER DIRECTORY ###############################
-clientDir <- paste(projectPath, "04_recommender/Client_", clientId, sep="")
+clientDir <- paste(projectPath, "04_user_recommendation/Client_", clientId, sep="")
 unlink(clientDir, recursive = TRUE)
 dir.create(file.path(clientDir), showWarnings = FALSE)
-descriptionFile<-paste(projectPath, "04_recommender/Client_", clientId, "/description.txt", sep="")
+descriptionFile<-paste(projectPath, "04_user_recommendation/Client_", clientId, "/description.txt", sep="")
 clientProfile <- data.frame(ClientId=clientId)
 
 
