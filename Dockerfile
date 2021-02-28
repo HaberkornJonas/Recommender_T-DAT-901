@@ -9,8 +9,6 @@ RUN mkdir -p /04_user_recommendation
 
 COPY /01_data /01_data
 COPY /02_code /02_code
-COPY /03_generated /03_generated
-COPY /04_user_recommendation /04_user_recommendation
 
 # Install prerequisites
 RUN apt-get update
