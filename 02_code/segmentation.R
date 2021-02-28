@@ -20,7 +20,7 @@ moisIds <- c(1:12)
 moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre")
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
 
-Customers <- read_csv(paste(projectPath, "03_output/Customers.csv", sep=""))
+Customers <- read_csv(paste(projectPath, "03_generated/Customers.csv", sep=""))
 
 
 ####  [S] Segmentation ####
@@ -28,8 +28,8 @@ Customers <- read_csv(paste(projectPath, "03_output/Customers.csv", sep=""))
 print("[S_R]...")
 
 # Lecture des donnees
-C_T_M_M <- read_csv(paste(projectPath, "03_output/C_T_M_M.csv", sep=""))
-C_T_M_S <- read_csv(paste(projectPath, "03_output/C_T_M_S.csv", sep=""))
+C_T_M_M <- read_csv(paste(projectPath, "03_generated/C_T_M_M.csv", sep=""))
+C_T_M_S <- read_csv(paste(projectPath, "03_generated/C_T_M_S.csv", sep=""))
 
 # Segmenting customers
 S_R <- C_T_M_M %>%
@@ -46,10 +46,10 @@ plot <- fviz_cluster(cl,
 S_R <- cbind(S_R, ClusterId=cl$cluster)                                                                            # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
-write_csv(S_R, paste(projectPath, "03_output/S_R.csv", sep=""))
+write_csv(S_R, paste(projectPath, "03_generated/S_R.csv", sep=""))
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/S_R.png", sep=""), width = 10, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/S_R.png", sep=""), width = 10, height = 8, dpi = 100)
 rm(C_T_M_M)
 rm(C_T_M_S)
 rm(S_R)
@@ -64,8 +64,8 @@ sprintf("[S_R] Done!")
 print("[S_S_T]...")
 
 # Lecture des donnees
-C_S_T_M <- read_csv(paste(projectPath, "03_output/C_S_T_M.csv", sep=""))
-C_S_T_S <- read_csv(paste(projectPath, "03_output/C_S_T_S.csv", sep=""))
+C_S_T_M <- read_csv(paste(projectPath, "03_generated/C_S_T_M.csv", sep=""))
+C_S_T_S <- read_csv(paste(projectPath, "03_generated/C_S_T_S.csv", sep=""))
 
 # Segmenting customers
 S_S_T <- C_S_T_M %>%
@@ -82,10 +82,10 @@ plot <- fviz_cluster(cl,
 S_S_T <- cbind(S_S_T, ClusterId=cl$cluster)                                                                        # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
-write_csv(S_S_T, paste(projectPath, "03_output/S_S_T.csv", sep=""))
+write_csv(S_S_T, paste(projectPath, "03_generated/S_S_T.csv", sep=""))
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/S_S_T.png", sep=""), width = 10, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/S_S_T.png", sep=""), width = 10, height = 8, dpi = 100)
 rm(C_S_T_M)
 rm(C_S_T_S)
 rm(S_S_T)
@@ -100,8 +100,8 @@ sprintf("[S_S_T] Done!")
 print("[S_S_I]...")
 
 # Lecture des donnees
-C_S_P_M <- read_csv(paste(projectPath, "03_output/C_S_P_M.csv", sep=""))
-C_S_P_S <- read_csv(paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
+C_S_P_M <- read_csv(paste(projectPath, "03_generated/C_S_P_M.csv", sep=""))
+C_S_P_S <- read_csv(paste(projectPath, "03_generated/C_S_P_S.csv", sep=""))
 
 # Segmenting customers
 S_S_I <- C_S_P_M %>%
@@ -118,10 +118,10 @@ plot <- fviz_cluster(cl,
 S_S_I <- cbind(S_S_I, ClusterId=cl$cluster)                                                                        # Bind ClientId and data to ClusterId                        
 
 # Sauvegarde des donnees
-write_csv(S_S_I, paste(projectPath, "03_output/S_S_I.csv", sep=""))
+write_csv(S_S_I, paste(projectPath, "03_generated/S_S_I.csv", sep=""))
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/S_S_I.png", sep=""), width = 10, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/S_S_I.png", sep=""), width = 10, height = 8, dpi = 100)
 rm(C_S_P_M)
 rm(C_S_P_S)
 rm(S_S_I)
@@ -136,7 +136,7 @@ sprintf("[S_S_I] Done!")
 print("[S_F]...")
 
 # Lecture des donnees
-C_F_Y_MF <- read_csv(paste(projectPath, "03_output/C_F_Y_MF.csv", sep=""))
+C_F_Y_MF <- read_csv(paste(projectPath, "03_generated/C_F_Y_MF.csv", sep=""))
 
 # Segmenting customers
 S_F <- C_F_Y_MF 
@@ -152,10 +152,10 @@ plot <- fviz_cluster(cl,
 S_F <- cbind(S_F, ClusterId=cl$cluster)                                                                            # Bind ClientId and data to ClusterId   
 
 # Sauvegarde des donnees
-write_csv(S_F, paste(projectPath, "03_output/S_F.csv", sep=""))
+write_csv(S_F, paste(projectPath, "03_generated/S_F.csv", sep=""))
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/S_F.png", sep=""), width = 10, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/S_F.png", sep=""), width = 10, height = 8, dpi = 100)
 rm(C_F_Y_MF)
 rm(S_F)
 rm(cl)

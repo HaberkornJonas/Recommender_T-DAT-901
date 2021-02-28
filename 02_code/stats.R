@@ -61,7 +61,7 @@ plot <- ggplot(data = sells_per_family, aes(x = Famille, y = n))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/pre_processing_1.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/pre_processing_1.png", sep=""), width = 12, height = 8, dpi = 100)
 
 
 ## Products per families
@@ -84,7 +84,7 @@ plot <- ggplot(data = produits_per_family, aes(x = Famille, y = n))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/pre_processing_2.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/pre_processing_2.png", sep=""), width = 12, height = 8, dpi = 100)
 
 
 
@@ -102,20 +102,20 @@ sourceData <- sourceData[!(sourceData$Famille=="SANTE NATURELLE"),]
 Customers <- sourceData %>%
   select(ClientId) %>%                                                         # Keep ClientId column
   distinct()                                                                   # Keep only distinct ClientId
-write_csv(Customers, paste(projectPath, "03_output/Customers.csv", sep=""))    # Generating csv mapping
+write_csv(Customers, paste(projectPath, "03_generated/Customers.csv", sep=""))    # Generating csv mapping
 
 Familles <- sourceData %>%                                          
   select(Famille) %>%                                                          # Keep Famille column
   distinct() %>%                                                               # Keep only distinc familles
   mutate(FamilleId=row_number())                                               # Assign ID to famille
-write_csv(Familles, paste(projectPath, "03_output/Familles.csv", sep=""))      # Generating csv mapping
+write_csv(Familles, paste(projectPath, "03_generated/Familles.csv", sep=""))      # Generating csv mapping
 
 
 Produits <- sourceData %>%                                          
   select(Libelle, Famille) %>%                                                 # Keep Libelle column and family product name
   distinct(Libelle, Famille) %>%                                               # Keep only distinc produit
   mutate(ProduitId=row_number())                                               # Assign ID to produit
-write_csv(Produits, paste(projectPath, "03_output/Produits.csv", sep=""))      # Generating csv mapping
+write_csv(Produits, paste(projectPath, "03_generated/Produits.csv", sep=""))      # Generating csv mapping
 
 
 
@@ -137,7 +137,7 @@ G_T_Y_T <- sourceData$TicketId %>%                                             #
 colnames(G_T_Y_T) <- c("n")                                                    # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G_T_Y_T, paste(projectPath, "03_output/G_T_Y_T.csv", sep=""))
+write_csv(G_T_Y_T, paste(projectPath, "03_generated/G_T_Y_T.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_T_Y_T[1,1])
@@ -156,7 +156,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_T_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_T_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_Y_T] There was a total of %s tickets for this year.", G_T_Y_T[1,1])
 
 
@@ -177,7 +177,7 @@ G_T_M_T <- aggregate(G_T_M_T$TicketId, by=list(G_T_M_T$MoisVenteId), FUN=length)
            rename(MoisVenteId=Group.1, n=x)                                            # Renaming columns
 
 # Sauvegarde des donnees
-write_csv(G_T_M_T, paste(projectPath, "03_output/G_T_M_T.csv", sep=""))
+write_csv(G_T_M_T, paste(projectPath, "03_generated/G_T_M_T.csv", sep=""))
 
 # Creation du graphique
 plot <- ggplot(data = G_T_M_T, aes(x = as.numeric(MoisVenteId), y = n))+
@@ -196,7 +196,7 @@ plot <- ggplot(data = G_T_M_T, aes(x = as.numeric(MoisVenteId), y = n))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_T_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_T_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
 print("[G_T_M_T] Done!")
 
 
@@ -222,7 +222,7 @@ G_T_M_M <- mean(G_T_M_M$n) %>%                                                  
 colnames(G_T_M_M) <- c("mean")                                                         # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G_T_M_M, paste(projectPath, "03_output/G_T_M_M.csv", sep=""))
+write_csv(G_T_M_M, paste(projectPath, "03_generated/G_T_M_M.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_T_M_M[1,1])
@@ -241,7 +241,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_T_M_M.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_T_M_M.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_M] Done!")
 
 
@@ -267,7 +267,7 @@ G_T_M_S <- sd(G_T_M_S$n) %>%                                                    
 colnames(G_T_M_S) <- c("sd")                                                           # Give column name for CSV
 
 # Sauvegarde des donnees
-write_csv(G_T_M_S, paste(projectPath, "03_output/G_T_M_S.csv", sep=""))
+write_csv(G_T_M_S, paste(projectPath, "03_generated/G_T_M_S.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_T_M_S[1,1])
@@ -286,7 +286,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_T_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_T_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
 sprintf("[G_T_M_S] Done!")
 
 
@@ -325,7 +325,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_T_M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_T_M.png", sep=""), width = 7, height = 8, dpi = 100)
 sprintf("[G_T_M] Done!")
 
 
@@ -350,7 +350,7 @@ G_S_Y_T <- sourceData$PrixNet %>%
 colnames(G_S_Y_T) <- c("n")                                                
 
 # Sauvegarde des donnees
-write_csv(G_S_Y_T, paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
+write_csv(G_S_Y_T, paste(projectPath, "03_generated/G_S_Y_T.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_S_Y_T[1,1])
@@ -369,7 +369,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_S_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_S_Y_T.png", sep=""), width = 5, height = 8, dpi = 100)
 print("[G_S_Y_T] Done!")
 
 
@@ -384,7 +384,7 @@ G_S_M_T <- aggregate(G_S_M_T$PrixNet, by=list(G_S_M_T$MoisVenteId), FUN=sum) %>%
   rename(MoisVenteId=Group.1, n=x)
 
 # Sauvegarde des donnees
-write_csv(G_S_M_T, paste(projectPath, "03_output/G_S_M_T.csv", sep=""))
+write_csv(G_S_M_T, paste(projectPath, "03_generated/G_S_M_T.csv", sep=""))
 
 # Creation du graphique
 
@@ -404,7 +404,7 @@ plot <- ggplot(data = G_S_M_T, aes(x = as.numeric(MoisVenteId), y = n))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_S_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_S_M_T.png", sep=""), width = 12, height = 8, dpi = 100)
 print("[G_S_M_T] Done!")
 
 
@@ -423,7 +423,7 @@ G_S_M_M <- mean(G_S_M_M$n) %>%
 colnames(G_S_M_M) <- c("mean")                                                         
 
 # Sauvegarde des donnees
-write_csv(G_S_M_M, paste(projectPath, "03_output/G_S_M_M.csv", sep=""))
+write_csv(G_S_M_M, paste(projectPath, "03_generated/G_S_M_M.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_S_M_M[1,1])
@@ -457,7 +457,7 @@ G_S_M_S <- sd(G_S_M_S$n) %>%
 colnames(G_S_M_S) <- c("sd")
 
 # Sauvegarde des donnees
-write_csv(G_S_M_S, paste(projectPath, "03_output/G_S_M_S.csv", sep=""))
+write_csv(G_S_M_S, paste(projectPath, "03_generated/G_S_M_S.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x = 1, y = G_S_M_S[1,1])
@@ -476,7 +476,7 @@ plot <- ggplot(df, aes(x=x,y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_S_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_S_M_S.png", sep=""), width = 5, height = 8, dpi = 100)
 print("[G_S_M_S] Done!")
 
 
@@ -506,7 +506,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_S_M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_S_M.png", sep=""), width = 7, height = 8, dpi = 100)
 print("[G_S_M] Done!")
 
 
@@ -526,7 +526,7 @@ G_P_Y_T <- sourceData$Libelle %>%
 colnames(G_P_Y_T) <- c("n")                                                   
 
 # Sauvegarde des donnees
-write_csv(G_P_Y_T, paste(projectPath, "03_output/G_P_Y_T.csv", sep=""))
+write_csv(G_P_Y_T, paste(projectPath, "03_generated/G_P_Y_T.csv", sep=""))
 
 # Creation du graphique
 df <- data.frame(x=1, y=G_P_Y_T[1,1])
@@ -545,7 +545,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_P_Y_T.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_P_Y_T.png", sep=""), width = 7, height = 8, dpi = 100)
 sprintf("[G_P_Y_T] Done!")
 
 
@@ -557,7 +557,7 @@ G_P_M_T <- sourceData %>%
 G_P_M_T <- aggregate(G_P_M_T$Libelle, by=list(G_P_M_T$MoisVenteId), FUN=length) %>%
   rename(MoisVenteId=Group.1, n=x)
 
-write_csv(G_P_M_T, paste(projectPath, "03_output/G_P_M_T.csv", sep=""))
+write_csv(G_P_M_T, paste(projectPath, "03_generated/G_P_M_T.csv", sep=""))
 
 df <- data.frame(x = 1, y=G_P_M_T[1,1])
 plot <- ggplot(data = G_P_M_T, aes(x= as.numeric(MoisVenteId), y=n))+
@@ -577,7 +577,7 @@ plot <- ggplot(data = G_P_M_T, aes(x= as.numeric(MoisVenteId), y=n))+
   )
 #print(plot)
 
-ggsave(paste(projectPath, "03_output/G_P_M_T.png", sep=""), width = 5, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_P_M_T.png", sep=""), width = 5, height = 8, dpi = 100)
 print("[G_P_M_T] Done!")
 
 
@@ -594,7 +594,7 @@ G_P_M_M <- mean(G_P_M_M$n) %>%
   data.frame()
 colnames(G_P_M_M) <- c("mean")
 
-write_csv(G_P_M_M, paste(projectPath, "03_output/G_P_M_M.csv", sep=""))
+write_csv(G_P_M_M, paste(projectPath, "03_generated/G_P_M_M.csv", sep=""))
 
 df <- data.frame(x = 1, y = G_P_M_M[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
@@ -611,7 +611,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
         axis.ticks.x=element_blank())
 #print(plot)
 
-ggsave(paste(projectPath, "03_output/G_P_M_M.png", sep=""), width=5, height=8,dpi=100)
+ggsave(paste(projectPath, "03_generated/G_P_M_M.png", sep=""), width=5, height=8,dpi=100)
 print("[G_P_M_M] Done!")
 
 
@@ -626,7 +626,7 @@ G_P_M_S <- sd(G_P_M_S$n) %>%
   data.frame()
 colnames(G_P_M_S) <- c("sd")
 
-write_csv(G_P_M_S, paste(projectPath, "03_output/G_P_M_S.csv", sep=""))
+write_csv(G_P_M_S, paste(projectPath, "03_generated/G_P_M_S.csv", sep=""))
 
 df <- data.frame(x = 1, y = G_P_M_S[1,1])
 plot <- ggplot(df, aes(x=x, y=y))+
@@ -643,7 +643,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
         axis.ticks.x=element_blank())
 #print(plot)
 
-ggsave(paste(projectPath, "03_output/G_P_M_S.png", sep=""), width=5, height=8, dpi=100)
+ggsave(paste(projectPath, "03_generated/G_P_M_S.png", sep=""), width=5, height=8, dpi=100)
 print("[G_P_M_S] Done!")
 
 ## [G_P_M] ############################### 
@@ -672,7 +672,7 @@ plot <- ggplot(df, aes(x=x, y=y))+
 #print(plot)
 
 # Sauvegarde du graphique
-ggsave(paste(projectPath, "03_output/G_P_M.png", sep=""), width = 7, height = 8, dpi = 100)
+ggsave(paste(projectPath, "03_generated/G_P_M.png", sep=""), width = 7, height = 8, dpi = 100)
 print("[G_P_M] Done!")
 
 
@@ -698,7 +698,7 @@ productsByFamily_Plot <- ggplot(productsByFamily,
   )
 
 print(productsByFamily_Plot)
-ggsave(paste(projectPath, "03_output/G_F_T.png", sep=""), width=8, height=8, dpi=500)
+ggsave(paste(projectPath, "03_generated/G_F_T.png", sep=""), width=8, height=8, dpi=500)
 
 ## [G_F_Y_T] ############################### 
 G_F_Y_T <- as.data.frame(table(sourceData$Famille))
@@ -713,7 +713,7 @@ G_F_Y_T_Plot <- ggplot(G_F_Y_T,
         )
 
 print(G_F_Y_T_Plot)
-ggsave(paste(projectPath, "03_output/G_F_T_Y.png", sep=""), width=10, height=10, dpi=500)
+ggsave(paste(projectPath, "03_generated/G_F_T_Y.png", sep=""), width=10, height=10, dpi=500)
 
 
 ## [G_MF_F] ############################### 
@@ -725,49 +725,49 @@ hygieneFam = table(sourceData[sourceData$Famille=="HYGIENE", ]$Libelle)
 bestHygieneItems = as.data.frame(hygieneFam[order(hygieneFam, decreasing = TRUE)])
 colnames(bestHygieneItems)[1] <- "Libelle"
 colnames(bestHygieneItems)[2] <- "Ventes"
-write_csv(bestHygieneItems, paste(projectPath, "03_output/bestHygieneItems.csv", sep=""))
+write_csv(bestHygieneItems, paste(projectPath, "03_generated/bestHygieneItems.csv", sep=""))
 
 # Capillary Family #
 capillaryFam = table(sourceData[sourceData$Famille=="CAPILLAIRES", ]$Libelle)
 bestCapillaryItems = as.data.frame(capillaryFam[order(capillaryFam, decreasing = TRUE)])
 colnames(bestCapillaryItems)[1] <- "Libelle"
 colnames(bestCapillaryItems)[2] <- "Ventes"
-write_csv(bestCapillaryItems, paste(projectPath, "03_output/bestCapillaryItems.csv", sep=""))
+write_csv(bestCapillaryItems, paste(projectPath, "03_generated/bestCapillaryItems.csv", sep=""))
 
 # Makeup Family #
 makeupFam = table(sourceData[sourceData$Famille=="MAQUILLAGE", ]$Libelle)
 bestMakeupItems = as.data.frame(makeupFam[order(makeupFam, decreasing = TRUE)])
 colnames(bestMakeupItems)[1] <- "Libelle"
 colnames(bestMakeupItems)[2] <- "Ventes"
-write_csv(bestMakeupItems, paste(projectPath, "03_output/bestMakeupItems.csv", sep=""))
+write_csv(bestMakeupItems, paste(projectPath, "03_generated/bestMakeupItems.csv", sep=""))
 
 # Parfum Family #
 parfumFam = table(sourceData[sourceData$Famille=="PARFUMAGE", ]$Libelle)
 bestParfumItems = as.data.frame(parfumFam[order(parfumFam, decreasing = TRUE)])
 colnames(bestParfumItems)[1] <- "Libelle"
 colnames(bestParfumItems)[2] <- "Ventes"
-write_csv(bestParfumItems, paste(projectPath, "03_output/bestParfumItems.csv", sep=""))
+write_csv(bestParfumItems, paste(projectPath, "03_generated/bestParfumItems.csv", sep=""))
 
 # Body Care Family #
 bodyCareFam = table(sourceData[sourceData$Famille=="SOINS DU CORPS", ]$Libelle)
 bestBodyCareItems = as.data.frame(bodyCareFam[order(bodyCareFam, decreasing = TRUE)])
 colnames(bestBodyCareItems)[1] <- "Libelle"
 colnames(bestBodyCareItems)[2] <- "Ventes"
-write_csv(bestBodyCareItems, paste(projectPath, "03_output/bestBodyCareItems.csv", sep=""))
+write_csv(bestBodyCareItems, paste(projectPath, "03_generated/bestBodyCareItems.csv", sep=""))
 
 # Face Care Family #
 faceCareFam = table(sourceData[sourceData$Famille=="SOINS DU VISAGE", ]$Libelle)
 bestFaceCareItems = as.data.frame(faceCareFam[order(faceCareFam, decreasing = TRUE)])
 colnames(bestFaceCareItems)[1] <- "Libelle"
 colnames(bestFaceCareItems)[2] <- "Ventes"
-write_csv(bestFaceCareItems, paste(projectPath, "03_output/bestFaceCareItems.csv", sep=""))
+write_csv(bestFaceCareItems, paste(projectPath, "03_generated/bestFaceCareItems.csv", sep=""))
 
 # Sun Family #
 sunFam = table(sourceData[sourceData$Famille=="SOLAIRES", ]$Libelle)
 bestSunItems = as.data.frame(sunFam[order(sunFam, decreasing = TRUE)])
 colnames(bestSunItems)[1] <- "Libelle"
 colnames(bestSunItems)[2] <- "Ventes"
-write_csv(bestSunItems, paste(projectPath, "03_output/bestSunItems.csv", sep=""))
+write_csv(bestSunItems, paste(projectPath, "03_generated/bestSunItems.csv", sep=""))
 
 
 ## [G_F_P_M] ###############################
@@ -868,7 +868,7 @@ meanPricesByFamilies_Plot <- ggplot(meanPricesByFamilies_DF,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(meanPricesByFamilies_Plot)
-ggsave(paste(projectPath, "03_output/G_F_P_M.png", sep=""), width=7, height=8, dpi=500)
+ggsave(paste(projectPath, "03_generated/G_F_P_M.png", sep=""), width=7, height=8, dpi=500)
 
 ## [G_F_P_S] ############################### 
 standardDeviations <- c(
@@ -891,7 +891,7 @@ standardDeviations_Plot <- ggplot(standardDeviations_DF,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(standardDeviations_Plot)
-ggsave(paste(projectPath, "03_output/G_F_P_S.png",sep=""), width=7, height=8, dpi=500)
+ggsave(paste(projectPath, "03_generated/G_F_P_S.png",sep=""), width=7, height=8, dpi=500)
 
 ####  [G_U] General Univers stats ####
 ## [G_U_T] ############################### 
@@ -909,8 +909,8 @@ productsByUnivers_Plot <- ggplot(productsByUnivers,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(productsByUnivers_Plot)
-ggsave(paste(projectPath, "03_output/G_U_T.png",sep=""), width=20, height=10, dpi=500)
-write_csv(productsByUnivers, paste(projectPath, "03_output/G_U_T.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_U_T.png",sep=""), width=20, height=10, dpi=500)
+write_csv(productsByUnivers, paste(projectPath, "03_generated/G_U_T.csv", sep=""))
 ## [G_U_Y_T] ############################### 
 salesByUniversYear= as.data.frame(table(sourceData$Univers))
 colnames(salesByUniversYear)[1] = "Univers"
@@ -926,8 +926,8 @@ salesByUniversYear_Plot <- ggplot(salesByUniversYear,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(salesByUniversYear_Plot)
-ggsave(paste(projectPath, "03_output/G_U_Y_T.png",sep=""), width=25, height=10, dpi=500)
-write_csv(salesByUniversYear, paste(projectPath, "03_output/G_U_Y_T.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_U_Y_T.png",sep=""), width=25, height=10, dpi=500)
+write_csv(salesByUniversYear, paste(projectPath, "03_generated/G_U_Y_T.csv", sep=""))
 
 
 ## [G_U_P_M] ############################### 
@@ -950,8 +950,8 @@ meanPriceByUnivers_Plot <- ggplot(universDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(meanPriceByUnivers_Plot)
-ggsave(paste(projectPath, "03_output/G_U_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(universDf, paste(projectPath, "03_output/G_U_P_M.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_U_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(universDf, paste(projectPath, "03_generated/G_U_P_M.csv", sep=""))
 ## [G_U_P_S] ###############################
 universDf[, "EcartType"] <- NA
 
@@ -969,8 +969,8 @@ standardDeviationseByUnivers_Plot <- ggplot(universDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(standardDeviationseByUnivers_Plot)
-ggsave(paste(projectPath, "03_output/G_U_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(universDf, paste(projectPath, "03_output/G_U_P_S.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_U_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(universDf, paste(projectPath, "03_generated/G_U_P_S.csv", sep=""))
 ####  [G_M] General Maille stats ####
 ## [G_M_T] ############################### 
 productsByMaille = as.data.frame(table(productsData$Maille))
@@ -987,8 +987,8 @@ productsByMaille_Plot <- ggplot(productsByMaille,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(productsByMaille_Plot)
-ggsave(paste(projectPath, "03_output/G_M_T.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(productsByMaille, paste(projectPath, "03_output/G_M_T.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_M_T.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(productsByMaille, paste(projectPath, "03_generated/G_M_T.csv", sep=""))
 ## [G_M_Y_T] ############################### 
 salesByMaillesYear = as.data.frame(table(sourceData$Maille))
 colnames(salesByMaillesYear)[1] = "Maille"
@@ -1004,8 +1004,8 @@ salesByMaillesYear_Plot <- ggplot(salesByMaillesYear,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(salesByMaillesYear_Plot)
-ggsave(paste(projectPath, "03_output/G_M_Y_T.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(salesByMaillesYear, paste(projectPath, "03_output/G_M_Y_T.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_M_Y_T.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(salesByMaillesYear, paste(projectPath, "03_generated/G_M_Y_T.csv", sep=""))
 
 
 ## [G_M_P_M] ############################### 
@@ -1028,8 +1028,8 @@ meanPriceByMaille_Plot <- ggplot(maillesDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(meanPriceByMaille_Plot)
-ggsave(paste(projectPath, "03_output/G_M_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(maillesDf, paste(projectPath, "03_output/G_M_P_M.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_M_P_M.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(maillesDf, paste(projectPath, "03_generated/G_M_P_M.csv", sep=""))
 ## [G_M_P_S] ############################### 
 maillesDf[, "EcartType"] <- NA
 
@@ -1047,8 +1047,8 @@ standardDeviationsByMaille_Plot <- ggplot(maillesDf,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(standardDeviationsByMaille_Plot)
-ggsave(paste(projectPath, "03_output/G_M_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
-write_csv(maillesDf, paste(projectPath, "03_output/G_M_P_S.csv", sep=""))
+ggsave(paste(projectPath, "03_generated/G_M_P_S.png", sep=""), width = 25, height = 10, dpi = 500)
+write_csv(maillesDf, paste(projectPath, "03_generated/G_M_P_S.csv", sep=""))
 ####  [G_MF] General Most favorites Products ####
 ## [G_MF_Y] ############################### 
 salesByProductYear = as.data.frame(sort(table(sourceData$Libelle), decreasing = TRUE))
@@ -1067,7 +1067,7 @@ salesByProductYear_Plot <- ggplot(salesByProductYear,
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 print(salesByProductYear_Plot) # The plot is unreadable, so no png generated, the csv will do
-write_csv(salesByProductYear, paste(projectPath, "03_output/G_MF_Y.csv", sep=""))
+write_csv(salesByProductYear, paste(projectPath, "03_generated/G_MF_Y.csv", sep=""))
 
 
 
@@ -1082,13 +1082,13 @@ colnames(itemsBoughtByClients)[2] <- "ItemsBought"
 G_C_P_Y_M <- mean(itemsBoughtByClients[["ItemsBought"]]) %>% data.frame()
 colnames(G_C_P_Y_M) <- c("mean")
 
-write_csv(G_C_P_Y_M, paste(projectPath, "03_output/G_C_P_Y_M.csv", sep=""))
+write_csv(G_C_P_Y_M, paste(projectPath, "03_generated/G_C_P_Y_M.csv", sep=""))
 
 ## [G_C_P_Y_S] ############################### 
 G_C_P_Y_S <- sd(itemsBoughtByClients[["ItemsBought"]]) %>% data.frame()
 colnames(G_C_P_Y_S) <- c("sd")
 
-write_csv(G_C_P_Y_S, paste(projectPath, "03_output/G_C_P_Y_S.csv", sep=""))
+write_csv(G_C_P_Y_S, paste(projectPath, "03_generated/G_C_P_Y_S.csv", sep=""))
 
 
 
@@ -1108,7 +1108,7 @@ C_T_Y_T <- sourceData %>%
   tally()                                                                      # Make a count of the number of different tickets per customer
 
 # Sauvegarde des donnees
-write_csv(C_T_Y_T, paste(projectPath, "03_output/C_T_Y_T.csv", sep=""))
+write_csv(C_T_Y_T, paste(projectPath, "03_generated/C_T_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[G_T_Y_T] Done!")
@@ -1127,7 +1127,7 @@ C_T_M_T <- sourceData %>%
   tally()                                                                      # Make a count of the number of different tickets per customer per month
 
 # Sauvegarde des donnees
-write_csv(C_T_M_T, paste(projectPath, "03_output/C_T_M_T.csv", sep=""))
+write_csv(C_T_M_T, paste(projectPath, "03_generated/C_T_M_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_T_M_T] Done!")
@@ -1147,7 +1147,7 @@ C_T_M_M <- sourceData %>%
   summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean number of tickets per month for each customer
 
 # Sauvegarde des donnees
-write_csv(C_T_M_M, paste(projectPath, "03_output/C_T_M_M.csv", sep=""))
+write_csv(C_T_M_M, paste(projectPath, "03_generated/C_T_M_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_T_M_M] Done!")
@@ -1168,7 +1168,7 @@ C_T_M_S <- sourceData %>%
 
 
 # Sauvegarde des donnees
-write_csv(C_T_M_S, paste(projectPath, "03_output/C_T_M_S.csv", sep=""))
+write_csv(C_T_M_S, paste(projectPath, "03_generated/C_T_M_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_T_M_S] Done!")
@@ -1191,7 +1191,7 @@ C_S_Y_T <- sourceData %>%
   summarise(n=round(sum(PrixNet), digits=2))                                   # Calculate spendings of the year
   
 # Sauvegarde des donnees
-write_csv(C_S_Y_T, paste(projectPath, "03_output/C_S_Y_T.csv", sep=""))
+write_csv(C_S_Y_T, paste(projectPath, "03_generated/C_S_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_Y_T] Done!")
@@ -1209,7 +1209,7 @@ C_S_M_T <- sourceData %>%
   summarise(n=round(sum(PrixNet), digits=2))                                   # Calculate spendings of each month per customer
 
 # Sauvegarde des donnees
-write_csv(C_S_M_T, paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
+write_csv(C_S_M_T, paste(projectPath, "03_generated/C_S_M_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_M_T] Done!")
@@ -1228,7 +1228,7 @@ C_S_M_M <- sourceData %>%
   summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean spendings per month per customer
 
 # Sauvegarde des donnees
-write_csv(C_S_M_M, paste(projectPath, "03_output/C_S_M_M.csv", sep=""))
+write_csv(C_S_M_M, paste(projectPath, "03_generated/C_S_M_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_M_M] Done!")
@@ -1247,7 +1247,7 @@ C_S_M_S <- sourceData %>%
   summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate standard deviation of spendings per month per customer
 
 # Sauvegarde des donnees
-write_csv(C_S_M_S, paste(projectPath, "03_output/C_S_M_S.csv", sep=""))
+write_csv(C_S_M_S, paste(projectPath, "03_generated/C_S_M_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_M_S] Done!")
@@ -1267,7 +1267,7 @@ C_S_T_M <- sourceData %>%
   summarise(mean=round(mean(n), digits=2))                                     # Calculate mean spendings per ticket per customer
   
 # Sauvegarde des donnees
-write_csv(C_S_T_M, paste(projectPath, "03_output/C_S_T_M.csv", sep=""))
+write_csv(C_S_T_M, paste(projectPath, "03_generated/C_S_T_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_T_M] Done!")
@@ -1288,7 +1288,7 @@ C_S_T_S <- sourceData %>%
 C_S_T_S[is.na(C_S_T_S)] <- 0                                                   # Replacing NA values with 0 for customers having only one ticket
 
 # Sauvegarde des donnees
-write_csv(C_S_T_S, paste(projectPath, "03_output/C_S_T_S.csv", sep=""))
+write_csv(C_S_T_S, paste(projectPath, "03_generated/C_S_T_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_T_S] Done!")
@@ -1306,7 +1306,7 @@ C_S_P_M <- sourceData %>%
   summarise(mean=round(mean(PrixNet), digits=2))                               # Calculate mean spendings per product per customer
 
 # Sauvegarde des donnees
-write_csv(C_S_P_M, paste(projectPath, "03_output/C_S_P_M.csv", sep=""))
+write_csv(C_S_P_M, paste(projectPath, "03_generated/C_S_P_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_P_M] Done!")
@@ -1325,7 +1325,7 @@ C_S_P_S <- sourceData %>%
 C_S_P_S[is.na(C_S_P_S)] <- 0                                                   # Replacing NA values with 0 for customers that bought only one product
 
 # Sauvegarde des donnees
-write_csv(C_S_P_S, paste(projectPath, "03_output/C_S_P_S.csv", sep=""))
+write_csv(C_S_P_S, paste(projectPath, "03_generated/C_S_P_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_S_P_S] Done!")
@@ -1348,7 +1348,7 @@ C_P_Y_T <- sourceData %>%
   tally()                                                                      # Make a count of the number of products per customer
 
 # Sauvegarde des donnees
-write_csv(C_P_Y_T, paste(projectPath, "03_output/C_P_Y_T.csv", sep=""))
+write_csv(C_P_Y_T, paste(projectPath, "03_generated/C_P_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_P_Y_T] Done!")
@@ -1367,7 +1367,7 @@ C_P_M_T <- sourceData %>%
   tally()                                                                      # Make a count of the number of products per customer per month
 
 # Sauvegarde des donnees
-write_csv(C_P_M_T, paste(projectPath, "03_output/C_P_M_T.csv", sep=""))
+write_csv(C_P_M_T, paste(projectPath, "03_generated/C_P_M_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_P_M_T] Done!")
@@ -1386,7 +1386,7 @@ C_P_M_M <- sourceData %>%
   summarise(mean=round(mean(c(rep(0, 12-length(n)), n)), digits=2))            # Calculate mean number of products per month for each customer
 
 # Sauvegarde des donnees
-write_csv(C_P_M_M, paste(projectPath, "03_output/C_P_M_M.csv", sep=""))
+write_csv(C_P_M_M, paste(projectPath, "03_generated/C_P_M_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_P_M_M] Done!")
@@ -1405,7 +1405,7 @@ C_P_M_S <- sourceData %>%
   summarise(sd=round(sd(c(rep(0, 12-length(n)), n)), digits=2))                # Calculate standard deviation of products per month for each customer
 
 # Sauvegarde des donnees
-write_csv(C_P_M_S, paste(projectPath, "03_output/C_P_M_S.csv", sep=""))
+write_csv(C_P_M_S, paste(projectPath, "03_generated/C_P_M_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_P_M_S] Done!")
@@ -1429,7 +1429,7 @@ C_F_Y_T <- sourceData %>%
 
 
 # Sauvegarde des donnees
-write_csv(C_F_Y_T, paste(projectPath, "03_output/C_F_Y_T.csv", sep=""))
+write_csv(C_F_Y_T, paste(projectPath, "03_generated/C_F_Y_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_Y_T] Done!")
@@ -1449,7 +1449,7 @@ C_F_M_T <- sourceData %>%
   subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
 
 # Sauvegarde des donnees
-write_csv(C_F_M_T, paste(projectPath, "03_output/C_F_M_T.csv", sep=""))
+write_csv(C_F_M_T, paste(projectPath, "03_generated/C_F_M_T.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_M_T] Done!")
@@ -1471,7 +1471,7 @@ C_F_M_M <- sourceData %>%
   subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
   
 # Sauvegarde des donnees
-write_csv(C_F_M_M, paste(projectPath, "03_output/C_F_M_M.csv", sep=""))
+write_csv(C_F_M_M, paste(projectPath, "03_generated/C_F_M_M.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_M_M] Done!")
@@ -1493,7 +1493,7 @@ C_F_M_S <- sourceData %>%
   subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
 
 # Sauvegarde des donnees
-write_csv(C_F_M_S, paste(projectPath, "03_output/C_F_M_S.csv", sep=""))
+write_csv(C_F_M_S, paste(projectPath, "03_generated/C_F_M_S.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_M_S] Done!")
@@ -1516,7 +1516,7 @@ C_F_Y_MF <- sourceData %>%
   subset(select= -c(Famille))                                                  # Removing Famille column to save memory and only use the assigned FamilleId
 
 # Sauvegarde des donnees
-write_csv(C_F_Y_MF, paste(projectPath, "03_output/C_F_Y_MF.csv", sep=""))
+write_csv(C_F_Y_MF, paste(projectPath, "03_generated/C_F_Y_MF.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_Y_MF] Done!")
@@ -1541,7 +1541,7 @@ C_F_MF_Y <- sourceData %>%
   arrange(ClientId, FamilleId, n)                                              # Arranging dataframe by ClientId, FamilleId, number of time product has been bought
 
 # Sauvegarde des donnees
-write_csv(C_F_MF_Y, paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
+write_csv(C_F_MF_Y, paste(projectPath, "03_generated/C_F_MF_Y.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_F_MF_Y] Done!")
@@ -1568,7 +1568,7 @@ C_MF_Y <- sourceData %>%
   arrange(ClientId, n)                                                         # Arranging dataframe by ClientId and number of time product has been bought
 
 # Sauvegarde des donnees
-write_csv(C_MF_Y, paste(projectPath, "03_output/C_MF_Y.csv", sep=""))
+write_csv(C_MF_Y, paste(projectPath, "03_generated/C_MF_Y.csv", sep=""))
 
 # Pas de graphique (trop d'entrees, resultat illisible et long a generer)
 sprintf("[C_MF_Y] Done!")

@@ -19,16 +19,24 @@ moisNoms <- c("Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","
 moisDictionary <- data.frame(moisVenteId=c(1:12), moisVente=moisNoms)
 
 
-Customers <- read_csv(paste(projectPath, "03_output/Customers.csv", sep=""))
-Families <- read_csv(paste(projectPath, "03_output/Familles.csv", sep=""))
-Products <- read_csv(paste(projectPath, "03_output/Produits.csv", sep=""))
+Customers <- read_csv(paste(projectPath, "03_generated/Customers.csv", sep=""))
+Families <- read_csv(paste(projectPath, "03_generated/Familles.csv", sep=""))
+Products <- read_csv(paste(projectPath, "03_generated/Produits.csv", sep=""))
 
 options("scipen"=100)
 
-
 ## GETTING CLIENT ID ###############################
 repeat{
-  clientId <- as.numeric(readline(prompt="Enter a ClientId: "))
+  # Getting client ID
+  if (interactive()){
+    clientId <- as.numeric(readline(prompt="Entrez l'ID du client: "))
+  } else {
+    #  non-interactive
+    cat("Entrez l'ID du client: ")
+    clientId <- as.numeric(readLines("stdin",n=1))
+  }
+
+  # Checking validity of ID
   if (!is.na(clientId)){
     if(clientId %in% Customers$ClientId){
       break
@@ -44,15 +52,14 @@ repeat{
 
 
 ## SETUP CUSTOMER DIRECTORY ###############################
-clientDir <- paste(projectPath, "03_output/Client_", clientId, sep="")
+clientDir <- paste(projectPath, "04_recommender/Client_", clientId, sep="")
 unlink(clientDir, recursive = TRUE)
 dir.create(file.path(clientDir), showWarnings = FALSE)
-descriptionFile<-paste(projectPath, "03_output/Client_", clientId, "/description.txt", sep="")
+descriptionFile<-paste(projectPath, "04_recommender/Client_", clientId, "/description.txt", sep="")
 clientProfile <- data.frame(ClientId=clientId)
 
 
 ## CLIENT STATISTICAL DESCRIPTION ###############################
-print("## Client statistical dedscripton")
 write("----- DESCRIPTION STATISTIQUE DU CLIENT -----", file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
@@ -62,22 +69,25 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 # General statistics
 ## Loading data ##
-C_T_Y_T <- read_csv(paste(projectPath, "03_output/C_T_Y_T.csv", sep=""))
-G_T_Y_T <- read_csv(paste(projectPath, "03_output/G_T_Y_T.csv", sep=""))
-C_P_Y_T <- read_csv(paste(projectPath, "03_output/C_P_Y_T.csv", sep=""))
-G_C_P_Y_M <- read_csv(paste(projectPath, "03_output/G_C_P_Y_M.csv", sep=""))
-C_S_Y_T <- read_csv(paste(projectPath, "03_output/C_S_Y_T.csv", sep=""))
-C_P_M_M <- read_csv(paste(projectPath, "03_output/C_P_M_M.csv", sep=""))
-C_P_M_T <- read_csv(paste(projectPath, "03_output/C_P_M_T.csv", sep=""))
-C_T_M_T <- read_csv(paste(projectPath, "03_output/C_T_M_T.csv", sep=""))
-C_S_M_T <- read_csv(paste(projectPath, "03_output/C_S_M_T.csv", sep=""))
-G_S_Y_T <- read_csv(paste(projectPath, "03_output/G_S_Y_T.csv", sep=""))
-C_F_Y_MF <- read_csv(paste(projectPath, "03_output/C_F_Y_MF.csv", sep=""))
-C_F_Y_T <- read_csv(paste(projectPath, "03_output/C_F_Y_T.csv", sep=""))
-C_F_MF_Y <- read_csv(paste(projectPath, "03_output/C_F_MF_Y.csv", sep=""))
-C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))
+C_T_Y_T <- read_csv(paste(projectPath, "03_generated/C_T_Y_T.csv", sep=""))
+G_T_Y_T <- read_csv(paste(projectPath, "03_generated/G_T_Y_T.csv", sep=""))
+C_P_Y_T <- read_csv(paste(projectPath, "03_generated/C_P_Y_T.csv", sep=""))
+G_C_P_Y_M <- read_csv(paste(projectPath, "03_generated/G_C_P_Y_M.csv", sep=""))
+C_S_Y_T <- read_csv(paste(projectPath, "03_generated/C_S_Y_T.csv", sep=""))
+C_P_M_M <- read_csv(paste(projectPath, "03_generated/C_P_M_M.csv", sep=""))
+C_P_M_T <- read_csv(paste(projectPath, "03_generated/C_P_M_T.csv", sep=""))
+C_T_M_T <- read_csv(paste(projectPath, "03_generated/C_T_M_T.csv", sep=""))
+C_S_M_T <- read_csv(paste(projectPath, "03_generated/C_S_M_T.csv", sep=""))
+G_S_Y_T <- read_csv(paste(projectPath, "03_generated/G_S_Y_T.csv", sep=""))
+C_F_Y_MF <- read_csv(paste(projectPath, "03_generated/C_F_Y_MF.csv", sep=""))
+C_F_Y_T <- read_csv(paste(projectPath, "03_generated/C_F_Y_T.csv", sep=""))
+C_F_MF_Y <- read_csv(paste(projectPath, "03_generated/C_F_MF_Y.csv", sep=""))
+C_MF_Y <- read_csv(paste(projectPath, "03_generated/C_MF_Y.csv", sep=""))
+
 
 ## Writing data in the file ## 
+print("Generating Client statistical description...")
+
 ### Number of tickets
 write(paste("Nombre total de tickets: ", C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n, " (", signif((C_T_Y_T[C_T_Y_T$ClientId==clientId,]$n*100)/G_T_Y_T$n, 3), "% des tickets du magasin)", sep=""), file=descriptionFile, append=T)
 
@@ -175,7 +185,7 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 
 
 ## CLIENT SEGMENTATION ANALYSIS ###############################
-print("## Client segmentation analysis")
+print("Generating Client segmentation analysis...")
 write(paste("", sep=""), file=descriptionFile, append=T)
 write("----- ANALYSE DE LA SEGMENTATION -----", file=descriptionFile, append=T)
 
@@ -183,7 +193,8 @@ write("----- ANALYSE DE LA SEGMENTATION -----", file=descriptionFile, append=T)
 
 ## [S_R] Regularity
 write(paste("", sep=""), file=descriptionFile, append=T)
-S_R <- read_csv(paste(projectPath, "03_output/S_R.csv", sep=""))  # Getting segmentation result
+S_R <- read_csv(paste(projectPath, "03_generated/S_R.csv", sep=""))  # Getting segmentation result
+print("    [S_R] Getting data and generating graph...")
 
 # Extracting clusterId and data
 S_R.client <- subset(S_R, ClientId == clientId)                                # Extracting client entry
@@ -297,7 +308,8 @@ dev.off()
 
 
 # [S_S_T] Spendings per tickets
-S_S_T <- read_csv(paste(projectPath, "03_output/S_S_T.csv", sep=""))  # Getting segmentation result
+S_S_T <- read_csv(paste(projectPath, "03_generated/S_S_T.csv", sep=""))  # Getting segmentation result
+print("    [S_S_T] Getting data and generating graph...")
 
 # Extracting clusterId and data
 S_S_T.client <- subset(S_S_T, ClientId == clientId)                            # Extracting client entry
@@ -409,7 +421,8 @@ dev.off()
 
 
 # [S_S_I] Spendings per items
-S_S_I <- read_csv(paste(projectPath, "03_output/S_S_I.csv", sep=""))  # Getting segmentation result
+S_S_I <- read_csv(paste(projectPath, "03_generated/S_S_I.csv", sep=""))  # Getting segmentation result
+print("    [S_S_I] Getting data and generating graph...")
 
 # Extracting clusterId and data
 S_S_I.client <- subset(S_S_I, ClientId == clientId)                            # Extracting client entry
@@ -520,7 +533,8 @@ dev.off()
 
 
 # [S_F] Prefered product family
-S_F <- read_csv(paste(projectPath, "03_output/S_F.csv", sep=""))  # Getting segmentation result
+S_F <- read_csv(paste(projectPath, "03_generated/S_F.csv", sep=""))  # Getting segmentation result
+print("    [S_F] Getting data and generating graph...")
 
 # Extracting clusterId and data
 S_F.client <- subset(S_F, ClientId == clientId)                                # Extracting client entry
@@ -558,7 +572,6 @@ write(paste("    Groupe ID:            [", clientProfile$S_F, "]", sep=""), file
 write(paste("    Produits achetes:     [", minN, ", ", n, ", ", maxN, "] (mean: ", meanN, ", sd: ", sdN, ")", sep=""), file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
-group
 # Generating plot
 # Scatter plot of clients in the group
 scatterPlot <- ggplot(group,aes(n, FamilleId)) + 
@@ -615,7 +628,7 @@ dev.off()
 
 
 ## CLIENT RECOMMENDATIONS ###############################
-print("## Client recommendations")
+print("Client recommendations...")
 write("----- RECOMMENDATIONS -----", file=descriptionFile, append=T)
 write(paste("", sep=""), file=descriptionFile, append=T)
 
@@ -623,7 +636,6 @@ write(paste("", sep=""), file=descriptionFile, append=T)
 display_Recommendations <- function(descriptionFile, R_top_related_products, R_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, recommendation_intro, recommendation_description){
   
   # Making recommendation
-  print(R_top_related_products)
   write(paste("- ", recommendation_intro, sep=""), file=descriptionFile, append=T)
   write(paste("    * ", R_top_related_products[1, "Libelle"], " (#", R_top_related_products[1, "ProduitId"], ") [", R_top_related_products[1, "Famille"], "]", sep=""), file=descriptionFile, append=T)
   write(paste("    * ", R_top_related_products[2, "Libelle"], " (#", R_top_related_products[2, "ProduitId"], ") [", R_top_related_products[2, "Famille"], "]", sep=""), file=descriptionFile, append=T)
@@ -665,7 +677,7 @@ display_Recommendations <- function(descriptionFile, R_top_related_products, R_t
 
 
 # Getting general data
-C_MF_Y <- read_csv(paste(projectPath, "03_output/C_MF_Y.csv", sep=""))                                    # Getting client's preferred products
+C_MF_Y <- read_csv(paste(projectPath, "03_generated/C_MF_Y.csv", sep=""))                                    # Getting client's preferred products
 clientPreferedProducts <- C_MF_Y %>%
   filter(ClientId==clientId) %>%
   select(ProduitId)
@@ -707,6 +719,7 @@ related_S_F <-  S_F %>%
 
 ### [R_1] "Other profiles like yours also like..." ############################### 
 # Calculating how close each profile that appears at least once in the same cluster are from the selected client
+print("    [R_1]...")
 R_1_related <- related_S_R %>%
   rename(dist_S_R=dist) %>%
   select(ClientId, dist_S_R) %>%
@@ -758,6 +771,7 @@ display_Recommendations(descriptionFile, R_1_top_related_products, R_1_top_relat
 
 ### [R_2] "Because you are interested in..." ###############################
 # Calculating how close each profile that appears at least once in the same cluster are from the selected client
+print("    [R_2]...")
 R_2_related <- related_S_F %>%
   select(ClientId, dist) %>%
   arrange(dist)
@@ -789,6 +803,7 @@ display_Recommendations(descriptionFile, R_2_top_related_products, R_2_top_relat
 
 ### [R_3] "Based on your budget..." ###############################
 # Calculating how close each profile that appears at least once in the same cluster are from the selected client
+print("    [R_3]...")
 R_3_related <- related_S_S_T %>%
   rename(dist_S_S_T=dist) %>%
   select(ClientId, dist_S_S_T) %>%
@@ -825,3 +840,4 @@ R_3_top_related_products <- C_MF_Y %>%
 # Displaying recommendation
 display_Recommendations(descriptionFile, R_3_top_related_products, R_3_top_related, clientPreferedProductFamily, clientPreferedProducts, C_MF_Y, "Base sur votre budget, nous vous recommandons...", "Ces recommendations se basent sur les produits preferes des profils les plus proches du votre suivant les depenses par achats et par produits pour vous proposer des produits dans votre budget et centre d'interet")
 
+print("Done!")

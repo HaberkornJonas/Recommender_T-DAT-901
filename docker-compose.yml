@@ -3,6 +3,6 @@ services:
   r:
     build: .
     volumes: 
-      - ./01_data:/01_data
-      - ./02_code:/02_code
-      - ./03_output:/03_output
+      - ./04_recommender:/04_recommender
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
