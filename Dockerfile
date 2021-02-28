@@ -20,4 +20,4 @@ RUN Rscript /02_code/stats.R
 RUN Rscript /02_code/segmentation.R
 
 # Start our script
-CMD Rscript /02_code/recommender.R
+CMD Rscript /02_code/user_recommendation.R
