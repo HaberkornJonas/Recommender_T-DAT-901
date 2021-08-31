@@ -76,7 +76,7 @@ Semestre 9 *(premier semestre de M2)*
   * Tâches implémentées : -
 
 # Notation
-**Référent pédagogique** : Alexandre Teisseire (Paris)
+**Référent pédagogique** : Teisseire Alexandre (Paris)
   
 **Proportion des compétences validé :** 100%    
 ![Proportion des compétences validé](assets/competences.png)
