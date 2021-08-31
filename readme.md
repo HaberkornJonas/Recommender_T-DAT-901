@@ -43,7 +43,7 @@ Semestre 9 *(premier semestre de M2)*
 
 ## Projets en parallèle 
 * [T-ESP-900](https://github.com/HaberkornJonas/ManageMint_Frontend_T-ESP-900)
-* [T-DAT-901](https://github.com/HaberkornJonas/Image-Recognition_T-DEV-810)
+* [T-AIA-901](https://github.com/HaberkornJonas/Travel-Order-Resolver_Notebooks_T-AIA-901)
 
 # Fonctionnalités
 * L'utilisateur clique sur le bouton et formule sa requête. L'IA lui retourne le chemin le plus court pour réaliser son voyage en train
