@@ -88,4 +88,3 @@ Feedback
 
 # Liens
 * [Projet](project)
-* [Sujets](documents/subject)
